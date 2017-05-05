@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "FindAssosiates";
+}
+
+<h2>Знайти однодумців</h2>
+
+<p>
+    Дайте відповіді на питання:
+</p>
+<fieldset>
+    <legend>ProfileRe-passTheSurvey</legend>
+    @using (Html.BeginForm("RetakeTest", "Profile", FormMethod.Post))
+    {
+        <p>
+            <button>Повторно пройти анкетування</button>
+        </p>
+    }
+    @using (Html.BeginForm("Index", "Profile", FormMethod.Post))
+    {
+        <p>
+
+            <button>Підтвердити</button>
+        </p>
+    }
+</fieldset>

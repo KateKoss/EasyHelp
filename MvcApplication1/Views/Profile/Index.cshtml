@@ -1,0 +1,89 @@
+﻿@model MvcApplication1.Models.ProfileModel
+
+@{
+    ViewBag.Title = "Profile";
+}
+
+<h2>Profile</h2>
+<div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        @*@{Html.EnableUnobtrusiveJavaScript(true);}*@
+    <nav>
+        <ul id="menu">
+            <li>@Html.ActionLink("My article", "CreateArticle", "Profile", FormMethod.Post)</li>
+            <li>@Html.ActionLink("Заявки", "Requests", "Profile", FormMethod.Post)</li>
+            <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", "Profile", FormMethod.Post)</li>
+        </ul>
+    </nav>
+        <fieldset>
+            <legend>ProfileModel</legend>
+            
+            @using (Html.BeginForm("CreateArticle", "Profile", FormMethod.Post))
+            {
+                <button>Створити статтю</button>
+            }
+            @using (Html.BeginForm("Requests", "Profile", FormMethod.Post))
+            {
+                <button>Заявки</button>
+            }
+            @using (Html.BeginForm("FindAssosiates", "Profile", FormMethod.Post))
+            {
+                <button>Знайти однодумців</button>
+            }
+
+            @using (Html.BeginForm("ForProfileEditing", "Profile", FormMethod.Post))
+            {
+                <p>
+                    <button>Редагувати</button>
+                </p>
+            }
+
+            @using (Html.BeginForm("UploadPhoto", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <input type="file" name="upload" /><br>
+                <input type="submit" value="Загрузить" />
+                //@Html.DisplayFor(m => m.UserPhoto)
+                @*@Html.Raw("<img style='width:80px; height:60px;' src=\"data:image/jpeg;base64,"
+            + Convert.ToBase64String(Model.UserPhoto) + "\" />")*@
+            }
+
+            @*@Html.LabelFor(model => model.Name)
+        <div>
+
+            <p>
+                Знайти ментора
+                @Html.TextBoxFor(m => m.TextSearhAssistants, new { @placeholder = "Знайти ментора" })
+                <p>
+                    @Html.ListBoxFor(model => model.SelectedTeg, Model.TegList, new { size = 5 })
+                </p>
+            </p>
+        </div>
+        <div>
+
+            <p>
+                Теги
+                @Html.LabelFor(model => model.MyTegs)
+            </p>
+        </div>*@
+            @*@Html.LabelFor(model => model.About_me)
+            @Html.ValidationMessageFor(model => model.About_me)*@
+
+
+
+
+
+</fieldset>
+       
+
+    
+    
+}
+</div>
+<li>@Html.ActionLink("Мої статті", "FindAssosiates", "Profile")</li>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
