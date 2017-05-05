@@ -13,9 +13,9 @@
         @*@{Html.EnableUnobtrusiveJavaScript(true);}*@
     <nav>
         <ul id="menu">
-            <li>@Html.ActionLink("My article", "CreateArticle", "Profile", FormMethod.Post)</li>
-            <li>@Html.ActionLink("Заявки", "Requests", "Profile", FormMethod.Post)</li>
-            <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", "Profile", FormMethod.Post)</li>
+            <li>@Html.ActionLink("My article", "CreateArticle", FormMethod.Post)</li>
+            <li>@Html.ActionLink("Заявки", "Requests", FormMethod.Post)</li>
+            <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Post)</li>
         </ul>
     </nav>
         <fieldset>
@@ -70,16 +70,7 @@
         </div>*@
             @*@Html.LabelFor(model => model.About_me)
             @Html.ValidationMessageFor(model => model.About_me)*@
-
-
-
-
-
 </fieldset>
-       
-
-    
-    
 }
 </div>
 <li>@Html.ActionLink("Мої статті", "FindAssosiates", "Profile")</li>
