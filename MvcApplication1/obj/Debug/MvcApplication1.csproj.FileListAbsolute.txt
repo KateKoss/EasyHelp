@@ -291,7 +291,6 @@ C:\Users\Катя\Documents\ТСПП\Проект\MvcApplication1_KateVer2\MvcAp
 C:\Users\Катя\Documents\ТСПП\Проект\MvcApplication1_KateVer2\MvcApplication1\MvcApplication1\bin\System.Web.WebPages.xml
 C:\Users\Катя\Documents\ТСПП\Проект\MvcApplication1_KateVer2\MvcApplication1\MvcApplication1\bin\System.Web.WebPages.Deployment.xml
 C:\Users\Катя\Documents\ТСПП\Проект\MvcApplication1_KateVer2\MvcApplication1\MvcApplication1\bin\System.Web.WebPages.Razor.xml
-C:\Users\Катя\Documents\ТСПП\Проект\MvcApplication1_KateVer2\MvcApplication1\MvcApplication1\bin\WebMatrix.Data.xml
 C:\Users\Катя\Documents\ТСПП\Проект\MvcApplication1_KateVer2\MvcApplication1\MvcApplication1\bin\Microsoft.Web.WebPages.OAuth.xml
 C:\Users\Катя\Documents\ТСПП\Проект\MvcApplication1_KateVer2\MvcApplication1\MvcApplication1\bin\WebMatrix.WebData.xml
 C:\Users\Катя\Documents\ТСПП\Проект\MvcApplication1_KateVer2\MvcApplication1\MvcApplication1\bin\DotNetOpenAuth.AspNet.xml
@@ -331,7 +330,6 @@ C:\Users\Катя\Documents\ТСПП\Проект\MvcApplication1_KateVer2\MvcAp
 C:\Users\Катя\Documents\ТСПП\Проект\MvcApplication1_KateVer2\MvcApplication1\MvcApplication1\bin\ru\System.Spatial.resources.dll
 C:\Users\Катя\Documents\ТСПП\Проект\MvcApplication1_KateVer2\MvcApplication1\MvcApplication1\bin\zh-Hans\System.Spatial.resources.dll
 C:\Users\Катя\Documents\ТСПП\Проект\MvcApplication1_KateVer2\MvcApplication1\MvcApplication1\bin\zh-Hant\System.Spatial.resources.dll
-C:\Users\Катя\Documents\ТСПП\Проект\MvcApplication1_KateVer2\MvcApplication1\MvcApplication1\obj\Debug\MvcApplication1.csprojResolveAssemblyReference.cache
 C:\Users\Катя\Documents\ТСПП\Проект\MvcApplication1_KateVer2\MvcApplication1\MvcApplication1\obj\Debug\MvcApplication1.Migrations.InitialCreate.resources
 C:\Users\Катя\Documents\ТСПП\Проект\MvcApplication1_KateVer2\MvcApplication1\MvcApplication1\obj\Debug\MvcApplication1.csproj.GenerateResource.Cache
 C:\Users\Катя\Documents\ТСПП\Проект\MvcApplication1_KateVer2\MvcApplication1\MvcApplication1\obj\Debug\MvcApplication1.dll

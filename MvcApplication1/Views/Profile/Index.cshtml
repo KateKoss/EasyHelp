@@ -1,23 +1,26 @@
-﻿@model MvcApplication1.Models.ProfileModel
+﻿@using System.Web.Mvc;
+@model MvcApplication1.Models.ProfileModel
 
 @{
     ViewBag.Title = "Profile";
 }
 
 <h2>Profile</h2>
+
 <div>
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true)
         @*@{Html.EnableUnobtrusiveJavaScript(true);}*@
-    <nav>
-        <ul id="menu">
-            <li>@Html.ActionLink("My article", "CreateArticle", FormMethod.Post)</li>
-            <li>@Html.ActionLink("Заявки", "Requests", FormMethod.Post)</li>
-            <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Post)</li>
-        </ul>
-    </nav>
+
+        <nav>
+            <ul id="menu">
+                <li>@Html.ActionLink("My article", "CreateArticle", FormMethod.Get)</li>
+                <li>@Html.ActionLink("Заявки", "Requests", FormMethod.Get)</li>
+                <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Get)</li>
+            </ul>
+        </nav>
         <fieldset>
             <legend>ProfileModel</legend>
             

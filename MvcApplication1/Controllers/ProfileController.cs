@@ -135,13 +135,13 @@ namespace MvcApplication1.Controllers
             return View("Index", model);
         }
 
-        [HttpPost]
+        [HttpGet]
         public ActionResult CreateArticle(ProfileModel model)
         {
             return View("CreateArticle", model);
         }
 
-        [HttpPost]
+        [HttpGet]
         public ActionResult FindAssosiates(ProfileModel model)
         {
             return View("FindAssosiates", model);
@@ -160,7 +160,7 @@ namespace MvcApplication1.Controllers
             return View("Index", model);
         }
 
-        [HttpPost]
+        [HttpGet]
         public ActionResult Requests(ProfileModel model)
         {
             return View("Requests", model);
