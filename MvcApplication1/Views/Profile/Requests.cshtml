@@ -2,4 +2,11 @@
     ViewBag.Title = "Requests";
 }
 
-<h2>Requests</h2>
+<h2>Заявки</h2>
+<nav>
+    <ul id="menu">
+        <li>@Html.ActionLink("Профіль", "Index", FormMethod.Get)</li>
+        <li>@Html.ActionLink("Мої статті", "CreateArticle", FormMethod.Get)</li>        
+        <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Get)</li>
+    </ul>
+</nav>

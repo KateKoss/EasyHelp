@@ -5,7 +5,15 @@
     ViewBag.Title = "Profile";
 }
 
-<h2>Profile</h2>
+<h2>Редагування</h2>
+<nav>
+    <ul id="menu">
+        @*<li>@Html.ActionLink("Профіль", "Index", FormMethod.Get)</li>*@
+        <li>@Html.ActionLink("Мої статті", "CreateArticle", FormMethod.Get)</li>
+        <li>@Html.ActionLink("Заявки", "Requests", FormMethod.Get)</li>  
+        <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Get)</li>      
+    </ul>
+</nav>
 <div>
     @using (Html.BeginForm())
     {
@@ -24,7 +32,7 @@
                     <div>
                         Теги
                 <p>
-                    @Html.DropDownListFor(model => model.SelectedTeg, Model.TegList)
+                    @*@Html.DropDownListFor(model => model.SelectedTeg, Model.TegList)*@
                 </p>
         </div>
         <button id="save_about_me" onclick="hide_about_me(this)" style="visibility:hidden">Save</button>

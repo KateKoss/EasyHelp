@@ -1,12 +1,18 @@
-﻿@using System.Web.Mvc;
+﻿
 @model MvcApplication1.Models.ProfileModel
 
 @{
     ViewBag.Title = "Profile";
 }
 
-<h2>Profile</h2>
-
+<h2>Профіль</h2>
+<nav>
+    <ul id="menu">
+        <li>@Html.ActionLink("Мої статті", "CreateArticle", FormMethod.Get)</li>
+        <li>@Html.ActionLink("Заявки", "Requests", FormMethod.Get)</li>
+        <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Get)</li>
+    </ul>
+</nav>
 <div>
     @using (Html.BeginForm())
     {
@@ -14,29 +20,11 @@
         @Html.ValidationSummary(true)
         @*@{Html.EnableUnobtrusiveJavaScript(true);}*@
 
-        <nav>
-            <ul id="menu">
-                <li>@Html.ActionLink("My article", "CreateArticle", FormMethod.Get)</li>
-                <li>@Html.ActionLink("Заявки", "Requests", FormMethod.Get)</li>
-                <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Get)</li>
-            </ul>
-        </nav>
+        
         <fieldset>
             <legend>ProfileModel</legend>
             
-            @using (Html.BeginForm("CreateArticle", "Profile", FormMethod.Post))
-            {
-                <button>Створити статтю</button>
-            }
-            @using (Html.BeginForm("Requests", "Profile", FormMethod.Post))
-            {
-                <button>Заявки</button>
-            }
-            @using (Html.BeginForm("FindAssosiates", "Profile", FormMethod.Post))
-            {
-                <button>Знайти однодумців</button>
-            }
-
+            
             @using (Html.BeginForm("ForProfileEditing", "Profile", FormMethod.Post))
             {
                 <p>
