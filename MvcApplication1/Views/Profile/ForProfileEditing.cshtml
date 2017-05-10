@@ -1,3 +1,4 @@
+﻿<<<<<<< HEAD
 ﻿@using System.Web.Mvc.Html;
 @model MvcApplication1.Models.ProfileModel
 
@@ -120,4 +121,120 @@
 
     @section Scripts {
         @Scripts.Render("~/bundles/jqueryval")
+=======
+﻿@using System.Web.Mvc.Html;
+@model MvcApplication1.Models.ProfileModel
+
+@{
+    ViewBag.Title = "Profile";
+}
+
+<h2>Profile</h2>
+<div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        <fieldset>
+            <legend>ProfileModel</legend>
+            @using (Html.BeginForm("Index", "Profile", FormMethod.Post))
+            {
+                @Html.TextAreaFor(model => model.About_me, new { @placeholder = "About me", @id = "area_about_me", style = "visibility:hidden" })
+                @Html.ValidationMessageFor(model => model.About_me)
+                <p>
+                    @*<div class="@((Model.flag_about_me)?"visible-item":"hidden-item")">Some links</div>*@
+                    @*<input id="about_me" type="submit" value="Save" onclick="hideme(this)"/>*@
+                    <div>
+                        Теги
+                <p>
+               @*     @Html.DropDownListFor(model => model.SelectedTeg, Model.TegList)*@
+                </p>
+        </div>
+        <button id="save_about_me" onclick="hide_about_me(this)" style="visibility:hidden">Save</button>
+        <script type='text/javascript'>
+            function hide_about_me(obj) {
+                //obj.parentNode.style.display = "none";
+                document.getElementById("save_about_me").style.visibility = "hidden";
+                document.getElementById("area_about_me").style.visibility = "hidden";
+            }
+        </script>
+        </p>
+            }
+            </fieldset>
+
+            <fieldset>
+                <legend>ProfileModel</legend>
+                @using (Html.BeginForm("saveArticle", "Profile", FormMethod.Post))
+                {
+                    <p>
+                        <h3>Article name    <input type="submit" value="Edit" /></h3>
+                    </p>
+                    @Html.TextAreaFor(model => model.articleText, new { @placeholder = "Article text", @id = "area_article" })
+                    @Html.ValidationMessageFor(model => model.articleText)
+
+                    <button id="about_me" onclick="hideme(this)"> Save article</button>
+
+                    <script type='text/javascript'>
+
+                        function hideme(obj) {
+                            document.getElementById("area_article").style.display = "none";
+                        }
+                    </script>
+                }
+
+            </fieldset>
+    }
+    <button id="edit_about_me" onclick="show_about_me(this)">Edit</button>
+
+    <script type='text/javascript'>
+        function show_about_me(obj) {
+            document.getElementById("save_about_me").style.visibility = "visible";
+            document.getElementById("area_about_me").style.visibility = "visible";
+        }
+    </script>
+
+    <fieldset>
+        <legend>ProfileModelArticle</legend>
+        @using (Html.BeginForm("saveArticleToDraft", "Profile", FormMethod.Post))
+        {
+
+            <p>
+                <h3>Article name    <input type="submit" value="Edit article name" /></h3>
+            </p>
+            @Html.TextAreaFor(model => model.articleText, new { @placeholder = "Article text", @id = "area_article" })
+            @Html.ValidationMessageFor(model => model.articleText)
+
+            <button id="save_article_to_draft" onclick="hideButtSaveArticle(this)"> Save article to draft</button>
+            <script type='text/javascript'>
+                function hideButtSaveArticle(obj) {
+                    document.getElementById("Save_Article_To_Draft").style.visibility = "hidden";
+                    document.getElementById("area_article").style.visibility = "hidden";
+                }
+            </script>
+        }
+        @using (Html.BeginForm("publishArticle", "Profile", FormMethod.Post))
+        {
+            @Html.ValidationMessageFor(model => model.articleText)
+
+            <button id="publish_article" onclick="hidePublishButt(this)"> Publish article</button>
+            <script type='text/javascript'>
+
+                function hidePublishButt(obj) {
+                    document.getElementById("publish_article").style.visibility = "hidden";;
+                }
+            </script>
+        }
+    </fieldset>
+
+    </div>
+
+
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+>>>>>>> d96627d... Some changes
     }
