@@ -20,45 +20,10 @@ namespace MvcApplication1.Controllers
         //
         // GET: /Profile/
 
-        public ActionResult Index()
+        public ActionResult Index(ProfileModel model)
         {
-
-            List<SelectListItem> listSelectListItems = new List<SelectListItem>();
-            SelectListItem selectList = new SelectListItem()
-            {
-                Text = "с++",
-                Value = "1"
-
-            };
-            listSelectListItems.Add(selectList);
-            selectList = new SelectListItem()
-            {
-                Text = "с#",
-                Value = "2"
-
-            };
-            listSelectListItems.Add(selectList);
-            selectList = new SelectListItem()
-            {
-                Text = "javascript",
-                Value = "3"
-
-            };
-            listSelectListItems.Add(selectList);
-            //List<string> listTegItems = new List<string>();
-            //listTegItems.Add(selectList.Text);
-            ProfileModel myModel = new ProfileModel()
-            {
-                TegList = listSelectListItems
-                //SelectedTeg = listTegItems
-
-            };
-            
-            //model.TegList = new List<string>();
-            //model.TegList.Add("Vasia");
-            //model.TegList.Add("Tania");
-            //model.flag_about_me = !model.flag_about_me;
-            return View(myModel);
+           // model.UserPhoto = upload.SaveAs(Server.MapPath("~/Files/" + fileName)); ;
+            return View();
         }
         
         
@@ -88,17 +53,31 @@ namespace MvcApplication1.Controllers
 
 
 
-
-                    //var currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                   //var id = Request.Cookies["UserId"].Value;
+                   string currentPerson;
+                   if (Request.Cookies["UserId"] != null)
+                       currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                   else currentPerson = "Luda";
                     //var currentPerson = "fhdgsdfj";
+                   int id;
                     //var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
                     //if (user != null)
                     //{
-                    //    db.UserProfiles.Add(new UserProfile { About_me = model.About_me });
-                    //    //user.About_me = model.About_me;
-                    //    db.SaveChanges();
+                    //    //id = user;
+                    //    using (ProfileContext dbP = new ProfileContext())
+                    //    {
+                    //        dbP.ProfileDb.Add(model);
+                    //        //dbP.ProfileDb.Add(new ProfileModel { About_me = model.About_me });
+                    //        //dbP.ProfileDb.Add(new ProfileModel { Name = model.Name });
+                    //        //dbP.ProfileDb.Add(new ProfileModel { UserPhoto = model.UserPhoto});
+                    //        //dbP.ProfileDb.Add(new ProfileModel { MyTegs = model.MyTegs});
+                            
+                            
+                    //        //user.About_me = model.About_me;
+                    //        dbP.SaveChanges();
+                    //    }
                     //}
-                    //else ModelState.AddModelError(currentPerson, currentPerson + "Error");
+                    //else ModelState.AddModelError("Error", "Error");
                 }
                 //TODO: SubscribeUser(model.Email);
             }
@@ -211,10 +190,122 @@ namespace MvcApplication1.Controllers
             return View("Requests", model);
         }
         [HttpGet]
+        public ActionResult ForProfileEditing()
+        {
+            List<SelectListItem> listSelectListItems = new List<SelectListItem>();
+            SelectListItem selectList = new SelectListItem()
+            {
+                Text = "с++",
+                Value = "1",
+                Selected = true
+
+            };
+            listSelectListItems.Add(selectList);
+            selectList = new SelectListItem()
+            {
+                Text = "с#",
+                Value = "2"
+
+            };
+            listSelectListItems.Add(selectList);
+            selectList = new SelectListItem()
+            {
+                Text = "javascript",
+                Value = "3"
+
+            };
+            listSelectListItems.Add(selectList);
+            List<string> listTegItems = new List<string>();
+            listTegItems.Add(selectList.Text);
+            ProfileModel myModel = new ProfileModel()
+            {
+                TegList = listSelectListItems
+                //SelectedTeg = listTegItems
+
+            };
+            return View("ForProfileEditing",myModel);
+        }
+        [HttpPost]
         public ActionResult ForProfileEditing(ProfileModel model)
         {
-            return View("ForProfileEditing", model);
+            List<SelectListItem> listSelectListItems = new List<SelectListItem>();
+            SelectListItem selectList = new SelectListItem()
+            {
+                Text = "с++",
+                Value = "1",
+                Selected = true
+
+            };
+            listSelectListItems.Add(selectList);
+            selectList = new SelectListItem()
+            {
+                Text = "с#",
+                Value = "2"
+
+            };
+            listSelectListItems.Add(selectList);
+            selectList = new SelectListItem()
+            {
+                Text = "javascript",
+                Value = "3"
+
+            };
+            listSelectListItems.Add(selectList);
+            List<string> listTegItems = new List<string>();
+            listTegItems.Add(selectList.Text);
+            //ProfileModel myModel = new ProfileModel()
+            //{
+            //    TegList = listSelectListItems
+            //    //SelectedTeg = listTegItems
+
+            //};
+            StringBuilder sb = new StringBuilder();
+            ProfileModel myModel;
+
+            var str="";
+            if(model.SelectedTeg != null)
+            foreach (string s in model.SelectedTeg)
+               str += "fjf    " + s;
+           
+            
+                myModel = new ProfileModel()
+                {
+                    TegList = listSelectListItems
+                    //MyTegs = listSelectListItems[model.SelectedTeg];
+                    //MyTegs = sb.Append(string.Join(" ", selectedTegs)).ToString()
+                    //SelectedTeg = listTegItems
+                };
+            
+            model.MyTegs = " dfjjff";
+            //model.SelectedTeg = model.SelectedTeg;
+                myModel = new ProfileModel()
+                {
+                    TegList = listSelectListItems,
+                    MyTegs = str
+                    //SelectedTeg = listTegItems
+                };
+            
+            return View("ForProfileEditing", myModel);
         }
+        [HttpPost]
+        public ActionResult AddTeg(ProfileModel model, LoginModel lm)
+        {
+            return View("Index", model);
+        }
+        //[HttpPost]
+        //public ActionResult AddTeg()
+        //{
+        //    StringBuilder sb = new StringBuilder();
+
+        //    ProfileModel myModel = new ProfileModel()
+        //    {
+                
+        //         //MyTegs = sb.Append(string.Join(" ", selectedTegs)).ToString()
+        //        //SelectedTeg = listTegItems
+
+        //    };
+        //    return View( myModel);
+        //}
 
         public ActionResult UploadPhoto()
         {
@@ -224,7 +315,8 @@ namespace MvcApplication1.Controllers
         [HttpPost]
         public ActionResult UploadPhoto(ProfileModel model, HttpPostedFileBase upload)
         {
-            if (upload != null)
+            
+            if (ModelState.IsValid && upload != null)
             {
                 // получаем имя файла
                 string fileName = System.IO.Path.GetFileName(upload.FileName);

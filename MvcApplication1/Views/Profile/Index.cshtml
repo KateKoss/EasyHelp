@@ -15,6 +15,12 @@
 </nav>
 
     
+<h2>Профіль</h2>@Html.ActionLink("Редагувати", "ForProfileEditing")
+
+
+<div>
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true)
         @*@{Html.EnableUnobtrusiveJavaScript(true);}*@
@@ -23,23 +29,18 @@
         <fieldset>
             <legend>ProfileModel</legend>
             
-            <div>
-                @using (Html.BeginForm("ForProfileEditing", "Profile", FormMethod.Get))
-                {
-                    <p>
-                        <button>Редагувати</button>
-                    </p>
-                }
-            </div>
-            <div>
-                @using (Html.BeginForm("UploadPhoto", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                {
-                    <input type="file" name="upload" /><br>
-                    <input type="submit" value="Загрузить" />
-                    //@Html.DisplayFor(m => m.UserPhoto)
-                    @*@Html.Raw("<img style='width:80px; height:60px;' src=\"data:image/jpeg;base64,"
-                + Convert.ToBase64String(Model.UserPhoto) + "\" />")*@
-                }
+            
+            
+            @using (Html.BeginForm("UploadPhoto", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <input type="file" name="upload" /><br>
+                <input type="submit" value="Загрузить" />
+                //@Html.DisplayFor(m => m.UserPhoto)
+                @*@Html.Raw("<img style='width:80px; height:60px;' src=\"data:image/jpeg;base64,"
+            + Convert.ToBase64String(Model.UserPhoto) + "\" />")*@
+                @*@Html.Raw("<img style='width:80px; height:60px;' src=\"data:image/jpeg;base64,"
+                + ((Model.UserPhoto!=null)?Convert.ToBase64String(Model.UserPhoto):"q") + "\" />")*@
+            }
             </div>
             @*@Html.LabelFor(model => model.Name)
         <div>
@@ -55,16 +56,15 @@
         <div>
 
             <p>
-                Теги
                 @Html.LabelFor(model => model.MyTegs)
             </p>
-        </div>*@
-            @*@Html.LabelFor(model => model.About_me)
-            @Html.ValidationMessageFor(model => model.About_me)*@
+        </div>
+            @Html.LabelFor(model => model.About_me)
+            @Html.ValidationMessageFor(model => model.About_me)
 </fieldset>
+    }
+</div>
 
-
-@*<li>@Html.ActionLink("Мої статті", "MyArticle", "Profile")</li>*@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
