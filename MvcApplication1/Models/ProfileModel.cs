@@ -13,8 +13,9 @@ namespace MvcApplication1.Models
 
     public class ProfileModel
     {
-        public string articleName { get; set; }
-        public string articleText { get; set; }
+        public IEnumerable<string> articleName { get; set; }
+        public IEnumerable<string> articleText { get; set; }
+        public IEnumerable<SelectListItem> articleNames { get; set; }
         public string About_me { get; set; }
         public string Name { get; set; }
         public byte[] UserPhoto { get; set; }

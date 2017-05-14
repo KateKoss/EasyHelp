@@ -317,9 +317,10 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Profile\Index.cshtml" />
     <Content Include="Views\Profile\ForProfileEditing.cshtml" />
-    <Content Include="Views\Profile\CreateArticle.cshtml" />
     <Content Include="Views\Profile\Requests.cshtml" />
     <Content Include="Views\Profile\FindAssosiates.cshtml" />
+    <Content Include="Views\Profile\CreateArticle.cshtml" />
+    <Content Include="Views\Profile\MyArticle.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

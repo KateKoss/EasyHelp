@@ -416,3 +416,4 @@ C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1\obj\De
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1\obj\Debug\MvcApplication1.csproj.GenerateResource.Cache
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1\obj\Debug\MvcApplication1.dll
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1\obj\Debug\MvcApplication1.pdb
+C:\Users\Катя\Documents\ТСПП\Проект\MvcApplication1_KateVer2\MvcApplication1\MvcApplication1\obj\Debug\MvcApplication1.csprojResolveAssemblyReference.cache

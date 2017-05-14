@@ -136,6 +136,51 @@ namespace MvcApplication1.Controllers
         }
 
         [HttpGet]
+        public ActionResult MyArticle(ProfileModel model)
+        {
+            UsersContext db = new UsersContext();
+            List<SelectListItem> listSelectListItems = new List<SelectListItem>();
+            SelectListItem selectList = new SelectListItem()
+            {
+                Text = "Взаємодія з даними",
+                Value = "1"
+            };
+            listSelectListItems.Add(selectList);
+            selectList = new SelectListItem()
+            {
+                Text = "Міграція даних",
+                Value = "2"
+            };
+            selectList = new SelectListItem()
+            {
+                Text = "Взаємодія з даними",
+                Value = "1"
+            };
+            listSelectListItems.Add(selectList);
+            selectList = new SelectListItem()
+            {
+                Text = "Принцип SOLID",
+                Value = "3"
+            };
+            listSelectListItems.Add(selectList);
+            //foreach (var article in db.UserProfiles) //тут я не знаю
+            //{
+            //    SelectListItem selectList = new SelectListItem()
+            //    {
+            //        Text = article.Name,
+            //        Value = article.ID
+            //    };
+            //    listSelectListItems.Add(selectList);
+            //}
+
+            ProfileModel myModel = new ProfileModel()
+            {
+                articleNames = listSelectListItems
+            };
+            return View(myModel);
+        }
+
+        [HttpGet]
         public ActionResult CreateArticle(ProfileModel model)
         {
             return View("CreateArticle", model);
@@ -165,7 +210,7 @@ namespace MvcApplication1.Controllers
         {
             return View("Requests", model);
         }
-        [HttpPost]
+        [HttpGet]
         public ActionResult ForProfileEditing(ProfileModel model)
         {
             return View("ForProfileEditing", model);
