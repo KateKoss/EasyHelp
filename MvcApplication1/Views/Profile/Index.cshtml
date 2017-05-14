@@ -6,6 +6,7 @@
 }
 
 <h2>Профіль</h2>
+@*@Html.ActionLink("Редагувати", "ForProfileEditing")*@
 <nav>
     <ul id="menu">
         <li>@Html.ActionLink("Мої статті", "MyArticle", FormMethod.Get)</li>
@@ -14,23 +15,12 @@
     </ul>
 </nav>
 
-    
-<h2>Профіль</h2>@Html.ActionLink("Редагувати", "ForProfileEditing")
-
-
-<div>
-    @using (Html.BeginForm())
-    {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true)
         @*@{Html.EnableUnobtrusiveJavaScript(true);}*@
-
         
         <fieldset>
             <legend>ProfileModel</legend>
-            
-            
-            
             @using (Html.BeginForm("UploadPhoto", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 <input type="file" name="upload" /><br>
@@ -41,29 +31,24 @@
                 @*@Html.Raw("<img style='width:80px; height:60px;' src=\"data:image/jpeg;base64,"
                 + ((Model.UserPhoto!=null)?Convert.ToBase64String(Model.UserPhoto):"q") + "\" />")*@
             }
-            </div>
-            @*@Html.LabelFor(model => model.Name)
-        <div>
+           @Html.LabelFor(model => model.Name)
 
             <p>
                 Знайти ментора
-                @Html.TextBoxFor(m => m.TextSearhAssistants, new { @placeholder = "Знайти ментора" })
-                <p>
-                    @Html.ListBoxFor(model => model.SelectedTeg, Model.TegList, new { size = 5 })
-                </p>
             </p>
-        </div>
-        <div>
+            @Html.TextBoxFor(m => m.TextSearhAssistants, new { @placeholder = "Знайти ментора" })
+            <p>
+                @Html.ListBoxFor(model => model.SelectedTeg, Model.TegList, new { size = 5 })
+            </p>
+            
 
             <p>
                 @Html.LabelFor(model => model.MyTegs)
             </p>
-        </div>
             @Html.LabelFor(model => model.About_me)
             @Html.ValidationMessageFor(model => model.About_me)
 </fieldset>
-    }
-</div>
+
 
 
 @section Scripts {
