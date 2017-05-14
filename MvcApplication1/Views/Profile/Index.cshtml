@@ -8,7 +8,7 @@
 <h2>Профіль</h2>
 <nav>
     <ul id="menu">
-        <li>@Html.ActionLink("Мої статті", "CreateArticle", FormMethod.Get)</li>
+        <li>@Html.ActionLink("Мої статті", "MyArticle", FormMethod.Get)</li>
         <li>@Html.ActionLink("Заявки", "Requests", FormMethod.Get)</li>
         <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Get)</li>
     </ul>
@@ -64,7 +64,7 @@
 </fieldset>
 
 
-<li>@Html.ActionLink("Мої статті", "MyArticle", "Profile")</li>
+@*<li>@Html.ActionLink("Мої статті", "MyArticle", "Profile")</li>*@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
