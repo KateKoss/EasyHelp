@@ -195,11 +195,21 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201704251840169_InitialCreate.cs" />
-    <Compile Include="Migrations\201704251840169_InitialCreate.Designer.cs">
-      <DependentUpon>201704251840169_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201705131817255_MYMIGRATION.cs" />
+    <Compile Include="Migrations\201705131817255_MYMIGRATION.Designer.cs">
+      <DependentUpon>201705131817255_MYMIGRATION.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Migrations\201705131831278_1.cs" />
+    <Compile Include="Migrations\201705131831278_1.Designer.cs">
+      <DependentUpon>201705131831278_1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705131834013_2.cs" />
+    <Compile Include="Migrations\201705131834013_2.Designer.cs">
+      <DependentUpon>201705131834013_2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ConfigurationC.cs" />
+    <Compile Include="Migrations\ConfigurationB.cs" />
+    <Compile Include="Migrations\ConfigurationA.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\ProfileModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -323,17 +333,24 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Migrations\A\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201704251840169_InitialCreate.resx">
-      <DependentUpon>201704251840169_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <EmbeddedResource Include="Migrations\201705131817255_MYMIGRATION.resx">
+      <DependentUpon>201705131817255_MYMIGRATION.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705131831278_1.resx">
+      <DependentUpon>201705131831278_1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705131834013_2.resx">
+      <DependentUpon>201705131834013_2.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

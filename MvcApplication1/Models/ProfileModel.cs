@@ -9,8 +9,17 @@ using System.Web.Security;
 
 namespace MvcApplication1.Models
 {
-    
 
+    public class ProfileContext : DbContext
+    {
+        public ProfileContext()
+            : base("DefaultConnection")
+        {
+        }
+
+        public DbSet<ProfileModel> ProfileDb { get; set; }
+    }
+    [Table("Profile")]
     public class ProfileModel
     {
         public string articleName { get; set; }
@@ -23,10 +32,10 @@ namespace MvcApplication1.Models
         public string MyTegs { get; set; }
         public string TextSearhAssoasiates { get; set; }
         public string TextSearhAssistants { get; set; }
-       // public IEnumerable<SelectListItem> TegList { get; set; }
+       
         [Key]
         public string UserName { get; set; }
-        public bool flag_about_me { get; set; }
+        
     }
     
 }
