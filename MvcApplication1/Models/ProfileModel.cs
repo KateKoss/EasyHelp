@@ -36,7 +36,7 @@ namespace MvcApplication1.Models
 
         public DbSet<ProfileModel> ProfileDb { get; set; }
     }
-    [Table("Profile")]
+    //[Table("Profile")]
     //public class ProfileModel
     //{
     //    public string articleName { get; set; }
