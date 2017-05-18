@@ -8,15 +8,6 @@ using System.Web.Security;
 
 namespace MvcApplication1.Models
 {
-    public class UsersContext : DbContext
-    {
-        public UsersContext()
-            : base("DefaultConnection")
-        {
-        }
-
-        public DbSet<UserProfile> UserProfiles { get; set; }
-    }
 
     [Table("UserProfile")]
     public class UserProfile
@@ -25,7 +16,8 @@ namespace MvcApplication1.Models
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
         public string UserName { get; set; }
-
+        public string EmailAddress { get; set; }
+        public string Role { get; set; }
     }
 
     public class RegisterExternalLoginModel
@@ -92,7 +84,7 @@ namespace MvcApplication1.Models
 
 
         [Display(Name = "Is Active")]
-        [Range(typeof(bool), "false", "true")]
+        //[Range(typeof(bool), "false", "true")]
         public bool Role { get; set; }
 
 

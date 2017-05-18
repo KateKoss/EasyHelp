@@ -1,7 +1,7 @@
 ﻿@model MvcApplication1.Models.ProfileModel
 
 @{
-    ViewBag.Title = "Profile";
+    ViewBag.Title = "ProfileModel";
 }
 
 <h2>Редагування</h2>
@@ -15,7 +15,7 @@
     </ul>
 </nav>
 <div>
-    @using (Html.BeginForm("ForProfileEditing", "Profile", FormMethod.Post))
+    @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true)
@@ -24,7 +24,7 @@
         <legend>ProfileModel</legend>
         <p>
             @Html.TextBoxFor(model => model.Name, new { @placeholder = "Ім'я" })
-            @Html.ValidationMessageFor(model => model.Name)
+            @*@Html.ValidationMessageFor(model => model.Name)*@
         </p>
 
         @*<div class="@((Model.flag_about_me)?"visible-item":"hidden-item")">Some links</div>*@
@@ -37,7 +37,9 @@
         @*@using (Html.BeginForm("AddTeg", "Profile", FormMethod.Post))*@
         {
         <p>
-            @Html.ListBoxFor(model => model.SelectedTeg, Model.TegList, new { size = 5 })
+            @*@Html.ListBoxFor(model => model.SelectedTeg, Model.TegList, new { size = 5 })*@
+            @Html.ValidationMessageFor(model => model.SelectedTeg)
+            
             <button type="submit" class="btn btn-default">+</button>
         </p>
         }

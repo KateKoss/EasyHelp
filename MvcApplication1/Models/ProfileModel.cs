@@ -10,15 +10,7 @@ using System.Web.Security;
 namespace MvcApplication1.Models
 {
 
-    public class ProfileContext : DbContext
-    {
-        public ProfileContext()
-            : base("DefaultConnection")
-        {
-        }
-
-        public DbSet<ProfileModel> ProfileDb { get; set; }
-    }
+   
     [Table("Profile")]
     public class ProfileModel
     {

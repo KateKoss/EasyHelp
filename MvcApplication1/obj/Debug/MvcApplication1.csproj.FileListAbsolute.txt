@@ -411,10 +411,9 @@ C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1\bin\ko
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1\bin\ru\System.Spatial.resources.dll
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1\bin\zh-Hans\System.Spatial.resources.dll
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1\bin\zh-Hant\System.Spatial.resources.dll
-C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1\obj\Debug\MvcApplication1.csprojResolveAssemblyReference.cache
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1\obj\Debug\MvcApplication1.dll
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1\obj\Debug\MvcApplication1.pdb
-C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1\obj\Debug\MvcApplication1.Migrations._1.resources
+C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1\obj\Debug\MvcApplication1.csprojResolveAssemblyReference.cache
+C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1\obj\Debug\MvcApplication1.Migrations.m.resources
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1\obj\Debug\MvcApplication1.csproj.GenerateResource.Cache
-C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1\obj\Debug\MvcApplication1.Migrations.MYMIGRATION.resources
-C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1\obj\Debug\MvcApplication1.Migrations._2.resources
+C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1\obj\Debug\MvcApplication1.Migrations.m1.resources

@@ -10,6 +10,7 @@ using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
 using MvcApplication1.Filters;
 using MvcApplication1.Models;
+using MvcApplication1.Contexts;
 
 namespace MvcApplication1.Controllers
 {
@@ -36,7 +37,7 @@ namespace MvcApplication1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel model, string returnUrl)
         {
-            using (UsersContext db = new UsersContext())
+            using (CustomDbContext db = new CustomDbContext())
             {
                 //var userDetails = db.UserProfiles.Where(x => x.UserName == model.UserName && x.Password== model.Password).FirstOrDefault();
             }
@@ -92,7 +93,7 @@ namespace MvcApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (UsersContext db = new UsersContext())
+                using (CustomDbContext db = new CustomDbContext())
                 {
                     //db.UserProfiles.Add();
                     
@@ -104,7 +105,8 @@ namespace MvcApplication1.Controllers
                     WebSecurity.CreateUserAndAccount(model.UserName, model.Password, propertyValues: new
                                                                                         {
                                                                                             EmailAddress = model.EmailAddress,
-                                                                                            Role = model.Role
+                                                                                            Role="user"
+                                                                                            //Role = model.Role
                                                                                         });
                     WebSecurity.Login(model.UserName, model.Password);
                     return RedirectToAction("Index","Profile");
@@ -289,7 +291,7 @@ namespace MvcApplication1.Controllers
             if (ModelState.IsValid)
             {
                 // Insert a new user into the database
-                using (UsersContext db = new UsersContext())
+                using (CustomDbContext db = new CustomDbContext())
                 {
                     UserProfile user = db.UserProfiles.FirstOrDefault(u => u.UserName.ToLower() == model.UserName.ToLower());
                     // Check if user already exists

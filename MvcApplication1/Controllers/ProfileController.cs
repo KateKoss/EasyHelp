@@ -11,6 +11,7 @@ using WebMatrix.WebData;
 using MvcApplication1.Filters;
 using System.Text;
 using System.IO;
+using MvcApplication1.Contexts;
 
 
 namespace MvcApplication1.Controllers
@@ -22,6 +23,7 @@ namespace MvcApplication1.Controllers
 
         public ActionResult Index(ProfileModel model)
         {
+            var s = Server.MapPath("/Images/short.jpg");
            // model.UserPhoto = upload.SaveAs(Server.MapPath("~/Files/" + fileName)); ;
             return View();
         }
@@ -35,7 +37,7 @@ namespace MvcApplication1.Controllers
             //bool hasLocalAccount = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
             //if (ModelState.IsValid)
             {
-                using (UsersContext db = new UsersContext())
+                using (CustomDbContext db = new CustomDbContext())
                 {
                     //
                     //db.SaveChanges();
@@ -57,27 +59,27 @@ namespace MvcApplication1.Controllers
                    string currentPerson;
                    if (Request.Cookies["UserId"] != null)
                        currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-                   else currentPerson = "Luda";
+                   else currentPerson = "user1";
                     //var currentPerson = "fhdgsdfj";
                    int id;
-                    //var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
-                    //if (user != null)
-                    //{
-                    //    //id = user;
-                    //    using (ProfileContext dbP = new ProfileContext())
-                    //    {
-                    //        dbP.ProfileDb.Add(model);
-                    //        //dbP.ProfileDb.Add(new ProfileModel { About_me = model.About_me });
-                    //        //dbP.ProfileDb.Add(new ProfileModel { Name = model.Name });
-                    //        //dbP.ProfileDb.Add(new ProfileModel { UserPhoto = model.UserPhoto});
-                    //        //dbP.ProfileDb.Add(new ProfileModel { MyTegs = model.MyTegs});
-                            
-                            
-                    //        //user.About_me = model.About_me;
-                    //        dbP.SaveChanges();
-                    //    }
-                    //}
-                    //else ModelState.AddModelError("Error", "Error");
+                    var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
+                   if (user != null)
+                   {
+                       //id = user;
+                       using (CustomDbContext dbP = new CustomDbContext())
+                       {
+                           //dbP.ProfileModel.Add(model);
+                           //dbP.ProfileDb.Add(new ProfileModel { About_me = model.About_me });
+                           //dbP.ProfileDb.Add(new ProfileModel { Name = model.Name });
+                           //dbP.ProfileDb.Add(new ProfileModel { UserPhoto = model.UserPhoto});
+                           //dbP.ProfileDb.Add(new ProfileModel { MyTegs = model.MyTegs});
+
+
+                           //user.About_me = model.About_me;
+                           //dbP.SaveChanges();
+                       }
+                   }
+                   else ModelState.AddModelError("Error", "Error");
                 }
                 //TODO: SubscribeUser(model.Email);
             }
@@ -172,8 +174,10 @@ namespace MvcApplication1.Controllers
             listSelectListItems.Add(selectList);
             List<string> listTegItems = new List<string>();
             listTegItems.Add(selectList.Text);
+
             ProfileModel myModel = new ProfileModel()
             {
+                Name = "luda",
                 TegList = listSelectListItems
                 //SelectedTeg = listTegItems
 
@@ -236,16 +240,28 @@ namespace MvcApplication1.Controllers
                 myModel = new ProfileModel()
                 {
                     TegList = listSelectListItems,
-                    MyTegs = str
+                    MyTegs = str,
+                    Name ="kate"
                     //SelectedTeg = listTegItems
                 };
-            
-            return View("ForProfileEditing", myModel);
+
+                return RedirectToAction("AddTeg");
         }
-        [HttpPost]
+        [HttpGet]
         public ActionResult AddTeg(ProfileModel model, LoginModel lm)
         {
-            return View("Index", model);
+           
+            //using (ProfileContext db = new ProfileContext())
+            //{
+            //    var currentPerson = "Luda";
+            //    var user = db.ProfileDb.SingleOrDefault(x => x.UserName == currentPerson);
+            //    if (user != null)
+                   
+            //    model = db.ProfileDb.Where(x => x.UserName == currentPerson).SingleOrDefault();
+
+            //    //model.Name = "dd";
+            //}
+            return View("ForProfileEditing", model);
         }
         //[HttpPost]
         //public ActionResult AddTeg()
