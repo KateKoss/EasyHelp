@@ -2,50 +2,64 @@
 @model MvcApplication1.Models.ProfileModel
 
 @{
-    ViewBag.Title = "Profile";
+    ViewBag.Title = "ProfileModel";
 }
 
-<h2>Профіль</h2>@Html.ActionLink("Редагувати", "ForProfileEditing")
+<h2>Профіль</h2>@Html.ActionLink("Редагувати", "ForProfileEditing", FormMethod.Get)
 
-
+<nav>
+    <ul id="menu">
+        <li>@Html.ActionLink("Мої статті", "CreateArticle", FormMethod.Get)</li>
+        <li>@Html.ActionLink("Заявки", "Requests", FormMethod.Get)</li>
+        <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Get)</li>
+    </ul>
+</nav>
 <div>
-    @using (Html.BeginForm())
+    @using (Html.BeginForm("UploadPhoto", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true)
-        @*@{Html.EnableUnobtrusiveJavaScript(true);}*@
+        <fieldset>
+            
+            
+            @if (Model.UserPhoto != null) { 
+            @Html.Raw("<img style='width:80px; height:60px;' src=\"data:image/jpeg;base64,"
+                + Convert.ToBase64String(Model.UserPhoto) + "\" />")
+            }
+            @if (Model.UserPhoto == null) { 
+                <img src='Images/userphoto2.jpg' alt="фото" /><br />
+            }
+            <input type="file" name="upload" /><br>
+            <input type="submit" value="Завантажити" />
+            @*@Html.DisplayFor(m => m.UserPhoto, Model.UserPhoto)*@
+            
+            @*<img src="@Server.MapPath("/Images/short.jpg")" alt="фото" />*@
 
-        <nav>
-            <ul id="menu">
-                <li>@Html.ActionLink("Мої статті", "CreateArticle", FormMethod.Get)</li>
-                <li>@Html.ActionLink("Заявки", "Requests", FormMethod.Get)</li>
-                <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Get)</li>
-            </ul>
-        </nav>
+            @*@Html.Raw("<img style='width:80px; height:60px;' src=\"data:image/jpeg;base64,"
+                + ((Model.UserPhoto!=null)?Convert.ToBase64String(Model.UserPhoto):"q") + "\" />")*@
+        </fieldset>
+    }
+    @using (Html.BeginForm("Index", "Profile", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        
+        
+
         <fieldset>
             <legend>ProfileModel</legend>
             
+            <p>
+                @Html.LabelFor(model => model.Name, Model.Name )
+            </p>
             
-            
-            @using (Html.BeginForm("UploadPhoto", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-                <img src='Images/userphoto2.jpg' alt="фото" /><br />
-                <input type="file" name="upload" /><br>
-                <input type="submit" value="Загрузить" />
-                //@Html.DisplayFor(m => m.UserPhoto)
-                @*@Html.Raw("<img style='width:80px; height:60px;' src=\"data:image/jpeg;base64,"
-            + Convert.ToBase64String(Model.UserPhoto) + "\" />")*@
-                @*<img src="@Server.MapPath("/Images/short.jpg")" alt="фото" />*@
-                
-                 @*@Html.Raw("<img style='width:80px; height:60px;' src=\"data:image/jpeg;base64,"
-                + ((Model.UserPhoto!=null)?Convert.ToBase64String(Model.UserPhoto):"q") + "\" />")*@
-            }
-                 @Html.LabelFor(model => model.Name)
+           
+
             <p>
                 Знайти ментора
                 @Html.TextBoxFor(m => m.TextSearhAssistants, new { @placeholder = "Знайти ментора" })
             </p>
-                @*<div>
+            @*<div>
 
 
                     <p>
@@ -54,13 +68,13 @@
                 </p>
             </div>*@<div>
 
-<p>
-                @Html.LabelFor(model => model.MyTegs)
-            </p>
-        </div>
-            @Html.LabelFor(model => model.About_me)
-            @Html.ValidationMessageFor(model => model.About_me)
-    </fieldset>
+                <p>
+                    @Html.LabelFor(model => model.MyTegs, Model.MyTegs)
+                </p>
+            </div>
+            @Html.LabelFor(model => model.About_me, Model.About_me)
+
+        </fieldset>
     }
 </div>
 
