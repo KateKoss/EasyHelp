@@ -20,89 +20,75 @@ namespace MvcApplication1.Controllers
     {
         //
         // GET: /Profile/
-
-        public ActionResult Index(ProfileModel model)
+        [HttpGet]
+        public ActionResult Index()
         {
-            var s = Server.MapPath("/Images/short.jpg");
+            ProfileModel model;
+            //var s = Server.MapPath("/Images/short.jpg");
            // model.UserPhoto = upload.SaveAs(Server.MapPath("~/Files/" + fileName)); ;
-            return View();
+            using (CustomDbContext db = new CustomDbContext())
+            {
+                
+                var currentPerson = "user1";
+                var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
+                if (user != null)
+                {
+                    var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
+                    if (myModel.UserPhoto == null)
+                    {
+
+                    }
+                    model = new ProfileModel()
+                    {
+                        Name = myModel.Name,
+                        MyTegs = myModel.MyTegs,
+                        About_me = myModel.About_me,
+                        UserPhoto = myModel.UserPhoto
+                    };
+                }
+                else model = new ProfileModel(){ };
+            }            
+
+            return View("Index", model);
         }
         
         
         [HttpPost]
         public ActionResult Index(ProfileModel model, LoginModel lm )
         {
-            
-            //model.flag_about_me = !model.flag_about_me;
-            //bool hasLocalAccount = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
-            //if (ModelState.IsValid)
+            using (CustomDbContext db = new CustomDbContext())
             {
-                using (CustomDbContext db = new CustomDbContext())
+                //var id = Request.Cookies["UserId"].Value;
+                string currentPerson;
+                if (Request.Cookies["UserId"] != null)
+                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                else currentPerson = "user1";
+                //var currentPerson = "fhdgsdfj";
+               
+                var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
+                if (user != null)
                 {
-                    //
-                    //db.SaveChanges();
+                       
+                    model.UserName = "user1";
+                    var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
+                    myModel.Name = model.Name;
+                    myModel.About_me = model.About_me;
+                    myModel.MyTegs = model.MyTegs;
+                    //dbP.ProfileModel.Add(model);
+                    //dbP.ProfileDb.Add(new ProfileModel { About_me = model.About_me });
+                    //dbP.ProfileDb.Add(new ProfileModel { Name = model.Name });
+                    //dbP.ProfileDb.Add(new ProfileModel { UserPhoto = model.UserPhoto});
+                    //dbP.ProfileDb.Add(new ProfileModel { MyTegs = model.MyTegs});
 
-                    //foreach (var blog in db.Blogs)
-                    //{
-                    //    Console.WriteLine(blog.Name);
-                    //}                    
-                    //var userDetails = db.UserProfiles.Where(x => x.UserName == lm.UserName && x.Password == model.Password).FirstOrDefault();
-                    //if (lm.UserName != null)
-                    //    model.UserID = WebSecurity.GetUserId(User.Identity.Name);
-                    //Database.SetInitializer(new MigrateDatabaseToLatestVersion<BlogContext, Configuration>());
-                    //var currentPerson = db.UserProfiles.Where(p => p.UserID == Convert.ToInt32(Request.Cookies["Id"]));
-
-
-
-
-                   //var id = Request.Cookies["UserId"].Value;
-                   string currentPerson;
-                   if (Request.Cookies["UserId"] != null)
-                       currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-                   else currentPerson = "user1";
-                    //var currentPerson = "fhdgsdfj";
-                   int id;
-                    var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
-                   if (user != null)
-                   {
-                       //id = user;
-                       using (CustomDbContext dbP = new CustomDbContext())
-                       {
-                           //dbP.ProfileModel.Add(model);
-                           //dbP.ProfileDb.Add(new ProfileModel { About_me = model.About_me });
-                           //dbP.ProfileDb.Add(new ProfileModel { Name = model.Name });
-                           //dbP.ProfileDb.Add(new ProfileModel { UserPhoto = model.UserPhoto});
-                           //dbP.ProfileDb.Add(new ProfileModel { MyTegs = model.MyTegs});
-
-
-                           //user.About_me = model.About_me;
-                           //dbP.SaveChanges();
-                       }
-                   }
-                   else ModelState.AddModelError("Error", "Error");
+                    db.SaveChanges();
+                      
                 }
-                //TODO: SubscribeUser(model.Email);
+                else ModelState.AddModelError("Error", "Error");
             }
 
-
-
-            
-            return View("Index", model);
+            return RedirectToAction("Index");
         }
-        //[HttpPost]
-        //public string Index(IEnumerable<string> selectedCities)
-        //{
-        //    if (selectedCities == null)
-        //    {
-        //        return "No cities are selected";
-        //    }
-        //    else
-        //    {
-        //        StringBuilder sb = new StringBuilder();
-        //        sb.Append("You selected – " + string.Join(",", selectedCities));
-        //        return sb.ToString();
-        //    }
-        //}
+        
         [HttpPost]
         public ActionResult saveArticleToDraft(ProfileModel model, LoginModel lm)
         {
@@ -219,19 +205,41 @@ namespace MvcApplication1.Controllers
             listSelectListItems.Add(selectList);
             List<string> listTegItems = new List<string>();
             listTegItems.Add(selectList.Text);
-
-            ProfileModel myModel = new ProfileModel()
+            ProfileModel model;
+            using (CustomDbContext db = new CustomDbContext())
             {
-                Name = "luda",
-                TegList = listSelectListItems
-                //SelectedTeg = listTegItems
 
-            };
-            return View("ForProfileEditing",myModel);
+                var currentPerson = "user1";
+                var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
+                if (user != null)
+                {
+                    var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
+                    model = new ProfileModel()
+                    {
+                        Name = myModel.Name,
+                        MyTegs = myModel.MyTegs,
+                        About_me = myModel.About_me,
+                        TegList = listSelectListItems
+                    };
+                }
+                else model = new ProfileModel() { };
+            }
+            return View("ForProfileEditing", model);
         }
         [HttpPost]
         public ActionResult ForProfileEditing(ProfileModel model)
         {
+            return View();
+        }
+        [HttpGet]
+        public ActionResult AddTeg()
+        {  
+            return View("ForProfileEditing");
+        }
+        [HttpPost]
+        public ActionResult AddTeg(ProfileModel model)
+        {
+            /////////////потом создать таблицу в бд и внести данные туда
             List<SelectListItem> listSelectListItems = new List<SelectListItem>();
             SelectListItem selectList = new SelectListItem()
             {
@@ -257,72 +265,42 @@ namespace MvcApplication1.Controllers
             listSelectListItems.Add(selectList);
             List<string> listTegItems = new List<string>();
             listTegItems.Add(selectList.Text);
-            //ProfileModel myModel = new ProfileModel()
-            //{
-            //    TegList = listSelectListItems
-            //    //SelectedTeg = listTegItems
+            model.TegList = listSelectListItems;
+            //////////////////////////
 
-            //};
-            StringBuilder sb = new StringBuilder();
-            ProfileModel myModel;
-
-            var str="";
-            if(model.SelectedTeg != null)
-            foreach (string s in model.SelectedTeg)
-               str += "fjf    " + s;
-           
-            
-                myModel = new ProfileModel()
+            var str = "";
+            if (model.SelectedTeg != null)
+                foreach (string s in model.SelectedTeg)
                 {
-                    TegList = listSelectListItems
-                    //MyTegs = listSelectListItems[model.SelectedTeg];
-                    //MyTegs = sb.Append(string.Join(" ", selectedTegs)).ToString()
-                    //SelectedTeg = listTegItems
-                };
-            
-            model.MyTegs = " dfjjff";
-            //model.SelectedTeg = model.SelectedTeg;
-                myModel = new ProfileModel()
+                    //model.TegList.SingleOrDefault(x => x.Value == s);
+
+                    str += model.TegList.SingleOrDefault(x => x.Value == s).Text + " ";
+                }
+
+            using (CustomDbContext db = new CustomDbContext())
+            {
+
+                var currentPerson = "user1";
+                var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
+                if (user != null)
                 {
-                    TegList = listSelectListItems,
-                    MyTegs = str,
-                    Name ="kate"
-                    //SelectedTeg = listTegItems
-                };
+                    var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
+                    var tegs = myModel.MyTegs;
+                    if (tegs.Contains(str))
+                        myModel.MyTegs = tegs.Replace(str, " ");
+                    else myModel.MyTegs = tegs + str;
+                    
+                    
+                    db.SaveChanges();
+                }
+                else model = new ProfileModel() { };
+            }
 
-                return RedirectToAction("AddTeg");
+
+            return RedirectToAction("ForProfileEditing");
         }
-        [HttpGet]
-        public ActionResult AddTeg(ProfileModel model, LoginModel lm)
-        {
-           
-            //using (ProfileContext db = new ProfileContext())
-            //{
-            //    var currentPerson = "Luda";
-            //    var user = db.ProfileDb.SingleOrDefault(x => x.UserName == currentPerson);
-            //    if (user != null)
-                   
-            //    model = db.ProfileDb.Where(x => x.UserName == currentPerson).SingleOrDefault();
 
-            //    //model.Name = "dd";
-            //}
-            return View("ForProfileEditing", model);
-        }
-        //[HttpPost]
-        //public ActionResult AddTeg()
-        //{
-        //    StringBuilder sb = new StringBuilder();
-
-        //    ProfileModel myModel = new ProfileModel()
-        //    {
-                
-        //         //MyTegs = sb.Append(string.Join(" ", selectedTegs)).ToString()
-        //        //SelectedTeg = listTegItems
-
-        //    };
-        //    return View( myModel);
-        //}
-
+        
         public ActionResult UploadPhoto()
         {
             return View();
@@ -350,6 +328,30 @@ namespace MvcApplication1.Controllers
                 // установка массива байтов
                 
                 model.UserPhoto = imageData;
+
+                using (CustomDbContext db = new CustomDbContext())
+                {
+                    //var id = Request.Cookies["UserId"].Value;
+                    string currentPerson;
+                    if (Request.Cookies["UserId"] != null)
+                        currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                    else currentPerson = "user1";
+                    //var currentPerson = "fhdgsdfj";
+
+                    var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
+                    if (user != null)
+                    {
+
+                        //model.UserName = "user1";
+                        var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
+                        myModel.UserPhoto = imageData;
+                        model = myModel;
+
+                        db.SaveChanges();
+
+                    }
+                    else ModelState.AddModelError("Error", "Error");
+                }
             }
             return View("Index", model);
         }

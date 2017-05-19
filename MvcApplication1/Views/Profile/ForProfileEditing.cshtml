@@ -2,7 +2,7 @@
 @model MvcApplication1.Models.ProfileModel
 
 @{
-    ViewBag.Title = "ProfileModel";
+    ViewBag.Title = "Профіль";
 }
 
 <h2>Редагування</h2>
@@ -12,30 +12,25 @@
         @*<li>@Html.ActionLink("Профіль", "Index", FormMethod.Get)</li>*@
         <li>@Html.ActionLink("Мої статті", "CreateArticle", FormMethod.Get)</li>
         <li>@Html.ActionLink("Заявки", "Requests", FormMethod.Get)</li>  
-        <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Get)</li>      
+        <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Get)</li>  
     </ul>
 </nav>
-@using (Html.BeginForm("ForProfileEditing", "Profile", FormMethod.Post))
+<div>
+@using (Html.BeginForm("AddTeg", "Profile", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
-
-    <fieldset>
-        <legend>ProfileModel</legend>
         @using (Html.BeginForm("Index", "Profile", FormMethod.Post))
         {
             @Html.TextAreaFor(model => model.About_me, new { @placeholder = "About me", @id = "area_about_me", style = "visibility:hidden" })
             @Html.ValidationMessageFor(model => model.About_me)
             <p>
                 @Html.TextBoxFor(model => model.Name, new { @placeholder = "Ім'я" })
-            @*@Html.ValidationMessageFor(model => model.Name)*@
             </p>
-
                 @*<div class="@((Model.flag_about_me)?"visible-item":"hidden-item")">Some links</div>*@
-
     <h3>Теги</h3>
             <p>
-                @Html.LabelFor(model => model.MyTegs)
+        @Html.LabelFor(model => model.MyTegs, Model.MyTegs)
             </p>
     <button id="save_about_me" onclick="hide_about_me(this)" style="visibility:hidden">Save</button>
     <script type='text/javascript'>
@@ -48,18 +43,18 @@
     
         }
         </fieldset>
-
     @*@using (Html.BeginForm("AddTeg", "Profile", FormMethod.Post))*@
             {
                 <p>
-            @*@Html.ListBoxFor(model => model.SelectedTeg, Model.TegList, new { size = 5 })*@
-            @Html.ValidationMessageFor(model => model.SelectedTeg)
-            
+        @Html.DropDownListFor(model => model.SelectedTeg, Model.TegList, new { size = 1 })
+        @Html.ValidationMessageFor(model => model.SelectedTeg)
+
                     <button type="submit" class="btn btn-default">+</button>
                 </p>
                 @Html.TextAreaFor(model => model.articleText, new { @placeholder = "Article text", @id = "area_article" })
+        }
                 @Html.ValidationMessageFor(model => model.articleText)
-
+        
                 <button id="about_me" onclick="hideme(this)"> Save article</button>
 
                 <script type='text/javascript'>
@@ -74,13 +69,30 @@
         @Html.ValidationMessageFor(model => model.About_me)
     </p>
 }
+   
+<div>
 @using (Html.BeginForm("Index", "Profile", FormMethod.Post))
 {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>ProfileModel</legend>
+        <p><h3>Ім'я</h3>
+            @Html.TextBoxFor(model => model.Name, new { @placeholder = "Ім'я" })            
+        </p>
+        @*<div class="@((Model.flag_about_me)?"visible-item":"hidden-item")">Some links</div>*@     
+        <p><h3>Про мене</h3>
+            @Html.TextAreaFor(model => model.About_me, new { @placeholder = "Про мене" })
+            
+        </p>
         <p>
                 <button>Зберегти зміни</button>
         </p>
         @Html.TextAreaFor(model => model.articleText, new { @placeholder = "Article text", @id = "area_article" })
+    </fieldset>
         @Html.ValidationMessageFor(model => model.articleText)
+    }
 
         <button id="save_article_to_draft" onclick="hideButtSaveArticle(this)"> Save article to draft</button>
         <script type='text/javascript'>
@@ -91,6 +103,9 @@
         </script>
 }
 
+<div>
+    @Html.ActionLink("Назад", "Index")
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
