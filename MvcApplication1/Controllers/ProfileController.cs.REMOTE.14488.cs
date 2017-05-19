@@ -11,7 +11,6 @@ using WebMatrix.WebData;
 using MvcApplication1.Filters;
 using System.Text;
 using System.IO;
-using MvcApplication1.Contexts;
 
 
 namespace MvcApplication1.Controllers
@@ -23,7 +22,6 @@ namespace MvcApplication1.Controllers
 
         public ActionResult Index(ProfileModel model)
         {
-            var s = Server.MapPath("/Images/short.jpg");
            // model.UserPhoto = upload.SaveAs(Server.MapPath("~/Files/" + fileName)); ;
             return View();
         }
@@ -37,7 +35,7 @@ namespace MvcApplication1.Controllers
             //bool hasLocalAccount = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
             //if (ModelState.IsValid)
             {
-                using (CustomDbContext db = new CustomDbContext())
+                using (UsersContext db = new UsersContext())
                 {
                     //
                     //db.SaveChanges();
@@ -59,27 +57,27 @@ namespace MvcApplication1.Controllers
                    string currentPerson;
                    if (Request.Cookies["UserId"] != null)
                        currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-                   else currentPerson = "user1";
+                   else currentPerson = "Luda";
                     //var currentPerson = "fhdgsdfj";
                    int id;
-                    var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
-                   if (user != null)
-                   {
-                       //id = user;
-                       using (CustomDbContext dbP = new CustomDbContext())
-                       {
-                           //dbP.ProfileModel.Add(model);
-                           //dbP.ProfileDb.Add(new ProfileModel { About_me = model.About_me });
-                           //dbP.ProfileDb.Add(new ProfileModel { Name = model.Name });
-                           //dbP.ProfileDb.Add(new ProfileModel { UserPhoto = model.UserPhoto});
-                           //dbP.ProfileDb.Add(new ProfileModel { MyTegs = model.MyTegs});
-
-
-                           //user.About_me = model.About_me;
-                           //dbP.SaveChanges();
-                       }
-                   }
-                   else ModelState.AddModelError("Error", "Error");
+                    //var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
+                    //if (user != null)
+                    //{
+                    //    //id = user;
+                    //    using (ProfileContext dbP = new ProfileContext())
+                    //    {
+                    //        dbP.ProfileDb.Add(model);
+                    //        //dbP.ProfileDb.Add(new ProfileModel { About_me = model.About_me });
+                    //        //dbP.ProfileDb.Add(new ProfileModel { Name = model.Name });
+                    //        //dbP.ProfileDb.Add(new ProfileModel { UserPhoto = model.UserPhoto});
+                    //        //dbP.ProfileDb.Add(new ProfileModel { MyTegs = model.MyTegs});
+                            
+                            
+                    //        //user.About_me = model.About_me;
+                    //        dbP.SaveChanges();
+                    //    }
+                    //}
+                    //else ModelState.AddModelError("Error", "Error");
                 }
                 //TODO: SubscribeUser(model.Email);
             }
@@ -114,51 +112,6 @@ namespace MvcApplication1.Controllers
         {
             //опубликовать статью
             return View("Index", model);
-        }
-
-        [HttpGet]
-        public ActionResult MyArticle(ProfileModel model)
-        {
-            UsersContext db = new UsersContext();
-            List<SelectListItem> listSelectListItems = new List<SelectListItem>();
-            SelectListItem selectList = new SelectListItem()
-            {
-                Text = "Взаємодія з даними",
-                Value = "1"
-            };
-            listSelectListItems.Add(selectList);
-            selectList = new SelectListItem()
-            {
-                Text = "Міграція даних",
-                Value = "2"
-            };
-            selectList = new SelectListItem()
-            {
-                Text = "Взаємодія з даними",
-                Value = "1"
-            };
-            listSelectListItems.Add(selectList);
-            selectList = new SelectListItem()
-            {
-                Text = "Принцип SOLID",
-                Value = "3"
-            };
-            listSelectListItems.Add(selectList);
-            //foreach (var article in db.UserProfiles) //тут я не знаю
-            //{
-            //    SelectListItem selectList = new SelectListItem()
-            //    {
-            //        Text = article.Name,
-            //        Value = article.ID
-            //    };
-            //    listSelectListItems.Add(selectList);
-            //}
-
-            ProfileModel myModel = new ProfileModel()
-            {
-                articleNames = listSelectListItems
-            };
-            return View(myModel);
         }
 
         [HttpGet]
@@ -219,10 +172,8 @@ namespace MvcApplication1.Controllers
             listSelectListItems.Add(selectList);
             List<string> listTegItems = new List<string>();
             listTegItems.Add(selectList.Text);
-
             ProfileModel myModel = new ProfileModel()
             {
-                Name = "luda",
                 TegList = listSelectListItems
                 //SelectedTeg = listTegItems
 
@@ -285,34 +236,22 @@ namespace MvcApplication1.Controllers
                 myModel = new ProfileModel()
                 {
                     TegList = listSelectListItems,
-                    MyTegs = str,
-                    Name ="kate"
+                    MyTegs = str
                     //SelectedTeg = listTegItems
                 };
-
-                return RedirectToAction("AddTeg");
+            
+            return View("ForProfileEditing", myModel);
         }
-        [HttpGet]
+        [HttpPost]
         public ActionResult AddTeg(ProfileModel model, LoginModel lm)
         {
-           
-            //using (ProfileContext db = new ProfileContext())
-            //{
-            //    var currentPerson = "Luda";
-            //    var user = db.ProfileDb.SingleOrDefault(x => x.UserName == currentPerson);
-            //    if (user != null)
-                   
-            //    model = db.ProfileDb.Where(x => x.UserName == currentPerson).SingleOrDefault();
-
-            //    //model.Name = "dd";
-            //}
-            return View("ForProfileEditing", model);
+            return View("Index", model);
         }
         //[HttpPost]
         //public ActionResult AddTeg()
         //{
         //    StringBuilder sb = new StringBuilder();
-
+            
         //    ProfileModel myModel = new ProfileModel()
         //    {
                 

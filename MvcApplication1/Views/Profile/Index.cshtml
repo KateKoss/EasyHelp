@@ -1,32 +1,26 @@
-﻿
+﻿@using System.Web.Mvc.Html;
 @model MvcApplication1.Models.ProfileModel
 
 @{
     ViewBag.Title = "Profile";
 }
 
-<h2>Профіль</h2>@Html.ActionLink("Редагувати", "ForProfileEditing")
+<h2>Профіль</h2>
+@Html.ActionLink("Редагувати", "ForProfileEditing")
+<nav>
+    <ul id="menu">
+        <li>@Html.ActionLink("Мої статті", "MyArticle", FormMethod.Get)</li>
+        <li>@Html.ActionLink("Заявки", "Requests", FormMethod.Get)</li>
+        <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Get)</li>
+    </ul>
+</nav>
 
-
-<div>
-    @using (Html.BeginForm())
-    {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true)
         @*@{Html.EnableUnobtrusiveJavaScript(true);}*@
-
-        <nav>
-            <ul id="menu">
-                <li>@Html.ActionLink("Мої статті", "CreateArticle", FormMethod.Get)</li>
-                <li>@Html.ActionLink("Заявки", "Requests", FormMethod.Get)</li>
-                <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Get)</li>
-            </ul>
-        </nav>
+        
         <fieldset>
             <legend>ProfileModel</legend>
-            
-            
-            
             @using (Html.BeginForm("UploadPhoto", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 <img src='Images/userphoto2.jpg' alt="фото" /><br />
@@ -43,13 +37,14 @@
                  @Html.LabelFor(model => model.Name)
             <p>
                 Знайти ментора
-                @Html.TextBoxFor(m => m.TextSearhAssistants, new { @placeholder = "Знайти ментора" })
+            </p>
+            @Html.TextBoxFor(m => m.TextSearhAssistants, new { @placeholder = "Знайти ментора" })
             </p>
                 @*<div>
 
 
                     <p>
-                        @Html.ListBoxFor(model => model.SelectedTeg, Model.TegList, new { size = 5 })
+                @*@Html.ListBoxFor(model => model.SelectedTeg, Model.TegList, new { size = 5 })*@
                     </p>
                 </p>
             </div>*@<div>
@@ -57,12 +52,10 @@
 <p>
                 @Html.LabelFor(model => model.MyTegs)
             </p>
-        </div>
             @Html.LabelFor(model => model.About_me)
             @Html.ValidationMessageFor(model => model.About_me)
-    </fieldset>
-    }
-</div>
+</fieldset>
+
 
 
 @section Scripts {

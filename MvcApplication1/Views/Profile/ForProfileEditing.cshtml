@@ -1,4 +1,5 @@
-﻿@model MvcApplication1.Models.ProfileModel
+﻿@using System.Web.Mvc.Html;
+@model MvcApplication1.Models.ProfileModel
 
 @{
     ViewBag.Title = "ProfileModel";
@@ -14,56 +15,84 @@
         <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Get)</li>      
     </ul>
 </nav>
-<div>
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary(true)
+@using (Html.BeginForm("ForProfileEditing", "Profile", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
 
     <fieldset>
         <legend>ProfileModel</legend>
-        <p>
-            @Html.TextBoxFor(model => model.Name, new { @placeholder = "Ім'я" })
-            @*@Html.ValidationMessageFor(model => model.Name)*@
-        </p>
-
-        @*<div class="@((Model.flag_about_me)?"visible-item":"hidden-item")">Some links</div>*@
-
-        <h3>Теги</h3>
-        <p>
-            @Html.LabelFor(model => model.MyTegs)
-        </p>
-
-        @*@using (Html.BeginForm("AddTeg", "Profile", FormMethod.Post))*@
+        @using (Html.BeginForm("Index", "Profile", FormMethod.Post))
         {
-        <p>
+            @Html.TextAreaFor(model => model.About_me, new { @placeholder = "About me", @id = "area_about_me", style = "visibility:hidden" })
+            @Html.ValidationMessageFor(model => model.About_me)
+            <p>
+                @Html.TextBoxFor(model => model.Name, new { @placeholder = "Ім'я" })
+            @*@Html.ValidationMessageFor(model => model.Name)*@
+            </p>
+
+                @*<div class="@((Model.flag_about_me)?"visible-item":"hidden-item")">Some links</div>*@
+
+    <h3>Теги</h3>
+            <p>
+                @Html.LabelFor(model => model.MyTegs)
+            </p>
+    <button id="save_about_me" onclick="hide_about_me(this)" style="visibility:hidden">Save</button>
+    <script type='text/javascript'>
+        function hide_about_me(obj) {
+            //obj.parentNode.style.display = "none";
+            document.getElementById("save_about_me").style.visibility = "hidden";
+            document.getElementById("area_about_me").style.visibility = "hidden";
+        }
+    </script>
+    
+        }
+        </fieldset>
+
+    @*@using (Html.BeginForm("AddTeg", "Profile", FormMethod.Post))*@
+            {
+                <p>
             @*@Html.ListBoxFor(model => model.SelectedTeg, Model.TegList, new { size = 5 })*@
             @Html.ValidationMessageFor(model => model.SelectedTeg)
             
-            <button type="submit" class="btn btn-default">+</button>
-        </p>
-        }
-
-        <p>
-            @Html.TextAreaFor(model => model.About_me, new { @placeholder = "Про мене" })
-            @Html.ValidationMessageFor(model => model.About_me)
-        </p>
-    </fieldset>
-    }
-            @using (Html.BeginForm("Index", "Profile", FormMethod.Post))
-            {
-                <p>
-                    <button>Зберегти зміни</button>
+                    <button type="submit" class="btn btn-default">+</button>
                 </p>
+                @Html.TextAreaFor(model => model.articleText, new { @placeholder = "Article text", @id = "area_article" })
+                @Html.ValidationMessageFor(model => model.articleText)
+
+                <button id="about_me" onclick="hideme(this)"> Save article</button>
+
+                <script type='text/javascript'>
+
+                    function hideme(obj) {
+                        document.getElementById("area_article").style.display = "none";
+                    }
+                </script>
             }
-          
+    <p>
+        @Html.TextAreaFor(model => model.About_me, new { @placeholder = "Про мене" })
+        @Html.ValidationMessageFor(model => model.About_me)
+    </p>
+}
+@using (Html.BeginForm("Index", "Profile", FormMethod.Post))
+{
+        <p>
+                <button>Зберегти зміни</button>
+        </p>
+        @Html.TextAreaFor(model => model.articleText, new { @placeholder = "Article text", @id = "area_article" })
+        @Html.ValidationMessageFor(model => model.articleText)
 
-</div>
+        <button id="save_article_to_draft" onclick="hideButtSaveArticle(this)"> Save article to draft</button>
+        <script type='text/javascript'>
+            function hideButtSaveArticle(obj) {
+                document.getElementById("Save_Article_To_Draft").style.visibility = "hidden";
+                document.getElementById("area_article").style.visibility = "hidden";
+            }
+        </script>
+}
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+
