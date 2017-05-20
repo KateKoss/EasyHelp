@@ -23,65 +23,67 @@ namespace MvcApplication1.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            ProfileModel model;
-            //var s = Server.MapPath("/Images/short.jpg");
-           // model.UserPhoto = upload.SaveAs(Server.MapPath("~/Files/" + fileName)); ;
-            using (CustomDbContext db = new CustomDbContext())
-            {
-                
-                var currentPerson = "user1";
-                var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
-                if (user != null)
-                {
-                    var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
-                    if (myModel.UserPhoto == null)
-                    {
+            //ProfileModel model;
+            ////var s = Server.MapPath("/Images/short.jpg");
+            //// model.UserPhoto = upload.SaveAs(Server.MapPath("~/Files/" + fileName)); ;
+            //using (CustomDbContext db = new CustomDbContext())
+            //{
+            //    
+            //    var currentPerson = "user1";
+            //    var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
+            //    if (user != null)
+            //    {
+            //        var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
+            //        if (myModel.UserPhoto == null)
+            //        {
+            //
+            //        }
+            //        model = new ProfileModel()
+            //        {
+            //            Name = myModel.Name,
+            //            MyTegs = myModel.MyTegs,
+            //            About_me = myModel.About_me,
+            //            UserPhoto = myModel.UserPhoto
+            //        };
+            //    }
+            //    else model = new ProfileModel(){ };
+            //}            
+            //
+            //return View("Index", model);
 
-                    }
-                    model = new ProfileModel()
-                    {
-                        Name = myModel.Name,
-                        MyTegs = myModel.MyTegs,
-                        About_me = myModel.About_me,
-                        UserPhoto = myModel.UserPhoto
-                    };
-                }
-                else model = new ProfileModel(){ };
-            }            
-
-            return View("Index", model);
+            return View("Index");//тебе эта строчка не нужна
         }
         
         
         [HttpPost]
         public ActionResult Index(ProfileModel model, LoginModel lm )
         {
-            using (CustomDbContext db = new CustomDbContext())
-            {
-                //var id = Request.Cookies["UserId"].Value;
-                string currentPerson;
-                if (Request.Cookies["UserId"] != null)
-                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-                else currentPerson = "user1";
-                //var currentPerson = "fhdgsdfj";
-               
-                var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
-                if (user != null)
-                {
-                       
-                    model.UserName = "user1";
-                    var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
-                    myModel.Name = model.Name;
-                    myModel.About_me = model.About_me;
-                    myModel.MyTegs = model.MyTegs;
-                    //dbP.ProfileModel.Add(model);
-                    //dbP.ProfileDb.Add(new ProfileModel { About_me = model.About_me });
+            //using (CustomDbContext db = new CustomDbContext())
+            //{
+            //    //var id = Request.Cookies["UserId"].Value;
+            //    string currentPerson;
+            //    if (Request.Cookies["UserId"] != null)
+            //        currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+            //    else currentPerson = "user1";
+            //    //var currentPerson = "fhdgsdfj";
+            //   
+            //    var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
+            //    if (user != null)
+            //    {
+            //           
+            //        model.UserName = "user1";
+            //        var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
+            //        myModel.Name = model.Name;
+            //        myModel.About_me = model.About_me;
+            //        myModel.MyTegs = model.MyTegs;
+            //        //dbP.ProfileModel.Add(model);
+            //        //dbP.ProfileDb.Add(new ProfileModel { About_me = model.About_me });
                     
-                    db.SaveChanges();
-                      
-                }
-                else ModelState.AddModelError("Error", "Error");
-            }
+            //        db.SaveChanges();
+            //          
+            //    }
+            //    else ModelState.AddModelError("Error", "Error");
+            //}
 
             return RedirectToAction("Index");
         }
@@ -97,6 +99,51 @@ namespace MvcApplication1.Controllers
         {
             //опубликовать статью
             return View("Index", model);
+        }
+
+        [HttpGet]
+        public ActionResult MyArticle(ProfileModel model)
+        {
+            //UsersContext db = new UsersContext();
+            List<SelectListItem> listSelectListItems = new List<SelectListItem>();
+            SelectListItem selectList = new SelectListItem()
+            {
+                Text = "Взаємодія з даними",
+                Value = "1"
+            };
+            listSelectListItems.Add(selectList);
+            selectList = new SelectListItem()
+            {
+                Text = "Міграція даних",
+                Value = "2"
+            };
+            selectList = new SelectListItem()
+            {
+                Text = "Взаємодія з даними",
+                Value = "1"
+            };
+            listSelectListItems.Add(selectList);
+            selectList = new SelectListItem()
+            {
+                Text = "Принцип SOLID",
+                Value = "3"
+            };
+            listSelectListItems.Add(selectList);
+            //foreach (var article in db.UserProfiles) //тут я не знаю
+            //{
+            //    SelectListItem selectList = new SelectListItem()
+            //    {
+            //        Text = article.Name,
+            //        Value = article.ID
+            //    };
+            //    listSelectListItems.Add(selectList);
+            //}
+
+            ProfileModel myModel = new ProfileModel()
+            {
+                articleNames = listSelectListItems
+            };
+            return View(myModel);
         }
 
         [HttpGet]

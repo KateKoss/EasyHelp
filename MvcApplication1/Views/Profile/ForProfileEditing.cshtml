@@ -30,6 +30,8 @@
 }
    
 <div>
+@using (Html.BeginForm("Index", "Profile", FormMethod.Post))
+{
     @using (Html.BeginForm("Index", "Profile", FormMethod.Post))
     {
         @Html.AntiForgeryToken()

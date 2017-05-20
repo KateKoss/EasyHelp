@@ -12,8 +12,7 @@
     </ul>
 </nav>
 <div>
-    @using (Html.BeginForm())
-    {
+
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true)
         <fieldset>
@@ -50,7 +49,10 @@
                 </script>
             }
         </fieldset>
-    }
+
+</div>
+<div>
+    @Html.ActionLink("Назад", "MyArticle")
 </div>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
