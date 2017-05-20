@@ -76,10 +76,7 @@ namespace MvcApplication1.Controllers
                     myModel.MyTegs = model.MyTegs;
                     //dbP.ProfileModel.Add(model);
                     //dbP.ProfileDb.Add(new ProfileModel { About_me = model.About_me });
-                    //dbP.ProfileDb.Add(new ProfileModel { Name = model.Name });
-                    //dbP.ProfileDb.Add(new ProfileModel { UserPhoto = model.UserPhoto});
-                    //dbP.ProfileDb.Add(new ProfileModel { MyTegs = model.MyTegs});
-
+                    
                     db.SaveChanges();
                       
                 }

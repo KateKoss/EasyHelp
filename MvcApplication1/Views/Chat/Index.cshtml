@@ -1,0 +1,81 @@
+﻿@model MvcApplication1.Models.ChatModel
+@{
+    ViewBag.Title = "Чат";
+}
+
+<h2>Чат</h2>
+
+<head>
+    <title></title>
+    <script src="../../Scripts/Chat.js"></script>
+
+    <style type="text/css">
+        
+    </style>
+
+</head>
+<body>
+    
+        
+            <div id="YourNickname">
+            </div>
+
+            <div id="LastRefresh">
+            </div>
+
+            <div id="container">
+                <div class="box" id="LoginPanel">
+                    Nick name :
+                    <input type="text" id="txtNickName" />
+                    <button id="btnLogin" value="Start">
+                        Start
+                    </button>
+                </div>
+            </div>
+
+            <div id="Error">
+            </div>
+            @*<button id="Btn_Add" text="Добавить"  onclick="Btn_Add_Click"></button>*@
+               
+
+            @Ajax.ActionLink("Login", "Index", "Chat", new { thisUserLoggedOn = "" }, new AjaxOptions { UpdateTargetId = "container", OnFailure = "LoginOnFailure", OnSuccess = "LoginOnSuccess" }, new { @id = "LoginButton"@*, @onclick = "LoginOnSuccess()"*@ ,
+                                                                                                                                                                                                          @style = "visibility:hidden;"})
+            @*<script language="javascript" type="text/javascript">
+        $(document).ready(function () {
+            $("#txtNickName").val("").focus();
+            $("#btnLogin").click(function () {
+                //alert("Hello world!");
+                var nickName = $("#txtNickName").val();
+                if (nickName) {
+                    //call the Index method of the controller and pass the attribute "logOn"
+                    var href = "/Chat?user=" + encodeURIComponent(nickName);
+                    href = href + "&logOn=true";
+                    $("#LoginButton").attr("href", href).click();
+
+                    //the nickname is persisted here
+                    $("#YourNickname").text(nickName);
+
+                }
+            });
+        });
+        function LoginOnSuccess(result) {
+            //alert('this is ajaxSuccess' + result);
+           
+
+        }
+        function LoginOnFailure(result) {
+            //alert('bbbbb' + result);
+            $("#YourNickname").val("");
+            $("#Error").text(result.responseText);
+            setTimeout("$('#Error').empty();", 2000);
+        }
+        
+    </script>*@
+            
+     
+    
+    
+</body>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
