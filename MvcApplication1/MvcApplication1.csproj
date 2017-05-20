@@ -331,6 +331,7 @@
     <Content Include="Views\Profile\CreateArticle.cshtml" />
     <Content Include="Views\Profile\Requests.cshtml" />
     <Content Include="Views\Profile\FindAssosiates.cshtml" />
+    <Content Include="Views\Profile\MyArticle.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201705171121431_m.resx">

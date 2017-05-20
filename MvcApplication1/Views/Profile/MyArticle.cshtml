@@ -4,7 +4,13 @@
     ViewBag.Title = "MyArticle";
 }
 <h2>Мої статті</h2>
-
+<nav>
+    <ul id="menu">
+        <li>@Html.ActionLink("Профіль", "Index", FormMethod.Get)</li>
+        <li>@Html.ActionLink("Заявки", "Requests", FormMethod.Get)</li>
+        <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Get)</li>
+    </ul>
+</nav>
 @Html.ListBoxFor(m => m.articleName, Model.articleNames, new { size = 3 })
 <br />
 @using (Html.BeginForm("CreateArticle", "Profile", FormMethod.Get))
@@ -16,3 +22,6 @@
 <p>
     <button>Редагувати статтю</button>
 </p>
+<div>
+    @Html.ActionLink("Назад", "Index")
+</div>
