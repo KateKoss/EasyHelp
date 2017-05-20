@@ -12,134 +12,261 @@ using MvcApplication1.Filters;
 using System.Text;
 using System.IO;
 using MvcApplication1.Contexts;
+using System.Reflection;
 
 
 namespace MvcApplication1.Controllers
 {
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    public class MultiButtonAttribute : ActionNameSelectorAttribute
+    {
+        public string MatchFormKey { get; set; }
+        public string MatchFormValue { get; set; }
+        public override bool IsValidName(ControllerContext controllerContext, string actionName, MethodInfo methodInfo)
+        {
+            return controllerContext.HttpContext.Request[MatchFormKey] != null &&
+                controllerContext.HttpContext.Request[MatchFormKey] == MatchFormValue;
+        }
+    }
     public class ProfileController : Controller
     {
-        //
-        // GET: /Profile/
         [HttpGet]
         public ActionResult Index()
         {
-            //ProfileModel model;
-            ////var s = Server.MapPath("/Images/short.jpg");
-            //// model.UserPhoto = upload.SaveAs(Server.MapPath("~/Files/" + fileName)); ;
-            //using (CustomDbContext db = new CustomDbContext())
-            //{
-            //    
-            //    var currentPerson = "user1";
-            //    var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
-            //    if (user != null)
-            //    {
-            //        var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
-            //        if (myModel.UserPhoto == null)
-            //        {
-            //
-            //        }
-            //        model = new ProfileModel()
-            //        {
-            //            Name = myModel.Name,
-            //            MyTegs = myModel.MyTegs,
-            //            About_me = myModel.About_me,
-            //            UserPhoto = myModel.UserPhoto
-            //        };
-            //    }
-            //    else model = new ProfileModel(){ };
-            //}            
-            //
-            //return View("Index", model);
+            ProfileModel model;
+            
+            using (CustomDbContext db = new CustomDbContext())
+            {
+                string currentPerson;
+                if (Request.Cookies["UserId"] != null)
+                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                else currentPerson = "user1";
+                var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
+                if (user != null)
+                {
+                    var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
+                    if (myModel.UserPhoto == null)
+                    {
 
-            return View("Index");//тебе эта строчка не нужна
+                    }
+                    model = new ProfileModel()
+                    {
+                        Name = myModel.Name,
+                        MyTegs = myModel.MyTegs,
+                        About_me = myModel.About_me,
+                        UserPhoto = myModel.UserPhoto
+                    };
+                }
+                else model = new ProfileModel() { };
+            }
+
+            return View("Index", model);
         }
-        
-        
-        [HttpPost]
-        public ActionResult Index(ProfileModel model, LoginModel lm )
-        {
-            //using (CustomDbContext db = new CustomDbContext())
-            //{
-            //    //var id = Request.Cookies["UserId"].Value;
-            //    string currentPerson;
-            //    if (Request.Cookies["UserId"] != null)
-            //        currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-            //    else currentPerson = "user1";
-            //    //var currentPerson = "fhdgsdfj";
-            //   
-            //    var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
-            //    if (user != null)
-            //    {
-            //           
-            //        model.UserName = "user1";
-            //        var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
-            //        myModel.Name = model.Name;
-            //        myModel.About_me = model.About_me;
-            //        myModel.MyTegs = model.MyTegs;
-            //        //dbP.ProfileModel.Add(model);
-            //        //dbP.ProfileDb.Add(new ProfileModel { About_me = model.About_me });
-                    
-            //        db.SaveChanges();
-            //          
-            //    }
-            //    else ModelState.AddModelError("Error", "Error");
-            //}
 
+
+        [HttpPost]
+        public ActionResult Index(ProfileModel model)
+        {
+            using (CustomDbContext db = new CustomDbContext())
+            {                
+                string currentPerson;
+                if (Request.Cookies["UserId"] != null)
+                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                else currentPerson = "user1";
+                
+                var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
+                if (user != null)
+                {
+                    var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
+                    myModel.Name = model.Name;
+                    myModel.About_me = model.About_me;
+                    myModel.MyTegs = model.MyTegs;
+                    
+                    db.SaveChanges();
+                }
+                else ModelState.AddModelError("Error", "Error");
+            }
             return RedirectToAction("Index");
         }
-        
+
         [HttpPost]
-        public ActionResult saveArticleToDraft(ProfileModel model, LoginModel lm)
+        [MultiButton(MatchFormKey = "action", MatchFormValue = "saveToDraft")]
+        public ActionResult SaveArticleToDraft(ArticleModel model)
         {
+            using (CustomDbContext db = new CustomDbContext())
+            {
+                string articleid;
+                string currentPerson;
+                if (Request.Cookies["UserId"] != null)
+                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                else currentPerson = "user1";
+
+                //чи створював користувач вже статті
+                var myModel = db.ArticleModel.FirstOrDefault(x => x.createdBy == currentPerson);
+                if (myModel == null)
+                {
+                    articleid = currentPerson + '_' + 1;
+                    //якщо ні, то id статті 1, бо ця стаття в нього перша
+                    db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson });
+                    db.SaveChanges();
+                }
+                //якщо користувач обрав існуючу статтю для редагування
+                if (model.articleID != null)
+                {
+                    articleid = currentPerson + "_" + model.articleID;
+                    //перевіряємо чи власне є ця стаття у бд
+                    myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleid);
+                    if (myModel!=null)//якщо є
+                    {
+                        myModel.articleTitle = model.articleTitle;
+                        myModel.articleText = model.articleText;
+                        myModel.isPublished = false;
+                    }
+                    else
+                    {
+                        
+                        db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson });
+                        myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleid);
+                        if (myModel != null)
+                        {
+                            myModel.articleTitle = model.articleTitle;
+                            myModel.articleText = model.articleText;
+                            myModel.isPublished = false;
+                        }
+                       
+                    }
+                }
+                else //якщо користувач створює нову статтю, проте в нього були вже створені статті
+                {
+                    var articleCount = db.ArticleModel.Count(x => x.createdBy == currentPerson);
+                    articleid = currentPerson + '_' + (articleCount + 1);
+                    db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson });
+                    myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleid);
+                    if (myModel != null)
+                    {
+                        myModel.articleTitle = model.articleTitle;
+                        myModel.articleText = model.articleText;
+                        myModel.isPublished = false;
+                    }
+                    
+                }
+                
+                db.SaveChanges();                
+            }
+
             //сохранить статью в бд
-            return View("Index", model);
+            return RedirectToAction("Index");
         }
 
-        public ActionResult publishArticle(ProfileModel model, LoginModel lm)
+        [HttpPost]
+        [MultiButton(MatchFormKey = "action", MatchFormValue = "publish")]
+        public ActionResult PublishArticle(ArticleModel model)
         {
+            using (CustomDbContext db = new CustomDbContext())
+            {
+                string articleid;
+                string currentPerson;
+                if (Request.Cookies["UserId"] != null)
+                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                else currentPerson = "user1";
+
+                //чи створював користувач вже статті
+                var myModel = db.ArticleModel.FirstOrDefault(x => x.createdBy == currentPerson);
+                if (myModel == null)
+                {
+                    articleid = currentPerson + '_' + 1;
+                    //якщо ні, то id статті 1, бо ця стаття в нього перша
+                    db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson });
+                    db.SaveChanges();
+                }
+                //якщо користувач обрав існуючу статтю для редагування
+                if (model.articleID != null)
+                {
+                    articleid = currentPerson + "_" + model.articleID;
+                    //перевіряємо чи власне є ця стаття у бд
+                    myModel = db.ArticleModel.SingleOrDefault(x => x.articleID == articleid);
+                    if (myModel != null)//якщо є
+                    {
+                        myModel.articleTitle = model.articleTitle;
+                        myModel.articleText = model.articleText;
+                        myModel.isPublished = true;
+                    }
+                    else
+                    {
+                        db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson });
+                        myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleid);
+                        if (myModel != null)
+                        {
+                            myModel.articleTitle = model.articleTitle;
+                            myModel.articleText = model.articleText;
+                            myModel.isPublished = true;
+                        }
+
+                    }
+                }
+                else //якщо користувач створює нову статтю, проте в нього були вже створені статті
+                {
+                    var articleCount = db.ArticleModel.Count(x => x.createdBy == currentPerson);
+                    articleid = currentPerson + '_' + (articleCount + 1);
+                    db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson });
+                    myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleid);
+                    if (myModel != null)
+                    {
+                        myModel.articleTitle = model.articleTitle;
+                        myModel.articleText = model.articleText;
+                        myModel.isPublished = true;
+                    }
+
+                }
+
+                db.SaveChanges();
+            }
             //опубликовать статью
-            return View("Index", model);
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
-        public ActionResult MyArticle(ProfileModel model)
+        public ActionResult MyArticle()
         {
-            //UsersContext db = new UsersContext();
+            
             List<SelectListItem> listSelectListItems = new List<SelectListItem>();
-            SelectListItem selectList = new SelectListItem()
-            {
-                Text = "Взаємодія з даними",
-                Value = "1"
-            };
-            listSelectListItems.Add(selectList);
-            selectList = new SelectListItem()
-            {
-                Text = "Міграція даних",
-                Value = "2"
-            };
-            selectList = new SelectListItem()
-            {
-                Text = "Взаємодія з даними",
-                Value = "1"
-            };
-            listSelectListItems.Add(selectList);
-            selectList = new SelectListItem()
-            {
-                Text = "Принцип SOLID",
-                Value = "3"
-            };
-            listSelectListItems.Add(selectList);
-            //foreach (var article in db.UserProfiles) //тут я не знаю
+            //SelectListItem selectList = new SelectListItem()
             //{
-            //    SelectListItem selectList = new SelectListItem()
-            //    {
-            //        Text = article.Name,
-            //        Value = article.ID
-            //    };
-            //    listSelectListItems.Add(selectList);
-            //}
-
-            ProfileModel myModel = new ProfileModel()
+            //    Text = "Взаємодія з даними",
+            //    Value = "1"
+            //};
+            //listSelectListItems.Add(selectList);
+            //selectList = new SelectListItem()
+            //{
+            //    Text = "Міграція даних",
+            //    Value = "2"
+            //};
+            
+            //listSelectListItems.Add(selectList);
+            //selectList = new SelectListItem()
+            //{
+            //    Text = "Принцип SOLID",
+            //    Value = "3"
+            //};
+            //listSelectListItems.Add(selectList);
+            using (CustomDbContext db = new CustomDbContext())
+            {
+                string currentPerson;
+                if (Request.Cookies["UserId"] != null)
+                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                else currentPerson = "user1";
+                
+                foreach (var article in db.ArticleModel.Where(x => x.createdBy == currentPerson)) 
+                {
+                    SelectListItem selectList = new SelectListItem()
+                    {
+                        Text = article.articleTitle,
+                        Value = article.articleID
+                    };
+                    listSelectListItems.Add(selectList);
+                }
+            }
+            ArticleModel myModel = new ArticleModel()
             {
                 articleNames = listSelectListItems
             };
@@ -147,8 +274,69 @@ namespace MvcApplication1.Controllers
         }
 
         [HttpGet]
-        public ActionResult CreateArticle(ProfileModel model)
+        public ActionResult CreateArticle(ArticleModel model)
         {
+            return View("CreateArticle", model);
+        }
+
+        [HttpGet]
+        public ActionResult EditArticle(ArticleModel model)
+        {
+            return View("CreateArticle", model);
+        }
+
+        [HttpPost]
+        public ActionResult EditArticle(ArticleModel model, LoginModel lm)
+        {
+            List<SelectListItem> listSelectListItems = new List<SelectListItem>();
+                        
+            using (CustomDbContext db = new CustomDbContext())
+            {
+                string currentPerson;
+                if (Request.Cookies["UserId"] != null)
+                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                else currentPerson = "user1";
+
+                foreach (var article in db.ArticleModel.Where(x => x.createdBy == currentPerson))
+                {
+                    SelectListItem selectList = new SelectListItem()
+                    {
+                        Text = article.articleTitle,
+                        Value = article.articleID
+                    };
+                    listSelectListItems.Add(selectList);
+                }
+            }
+            model.articleNames = listSelectListItems;
+            var str = "";
+            if (model.articleName != null)
+                foreach (string s in model.articleName)
+                {
+                    var str1 = model.articleNames.FirstOrDefault(x => x.Value == s).Text;
+                    str += str1;
+                    model.articleID = s;
+                }
+
+            using (CustomDbContext db = new CustomDbContext())
+            {
+
+                string currentPerson;
+                if (Request.Cookies["UserId"] != null)
+                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                else currentPerson = "user1";
+                
+                var myModel = db.ArticleModel.FirstOrDefault(x => x.createdBy == currentPerson);
+                if (myModel != null)
+                { 
+                    
+                    model.articleTitle = str;
+                    if (str!="")
+                        model.articleText = myModel.articleText;
+                    model.articleNames = listSelectListItems;
+                    
+                }
+                
+            }
             return View("CreateArticle", model);
         }
 
@@ -176,6 +364,7 @@ namespace MvcApplication1.Controllers
         {
             return View("Requests", model);
         }
+        
         [HttpGet]
         public ActionResult ForProfileEditing()
         {
@@ -208,7 +397,10 @@ namespace MvcApplication1.Controllers
             using (CustomDbContext db = new CustomDbContext())
             {
 
-                var currentPerson = "user1";
+                string currentPerson;
+                if (Request.Cookies["UserId"] != null)
+                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                else currentPerson = "user1";
                 var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
                 if (user != null)
                 {
@@ -232,7 +424,7 @@ namespace MvcApplication1.Controllers
         }
         [HttpGet]
         public ActionResult AddTeg()
-        {  
+        {
             return View("ForProfileEditing");
         }
         [HttpPost]
@@ -279,7 +471,10 @@ namespace MvcApplication1.Controllers
             using (CustomDbContext db = new CustomDbContext())
             {
 
-                var currentPerson = "user1";
+                string currentPerson;
+                if (Request.Cookies["UserId"] != null)
+                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                else currentPerson = "user1";
                 var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
                 if (user != null)
                 {
@@ -288,8 +483,8 @@ namespace MvcApplication1.Controllers
                     if (tegs.Contains(str))
                         myModel.MyTegs = tegs.Replace(str, " ");
                     else myModel.MyTegs = tegs + str;
-                    
-                    
+
+
                     db.SaveChanges();
                 }
                 else model = new ProfileModel() { };
@@ -299,7 +494,7 @@ namespace MvcApplication1.Controllers
             return RedirectToAction("ForProfileEditing");
         }
 
-        
+
         public ActionResult UploadPhoto()
         {
             return View();
@@ -308,46 +503,37 @@ namespace MvcApplication1.Controllers
         [HttpPost]
         public ActionResult UploadPhoto(ProfileModel model, HttpPostedFileBase upload)
         {
-            
+
             if (ModelState.IsValid && upload != null)
             {
                 // получаем имя файла
                 string fileName = System.IO.Path.GetFileName(upload.FileName);
                 // сохраняем файл в папку Files в проекте
                 upload.SaveAs(Server.MapPath("~/Files/" + fileName));
-                ////считаем загруженный файл в массив
-                //byte[] avatar = new byte[upload.ContentLength];
-                //upload.InputStream.Read(avatar, 0, upload.ContentLength);
+                
                 byte[] imageData = null;
                 // считываем переданный файл в массив байтов
                 using (var binaryReader = new BinaryReader(upload.InputStream))
                 {
                     imageData = binaryReader.ReadBytes(upload.ContentLength);
                 }
-                // установка массива байтов
-                
                 model.UserPhoto = imageData;
 
                 using (CustomDbContext db = new CustomDbContext())
-                {
-                    //var id = Request.Cookies["UserId"].Value;
+                {                    
                     string currentPerson;
                     if (Request.Cookies["UserId"] != null)
                         currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
                     else currentPerson = "user1";
-                    //var currentPerson = "fhdgsdfj";
-
+                    
                     var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
                     if (user != null)
                     {
-
-                        //model.UserName = "user1";
                         var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
                         myModel.UserPhoto = imageData;
                         model = myModel;
 
                         db.SaveChanges();
-
                     }
                     else ModelState.AddModelError("Error", "Error");
                 }

@@ -1,7 +1,6 @@
-﻿@using System.Web.Mvc.Html;
-@model MvcApplication1.Models.ProfileModel
+﻿@model MvcApplication1.Models.ArticleModel
 @{
-    ViewBag.Title = "MyArticle";
+    ViewBag.Title = "Статті";
 }
 <h2>Мої статті</h2>
 <nav>
@@ -11,17 +10,22 @@
         <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Get)</li>
     </ul>
 </nav>
-@Html.ListBoxFor(m => m.articleName, Model.articleNames, new { size = 3 })
-<br />
+
 @using (Html.BeginForm("CreateArticle", "Profile", FormMethod.Get))
 {
     <p>
         <button>Створити статтю</button>
     </p>
 }
-<p>
-    <button>Редагувати статтю</button>
-</p>
+@using (Html.BeginForm("EditArticle", "Profile", FormMethod.Post))
+{ 
+    <br />    
+    @Html.ListBoxFor(m => m.articleName, Model.articleNames, new { size = 3 })
+    <p>
+        <button>Редагувати статтю</button>
+    </p>
+}
+
 <div>
     @Html.ActionLink("Назад", "Index")
 </div>

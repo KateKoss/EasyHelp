@@ -197,16 +197,21 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201705171121431_m.cs" />
-    <Compile Include="Migrations\201705171121431_m.Designer.cs">
-      <DependentUpon>201705171121431_m.cs</DependentUpon>
+    <Compile Include="Migrations\201705201650080_1.cs" />
+    <Compile Include="Migrations\201705201650080_1.Designer.cs">
+      <DependentUpon>201705201650080_1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201705171125489_m1.cs" />
-    <Compile Include="Migrations\201705171125489_m1.Designer.cs">
-      <DependentUpon>201705171125489_m1.cs</DependentUpon>
+    <Compile Include="Migrations\201705201834433_2.cs" />
+    <Compile Include="Migrations\201705201834433_2.Designer.cs">
+      <DependentUpon>201705201834433_2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705201920175_3.cs" />
+    <Compile Include="Migrations\201705201920175_3.Designer.cs">
+      <DependentUpon>201705201920175_3.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\ArticleModel.cs" />
     <Compile Include="Models\ChatModel.cs" />
     <Compile Include="Models\ProfileModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -337,13 +342,17 @@
     <Content Include="Views\Chat\Index.cshtml" />
     <Content Include="Views\Chat\Lobby.cshtml" />
     <Content Include="Views\Chat\ChatHistory.cshtml" />
+    <Content Include="Views\Profile\MyArticle.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201705171121431_m.resx">
-      <DependentUpon>201705171121431_m.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201705201650080_1.resx">
+      <DependentUpon>201705201650080_1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705171125489_m1.resx">
-      <DependentUpon>201705171125489_m1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201705201834433_2.resx">
+      <DependentUpon>201705201834433_2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705201920175_3.resx">
+      <DependentUpon>201705201920175_3.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

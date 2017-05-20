@@ -1,53 +1,28 @@
-﻿@model MvcApplication1.Models.ProfileModel
+﻿@model MvcApplication1.Models.ArticleModel
 @{
-    ViewBag.Title = "CreateArticle";
+    ViewBag.Title = "Створити статтю";
 }
 
-<h2>Створити статтю</h2>
-<nav>
-    <ul id="menu">
-        <li>@Html.ActionLink("Профіль", "Index", FormMethod.Get)</li>
-        <li>@Html.ActionLink("Заявки", "Requests", FormMethod.Get)</li>
-        <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Get)</li>
-    </ul>
-</nav>
 <div>
 
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true)
         <fieldset>
 
-            @using (Html.BeginForm("saveArticleToDraft", "Profile", FormMethod.Post))
+            @using (Html.BeginForm("SaveActicleToDraft", "Profile", FormMethod.Post))
             {
-
                 <p>
-                    <h3>Article name    </h3>
-                    <input type="submit" value="Edit article name" />
+                    @Html.TextBoxFor(model => model.articleTitle, new { @placeholder = "Навза статті" })                    
                 </p>
-                @Html.TextAreaFor(model => model.articleText, new { @placeholder = "Article text", @id = "area_article" })
+                @Html.TextAreaFor(model => model.articleText, new { @placeholder = "Текст статті"})
                 @Html.ValidationMessageFor(model => model.articleText)
                 <p>
-                    <button id="save_article_to_draft" onclick="hideButtSaveArticle(this)"> Save article to draft</button>
+                    <button type="submit" name="action" value="saveToDraft">Зберегти як чернетку</button>
+                    <button type="submit" name="action" value="publish">Публікувати</button>
                 </p>
-                <script type='text/javascript'>
-                    function hideButtSaveArticle(obj) {
-                        document.getElementById("Save_Article_To_Draft").style.visibility = "hidden";
-                        document.getElementById("area_article").style.visibility = "hidden";
-                    }
-                </script>
+                @Html.TextBoxFor(model => model.articleID, new { @style ="visibility:hidden;" })
             }
-            @using (Html.BeginForm("publishArticle", "Profile", FormMethod.Post))
-            {
-                @Html.ValidationMessageFor(model => model.articleText)
-
-                <button id="publish_article" onclick="hidePublishButt(this)"> Publish article</button>
-                <script type='text/javascript'>
-
-                    function hidePublishButt(obj) {
-                        document.getElementById("publish_article").style.visibility = "hidden";;
-                    }
-                </script>
-            }
+            
         </fieldset>
 
 </div>

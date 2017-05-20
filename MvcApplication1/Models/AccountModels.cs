@@ -83,8 +83,7 @@ namespace MvcApplication1.Models
         //public bool Role { get; set; }
 
 
-        [Display(Name = "Is Active")]
-        //[Range(typeof(bool), "false", "true")]
+        [Display(Name = "I want to be a mentor")]
         public bool Role { get; set; }
 
 
