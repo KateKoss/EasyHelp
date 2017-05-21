@@ -93,39 +93,63 @@ namespace MvcApplication1.Controllers
         [MultiButton(MatchFormKey = "action", MatchFormValue = "saveToDraft")]
         public ActionResult SaveArticleToDraft(ArticleModel model)
         {
-            using (CustomDbContext db = new CustomDbContext())
-            {
-                string articleid;
-                string currentPerson;
-                if (Request.Cookies["UserId"] != null)
-                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-                else currentPerson = "user1";
+            if (model.articleTitle != null)
+                using (CustomDbContext db = new CustomDbContext())
+                {
+                    string articleid;
+                    string currentPerson;
+                    if (Request.Cookies["UserId"] != null)
+                        currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                    else currentPerson = "user1";
 
-                //чи створював користувач вже статті
-                var myModel = db.ArticleModel.FirstOrDefault(x => x.createdBy == currentPerson);
-                if (myModel == null)
-                {
-                    articleid = currentPerson + '_' + 1;
-                    //якщо ні, то id статті 1, бо ця стаття в нього перша
-                    db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson });
-                    db.SaveChanges();
-                }
-                //якщо користувач обрав існуючу статтю для редагування
-                if (model.articleID != null)
-                {
-                    articleid = currentPerson + "_" + model.articleID;
-                    //перевіряємо чи власне є ця стаття у бд
-                    myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleid);
-                    if (myModel!=null)//якщо є
+                    //чи створював користувач вже статті
+                    var myModel = db.ArticleModel.FirstOrDefault(x => x.createdBy == currentPerson);
+                    if (myModel == null)
                     {
-                        myModel.articleTitle = model.articleTitle;
-                        myModel.articleText = model.articleText;
-                        myModel.isPublished = false;
+                        articleid = currentPerson + '_' + 1;
+                        //якщо ні, то id статті 1, бо ця стаття в нього перша
+                        db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson, articleTitle = model.articleTitle });
+                        if (myModel != null)//якщо є
+                        {
+                            myModel.articleTitle = model.articleTitle;
+                            myModel.articleText = model.articleText;
+                            myModel.isPublished = false;
+                        }
+                        db.SaveChanges();  
+                    
+                    } else
+                    //якщо користувач обрав існуючу статтю для редагування
+                    if (model.articleID != null)
+                    {
+                        articleid = currentPerson + "_" + model.articleID;
+                        //перевіряємо чи власне є ця стаття у бд
+                        myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleid);
+                        if (myModel!=null)//якщо є
+                        {
+                            myModel.articleTitle = model.articleTitle;
+                            myModel.articleText = model.articleText;
+                            myModel.isPublished = false;
+                            db.SaveChanges();  
+                        }
+                        else
+                        {
+
+                            db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson, articleTitle = model.articleTitle });
+                            myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleid);
+                            if (myModel != null)
+                            {
+                                myModel.articleTitle = model.articleTitle;
+                                myModel.articleText = model.articleText;
+                                myModel.isPublished = false;
+                            }
+                            db.SaveChanges();  
+                        }
                     }
-                    else
+                    else //якщо користувач створює нову статтю, проте в нього були вже створені статті
                     {
-                        
-                        db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson });
+                        var articleCount = db.ArticleModel.Count(x => x.createdBy == currentPerson);
+                        articleid = currentPerson + '_' + (articleCount + 1);
+                        db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson, articleTitle = model.articleTitle });
                         myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleid);
                         if (myModel != null)
                         {
@@ -133,26 +157,11 @@ namespace MvcApplication1.Controllers
                             myModel.articleText = model.articleText;
                             myModel.isPublished = false;
                         }
-                       
+                        db.SaveChanges();  
                     }
-                }
-                else //якщо користувач створює нову статтю, проте в нього були вже створені статті
-                {
-                    var articleCount = db.ArticleModel.Count(x => x.createdBy == currentPerson);
-                    articleid = currentPerson + '_' + (articleCount + 1);
-                    db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson });
-                    myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleid);
-                    if (myModel != null)
-                    {
-                        myModel.articleTitle = model.articleTitle;
-                        myModel.articleText = model.articleText;
-                        myModel.isPublished = false;
-                    }
-                    
-                }
                 
-                db.SaveChanges();                
-            }
+                                
+                }
 
             //сохранить статью в бд
             return RedirectToAction("Index");
@@ -162,38 +171,61 @@ namespace MvcApplication1.Controllers
         [MultiButton(MatchFormKey = "action", MatchFormValue = "publish")]
         public ActionResult PublishArticle(ArticleModel model)
         {
-            using (CustomDbContext db = new CustomDbContext())
-            {
-                string articleid;
-                string currentPerson;
-                if (Request.Cookies["UserId"] != null)
-                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-                else currentPerson = "user1";
+            if (model.articleTitle!=null)
+                using (CustomDbContext db = new CustomDbContext())
+                {
+                    string articleid;
+                    string currentPerson;
+                    if (Request.Cookies["UserId"] != null)
+                        currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                    else currentPerson = "user1";
 
-                //чи створював користувач вже статті
-                var myModel = db.ArticleModel.FirstOrDefault(x => x.createdBy == currentPerson);
-                if (myModel == null)
-                {
-                    articleid = currentPerson + '_' + 1;
-                    //якщо ні, то id статті 1, бо ця стаття в нього перша
-                    db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson });
-                    db.SaveChanges();
-                }
-                //якщо користувач обрав існуючу статтю для редагування
-                if (model.articleID != null)
-                {
-                    articleid = currentPerson + "_" + model.articleID;
-                    //перевіряємо чи власне є ця стаття у бд
-                    myModel = db.ArticleModel.SingleOrDefault(x => x.articleID == articleid);
-                    if (myModel != null)//якщо є
+                    //чи створював користувач вже статті
+                    var myModel = db.ArticleModel.FirstOrDefault(x => x.createdBy == currentPerson);
+                    if (myModel == null)
                     {
-                        myModel.articleTitle = model.articleTitle;
-                        myModel.articleText = model.articleText;
-                        myModel.isPublished = true;
+                        articleid = currentPerson + '_' + 1;
+                        //якщо ні, то id статті 1, бо ця стаття в нього перша
+                        db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson, articleTitle = model.articleTitle });
+                        myModel = db.ArticleModel.SingleOrDefault(x => x.articleID == articleid);
+                        if (myModel != null)
+                        {
+                            myModel.articleTitle = model.articleTitle;
+                            myModel.articleText = model.articleText;
+                            myModel.isPublished = true;
+                        }
+                    
+                    } else
+                    //якщо користувач обрав існуючу статтю для редагування
+                    if (model.articleID != null)
+                    {
+                        articleid = currentPerson + "_" + model.articleID;
+                        //перевіряємо чи власне є ця стаття у бд
+                        myModel = db.ArticleModel.SingleOrDefault(x => x.articleID == articleid);
+                        if (myModel != null)//якщо є
+                        {
+                            myModel.articleTitle = model.articleTitle;
+                            myModel.articleText = model.articleText;
+                            myModel.isPublished = true;
+                        }
+                        else
+                        {
+                            db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson, articleTitle = model.articleTitle });
+                            myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleid);
+                            if (myModel != null)
+                            {
+                                myModel.articleTitle = model.articleTitle;
+                                myModel.articleText = model.articleText;
+                                myModel.isPublished = true;
+                            }
+
+                        }
                     }
-                    else
+                    else //якщо користувач створює нову статтю, проте в нього були вже створені статті
                     {
-                        db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson });
+                        var articleCount = db.ArticleModel.Count(x => x.createdBy == currentPerson);
+                        articleid = currentPerson + '_' + (articleCount + 1);
+                        db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson, articleTitle = model.articleTitle });
                         myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleid);
                         if (myModel != null)
                         {
@@ -203,24 +235,10 @@ namespace MvcApplication1.Controllers
                         }
 
                     }
-                }
-                else //якщо користувач створює нову статтю, проте в нього були вже створені статті
-                {
-                    var articleCount = db.ArticleModel.Count(x => x.createdBy == currentPerson);
-                    articleid = currentPerson + '_' + (articleCount + 1);
-                    db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson });
-                    myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleid);
-                    if (myModel != null)
-                    {
-                        myModel.articleTitle = model.articleTitle;
-                        myModel.articleText = model.articleText;
-                        myModel.isPublished = true;
-                    }
 
+                    db.SaveChanges();
                 }
-
-                db.SaveChanges();
-            }
+            
             //опубликовать статью
             return RedirectToAction("Index");
         }

@@ -20,7 +20,7 @@
 @using (Html.BeginForm("EditArticle", "Profile", FormMethod.Post))
 { 
     <br />    
-    @Html.ListBoxFor(m => m.articleName, Model.articleNames, new { size = 3 })
+    @Html.ListBoxFor(m => m.articleName, Model.articleNames, new { size = 3, style = "width:300px; height:100px;" })
     <p>
         <button>Редагувати статтю</button>
     </p>

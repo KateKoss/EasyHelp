@@ -49,7 +49,7 @@ namespace MvcApplication1.Controllers
                 HttpCookie cookie = new HttpCookie("UserId");
 
                 // Установить значения в нем
-               cookie.Value = model.UserName;
+                cookie.Value = model.UserName;
                 //cookie["Country"] = "ru-ru";
 
                 // Добавить куки в ответ
@@ -58,7 +58,7 @@ namespace MvcApplication1.Controllers
             }
 
             // If we got this far, something failed, redisplay form
-            ModelState.AddModelError("", "The user name or password provided is incorrect.");
+            ModelState.AddModelError("", "Ім'я користувача або пароль введені невірно.");
             return View(model);
         }
 
@@ -176,9 +176,9 @@ namespace MvcApplication1.Controllers
         public ActionResult Manage(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-                : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
-                : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
+                message == ManageMessageId.ChangePasswordSuccess ? "Ваш пароль змінений."
+                : message == ManageMessageId.SetPasswordSuccess ? "Ваш пароль встановлений."
+                : message == ManageMessageId.RemoveLoginSuccess ? "Ваш логін видалений."
                 : "";
             ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
             ViewBag.ReturnUrl = Url.Action("Manage");
@@ -216,7 +216,7 @@ namespace MvcApplication1.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
+                        ModelState.AddModelError("", "Поточний пароль неправильний або новий пароль введено невірно.");
                     }
                 }
             }
@@ -239,7 +239,7 @@ namespace MvcApplication1.Controllers
                     }
                     catch (Exception)
                     {
-                        ModelState.AddModelError("", String.Format("Unable to create local account. An account with the name \"{0}\" may already exist.", User.Identity.Name));
+                        ModelState.AddModelError("", String.Format("Неможливо сторити акаунт.Акаунт з ім'я \"{0}\" вже існує.", User.Identity.Name));
                     }
                 }
             }
@@ -328,7 +328,7 @@ namespace MvcApplication1.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("UserName", "User name already exists. Please enter a different user name.");
+                        ModelState.AddModelError("UserName", "Користувач вже існує з таким ім'ям. Будь ласка, введіть інше ім'я користувача.");
                     }
                 }
             }

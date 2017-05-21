@@ -18,7 +18,8 @@
         </p>
     </ul>
 </nav>
-<div>
+
+<section>
     @using (Html.BeginForm("UploadPhoto", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
@@ -37,9 +38,10 @@
             }
             <input type="file" name="upload" />
             <input type="submit" value="Завантажити" />
-           
+
         </fieldset>
     }
+
     @using (Html.BeginForm("Index", "Profile", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
@@ -63,7 +65,8 @@
 
         </fieldset>
     }
-</div>
+
+</section>
 
 
 @section Scripts {
