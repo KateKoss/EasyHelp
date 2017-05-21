@@ -192,6 +192,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ChatController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MentorController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -201,6 +202,7 @@
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\ArticleModel.cs" />
     <Compile Include="Models\ChatModel.cs" />
+    <Compile Include="Models\MentorsModel.cs" />
     <Compile Include="Models\ProfileModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -331,6 +333,8 @@
     <Content Include="Views\Chat\Lobby.cshtml" />
     <Content Include="Views\Chat\ChatHistory.cshtml" />
     <Content Include="Views\Profile\MyArticle.cshtml" />
+    <Content Include="Views\Profile\Mentors.cshtml" />
+    <Content Include="Views\Profile\MentorPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

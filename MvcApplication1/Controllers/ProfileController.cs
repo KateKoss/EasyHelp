@@ -31,16 +31,18 @@ namespace MvcApplication1.Controllers
     public class ProfileController : Controller
     {
         [HttpGet]
-        public ActionResult Index()
+        public ActionResult Index(ProfileModel model)
         {
-            ProfileModel model;
+
+            
+            string currentPerson;
+            if (Request.Cookies["UserId"] != null)
+                currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+            else currentPerson = "user1";
             
             using (CustomDbContext db = new CustomDbContext())
             {
-                string currentPerson;
-                if (Request.Cookies["UserId"] != null)
-                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-                else currentPerson = "user1";
+                
                 var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
                 if (user != null)
                 {
@@ -54,18 +56,87 @@ namespace MvcApplication1.Controllers
                         Name = myModel.Name,
                         MyTegs = myModel.MyTegs,
                         About_me = myModel.About_me,
-                        UserPhoto = myModel.UserPhoto
+                        UserPhoto = myModel.UserPhoto,
+                        searchMentor = model.searchMentor
                     };
                 }
                 else model = new ProfileModel() { };
             }
 
+            MentorsModel mentor = new MentorsModel();
+            
+            if (model.searchMentor != null && model.searchMentor != "")
+            {
+                using (CustomDbContext db = new CustomDbContext())
+                {
+                    string currentMentor;
+                    var mentorList = db.UserProfiles.Where(x => x.Role == "mentor");
+                    if (mentorList != null)
+                        foreach (var m in mentorList)
+                        {
+                            currentMentor = m.UserName;
+                            using (CustomDbContext db2 = new CustomDbContext())
+                            {
+                                var ment = db2.ProfileModel.SingleOrDefault(x => x.UserName == currentMentor);
+                                if (ment != null && ment.Name != null)
+                                    if (ment.Name.Contains(model.searchMentor))
+                                    {
+                                        mentor.Name = ment.Name;
+                                        mentor.UserName = ment.UserName;
+                                        mentor.UserPhoto = ment.UserPhoto;
+                                        model.mentors.Add(mentor);
+                                    }
+                            }
+                        }
+                }
+            } else
+
+            using (CustomDbContext db = new CustomDbContext())
+            {
+                
+                if (db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs != null)
+                {
+                    string[] currentPersonTegs = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs.Split(' ');
+
+                    List<ProfileModel> mentorListWithTegs = new List<ProfileModel>();
+                    var mentorList = db.UserProfiles.Where(x => x.Role == "mentor");
+                    if (mentorList != null)
+                        foreach (var m in mentorList)
+                            for (int i = 0; i < currentPersonTegs.Length; i++)
+                            {
+                                string currentTeg = currentPersonTegs[i];
+                                if (currentTeg != "")
+                                {
+                                    var currentMentor = m.UserName;
+                                    using (CustomDbContext db2 = new CustomDbContext())
+                                    {
+                                        var ment = db2.ProfileModel.SingleOrDefault(x => x.UserName == currentMentor);
+                                        if (ment != null)
+                                            if (ment.UserName != currentPerson)
+                                                if (ment.MyTegs != null)
+                                                    if (ment.MyTegs.Contains(currentTeg))
+                                                        if (!mentorListWithTegs.Contains(ment))
+                                                            mentorListWithTegs.Add(ment);
+                                    }
+                                }
+                            }
+
+
+                    foreach (var m in mentorListWithTegs)
+                    {
+                        mentor.Name = m.Name;
+                        mentor.UserName = m.UserName;
+                        mentor.UserPhoto = m.UserPhoto;
+                        model.mentors.Add(mentor);
+                    }
+                }                
+            }
             return View("Index", model);
         }
 
 
         [HttpPost]
-        public ActionResult Index(ProfileModel model)
+        public ActionResult Index(ProfileModel model, LoginModel lm)
         {
             using (CustomDbContext db = new CustomDbContext())
             {                
@@ -80,7 +151,7 @@ namespace MvcApplication1.Controllers
                     var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
                     myModel.Name = model.Name;
                     myModel.About_me = model.About_me;
-                    myModel.MyTegs = model.MyTegs;
+                    //myModel.MyTegs = model.MyTegs;
                     
                     db.SaveChanges();
                 }
@@ -498,9 +569,11 @@ namespace MvcApplication1.Controllers
                 {
                     var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
                     var tegs = myModel.MyTegs;
-                    if (tegs.Contains(str))
-                        myModel.MyTegs = tegs.Replace(str, " ");
-                    else myModel.MyTegs = tegs + str;
+                    if (tegs != null)
+                        if (tegs.Contains(str))
+                            myModel.MyTegs = tegs.Replace(str, " ");
+                        else myModel.MyTegs = tegs + str;
+                    else myModel.MyTegs = str;
 
 
                     db.SaveChanges();
