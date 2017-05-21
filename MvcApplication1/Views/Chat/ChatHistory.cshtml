@@ -1,0 +1,26 @@
+﻿@model MvcApplication1.Models.ChatModel
+<div id="Lobby">
+    <p>
+        <b>@Model.Users.Count online users</b>
+    </p>
+    @foreach (MvcApplication1.Models.ChatModel.ChatUser user in Model.Users)
+    {
+        @user.NickName<br />
+    }
+</div>
+<div id="ChatHistory">
+    @foreach (MvcApplication1.Models.ChatModel.ChatMessage msg in Model.ChatHistory)
+    {
+        <p>
+            <i>@msg.When</i><br />
+            @if (msg.ByUser != null)
+            {
+                <b>@(msg.ByUser.NickName + ":")</b> @msg.Message
+            }
+            else
+            {
+                <span style="color: Red">@msg.Message</span>
+            }
+        </p>
+    }
+</div>

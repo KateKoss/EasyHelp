@@ -1,0 +1,33 @@
+﻿@model MvcApplication1.Models.ChatModel
+<style type="text/css">
+    
+</style>
+<div id="RefreshArea">
+    @{
+        Html.RenderPartial("ChatHistory", Model);
+    }
+</div>
+
+@Ajax.ActionLink("ActionLink", "Index","Chat", new { user = "", logOn = "", logOff = "", chatMessage = "" }, new AjaxOptions { UpdateTargetId = "RefreshArea", OnSuccess = "ChatOnSuccess", OnFailure = "ChatOnFailure" }, new { @id = "ActionLink", @style = "visibility:hidden;" })
+
+<div id="Speak">
+    <table border="0" width="100">
+        <tr>
+            <td rowspan="2">
+                <textarea id="txtSpeak" style="width: 100%" rows="3"></textarea>
+            </td>
+            <td>
+                <button id="btnSpeak" value="Speak" style="font-weight: bold; width: 80px">
+                    Speak
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button id="btnLogOff" value="LogOff" style="width: 80px">
+                    LogOff
+                </button>
+            </td>
+        </tr>
+    </table>
+</div>

@@ -70,6 +70,14 @@ namespace MvcApplication1.Controllers
         public ActionResult LogOff()
         {
             WebSecurity.Logout();
+            if (Request.Cookies["UserId"] != null)
+            {
+                var cookie = new HttpCookie("UserId")
+                {
+                    Expires = DateTime.Now.AddDays(-1d)
+                };
+                Response.Cookies.Add(cookie);
+            }
 
             return RedirectToAction("Index", "Home");
         }
@@ -95,20 +103,32 @@ namespace MvcApplication1.Controllers
             {
                 using (CustomDbContext db = new CustomDbContext())
                 {
-                    //db.UserProfiles.Add();
-                    
-                    //db.SaveChanges();
+                    db.ProfileModel.Add(new ProfileModel { UserName = model.UserName });                    
+                    db.SaveChanges();
                 }
                 // Attempt to register the user
                 try
                 {
+                    string role = "";
+                    if (model.Role)
+                        role = "mentor";
+                    else role = "student";
                     WebSecurity.CreateUserAndAccount(model.UserName, model.Password, propertyValues: new
                                                                                         {
                                                                                             EmailAddress = model.EmailAddress,
-                                                                                            Role="user"
-                                                                                            //Role = model.Role
+                                                                                            Role = role                                                                                            
                                                                                         });
                     WebSecurity.Login(model.UserName, model.Password);
+
+                    // Создать объект cookie-набора
+                    HttpCookie cookie = new HttpCookie("UserId");
+
+                    // Установить значения в нем
+                    cookie.Value = model.UserName;
+                    
+                    // Добавить куки в ответ
+                    Response.Cookies.Add(cookie);
+
                     return RedirectToAction("Index","Profile");
                 }
                 catch (MembershipCreateUserException e)
