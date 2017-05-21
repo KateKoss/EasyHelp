@@ -10,60 +10,60 @@
 <nav>
     <ul id="menu">
         @*<li>@Html.ActionLink("Профіль", "Index", FormMethod.Get)</li>*@
-        <li>@Html.ActionLink("Мої статті", "CreateArticle", FormMethod.Get)</li>
+        <li>@Html.ActionLink("Мої статті", "MyArticle", FormMethod.Get)</li>
         <li>@Html.ActionLink("Заявки", "Requests", FormMethod.Get)</li>  
         <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Get)</li>  
     </ul>
 </nav>
 <div>
-@using (Html.BeginForm("AddTeg", "Profile", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true)
-    @using (Html.BeginForm("Index", "Profile", FormMethod.Post))
+    @using (Html.BeginForm("AddTeg", "Profile", FormMethod.Post))
     {
-        @Html.TextAreaFor(model => model.About_me, new { @placeholder = "About me", @id = "area_about_me", style = "visibility:hidden" })
-        @Html.ValidationMessageFor(model => model.About_me)
-        <p>
-            @Html.TextBoxFor(model => model.Name, new { @placeholder = "Ім'я" })
-        </p>
-                @*<div class="@((Model.flag_about_me)?"visible-item":"hidden-item")">Some links</div>*@
-        <h3>Теги</h3>
-        <p>
-            @Html.LabelFor(model => model.MyTegs, Model.MyTegs)
-        </p>
-        <button id="save_about_me" onclick="hide_about_me(this)" style="visibility:hidden">Save</button>
-        <script type='text/javascript'>
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        @using (Html.BeginForm("Index", "Profile", FormMethod.Post))
+        {
+            @Html.TextAreaFor(model => model.About_me, new { @placeholder = "About me", @id = "area_about_me", style = "visibility:hidden" })
+            @Html.ValidationMessageFor(model => model.About_me)
+            <p>
+                @Html.TextBoxFor(model => model.Name, new { @placeholder = "Ім'я" })
+            </p>
+            @*<div class="@((Model.flag_about_me)?"visible-item":"hidden-item")">Some links</div>*@
+            <h3>Теги</h3>
+            <p>
+                @Html.LabelFor(model => model.MyTegs, Model.MyTegs)
+            </p>
+            <button id="save_about_me" onclick="hide_about_me(this)" style="visibility:hidden">Save</button>
+            <script type='text/javascript'>
             function hide_about_me(obj) {
                 //obj.parentNode.style.display = "none";
                 document.getElementById("save_about_me").style.visibility = "hidden";
                 document.getElementById("area_about_me").style.visibility = "hidden";
             }
+            </script>
+        }
+
+        @using (Html.BeginForm("AddTeg", "Profile", FormMethod.Post))
+        {
+            <p>
+                @Html.DropDownListFor(model => model.SelectedTeg, Model.TegList, new { size = 1 })
+                @Html.ValidationMessageFor(model => model.SelectedTeg)
+                <button type="submit" class="btn btn-default">+</button>
+            </p>
+            @Html.TextAreaFor(model => model.articleText, new { @placeholder = "Article text", @id = "area_article" })
+        }
+        @Html.ValidationMessageFor(model => model.articleText)
+        <button id="about_me" onclick="hideme(this)"> Save article</button>
+        <script type='text/javascript'>
+            function hideme(obj) {
+                document.getElementById("area_article").style.display = "none";
+            }
         </script>
     }
-    
-    @using (Html.BeginForm("AddTeg", "Profile", FormMethod.Post))
-    {
-        <p>
-            @Html.DropDownListFor(model => model.SelectedTeg, Model.TegList, new { size = 1 })
-            @Html.ValidationMessageFor(model => model.SelectedTeg)
-            <button type="submit" class="btn btn-default">+</button>
-        </p>
-        @Html.TextAreaFor(model => model.articleText, new { @placeholder = "Article text", @id = "area_article" })
-    }
-    @Html.ValidationMessageFor(model => model.articleText)
-    <button id="about_me" onclick="hideme(this)"> Save article</button>
-    <script type='text/javascript'>
-        function hideme(obj) {
-            document.getElementById("area_article").style.display = "none";
-        }
-    </script>
-}
     <p>
         @Html.TextAreaFor(model => model.About_me, new { @placeholder = "Про мене" })
         @Html.ValidationMessageFor(model => model.About_me)
     </p>
-
+</div>
    
 <div>
 @using (Html.BeginForm("Index", "Profile", FormMethod.Post))
@@ -97,7 +97,7 @@
             }
         </script>
 }
-
+</div>
 <div>
     @Html.ActionLink("Назад", "Index")
 </div>

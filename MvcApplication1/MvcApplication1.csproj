@@ -190,8 +190,10 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Contexts\CustomDbContext.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ArticleController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Controllers\RequestsController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -207,6 +209,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\ProfileModel.cs" />
+    <Compile Include="Models\RequestsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -329,7 +332,7 @@
     <Content Include="Views\Profile\Index.cshtml" />
     <Content Include="Views\Profile\ForProfileEditing.cshtml" />
     <Content Include="Views\Profile\CreateArticle.cshtml" />
-    <Content Include="Views\Profile\Requests.cshtml" />
+    <Content Include="Views\Requests\StudentRequests.cshtml" />
     <Content Include="Views\Profile\FindAssosiates.cshtml" />
     <Content Include="Views\Profile\MyArticle.cshtml" />
   </ItemGroup>
@@ -347,6 +350,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

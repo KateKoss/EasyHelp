@@ -9,8 +9,8 @@
 @Html.ActionLink("Редагувати", "ForProfileEditing")
 <nav>
     <ul id="menu">
-                <li>@Html.ActionLink("Мої статті", "MyArticle", FormMethod.Get)</li>
-        <li>@Html.ActionLink("Заявки", "Requests", FormMethod.Get)</li>
+        <li>@Html.ActionLink("Мої статті", "MyArticle", FormMethod.Get)</li>
+        <li>@Html.ActionLink("Заявки", "LoadStudentRequests", "Requests")</li>
         <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Get)</li>
         <p>
             Знайти ментора
@@ -18,7 +18,7 @@
         </p>
     </ul>
 </nav>
-<div>
+
     @using (Html.BeginForm("UploadPhoto", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()

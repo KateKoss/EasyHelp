@@ -1,0 +1,26 @@
+﻿@using MvcApplication1.Models;
+@using System.Reflection;
+@using System.Collections;
+@model List<MvcApplication1.Models.RequestsModel.Request>
+@{
+    ViewBag.Title = "Requests";
+}
+
+<h2>Заявки</h2>
+<nav>
+    <ul id="menu">
+        <li>@Html.ActionLink("Профіль", "Index", "Profile")</li>
+        <li>@Html.ActionLink("Мої статті", "MyArticle", "Profile")</li>
+        <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", "Profile")</li>
+    </ul>
+</nav>
+<nav>@Html.ActionLink("Активні", "ActiveRequests", FormMethod.Get) | @Html.ActionLink("Розв'язані", "CreateArticle", FormMethod.Get) | @Html.ActionLink("Скасовані", "FindAssosiates", FormMethod.Get)</nav>
+<table cellspacing="3" border="1" cellpadding="5" width="600">
+    @foreach (var t in Model)
+    {
+        <tr>
+            <td>@t.requestName</td>
+            <td>@t.requestState</td>
+        </tr>
+    }
+</table>
