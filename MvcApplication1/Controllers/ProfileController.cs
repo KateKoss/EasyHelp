@@ -31,107 +31,129 @@ namespace MvcApplication1.Controllers
     public class ProfileController : Controller
     {
         [HttpGet]
-        public ActionResult Index(ProfileModel model)
+        public ActionResult Index(ProfileModel model, string user)
         {
-
-            
-            string currentPerson;
-            if (Request.Cookies["UserId"] != null)
-                currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-            else currentPerson = "user1";
-            
-            using (CustomDbContext db = new CustomDbContext())
+            if (user != null && user != "")
             {
-                
-                var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
-                if (user != null)
+                using (CustomDbContext db2 = new CustomDbContext())
                 {
-                    var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
-                    if (myModel.UserPhoto == null)
+                    var ment = db2.ProfileModel.SingleOrDefault(x => x.UserName == user);
+                    if (ment != null && ment.UserName != null)
                     {
-
+                        model.Name = ment.Name;
+                        model.UserName = ment.UserName;
+                        model.UserPhoto = ment.UserPhoto;
+                        model.About_me = ment.About_me;
+                        model.MyTegs = ment.MyTegs;
                     }
-                    model = new ProfileModel()
-                    {
-                        Name = myModel.Name,
-                        MyTegs = myModel.MyTegs,
-                        About_me = myModel.About_me,
-                        UserPhoto = myModel.UserPhoto,
-                        searchMentor = model.searchMentor
-                    };
                 }
-                else model = new ProfileModel() { };
-            }
 
-            MentorsModel mentor = new MentorsModel();
-            
-            if (model.searchMentor != null && model.searchMentor != "")
+                return View("MentorPage", model);
+            }
+            else
             {
+                string currentPerson;
+                if (Request.Cookies["UserId"] != null)
+                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                else currentPerson = "user1";
+
                 using (CustomDbContext db = new CustomDbContext())
                 {
-                    string currentMentor;
-                    var mentorList = db.UserProfiles.Where(x => x.Role == "mentor");
-                    if (mentorList != null)
-                        foreach (var m in mentorList)
+
+                    var user1 = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
+                    if (user1 != null)
+                    {
+                        var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
+                        if (myModel.UserPhoto == null)
                         {
-                            currentMentor = m.UserName;
-                            using (CustomDbContext db2 = new CustomDbContext())
-                            {
-                                var ment = db2.ProfileModel.SingleOrDefault(x => x.UserName == currentMentor);
-                                if (ment != null && ment.Name != null)
-                                    if (ment.Name.Contains(model.searchMentor))
-                                    {
-                                        mentor.Name = ment.Name;
-                                        mentor.UserName = ment.UserName;
-                                        mentor.UserPhoto = ment.UserPhoto;
-                                        model.mentors.Add(mentor);
-                                    }
-                            }
+
                         }
+                        model = new ProfileModel()
+                        {
+                            Name = myModel.Name,
+                            MyTegs = myModel.MyTegs,
+                            About_me = myModel.About_me,
+                            UserPhoto = myModel.UserPhoto,
+                            searchMentor = model.searchMentor
+                        };
+                    }
+                    else model = new ProfileModel() { };
                 }
-            } else
 
-            using (CustomDbContext db = new CustomDbContext())
-            {
-                
-                if (db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs != null)
+                MentorsModel mentor;
+
+                if (model.searchMentor != null && model.searchMentor != "")
                 {
-                    string[] currentPersonTegs = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs.Split(' ');
-
-                    List<ProfileModel> mentorListWithTegs = new List<ProfileModel>();
-                    var mentorList = db.UserProfiles.Where(x => x.Role == "mentor");
-                    if (mentorList != null)
-                        foreach (var m in mentorList)
-                            for (int i = 0; i < currentPersonTegs.Length; i++)
+                    using (CustomDbContext db = new CustomDbContext())
+                    {
+                        string currentMentor;
+                        var mentorList = db.UserProfiles.Where(x => x.Role == "mentor");
+                        if (mentorList != null)
+                            foreach (var m in mentorList)
                             {
-                                string currentTeg = currentPersonTegs[i];
-                                if (currentTeg != "")
+                                currentMentor = m.UserName;
+                                using (CustomDbContext db2 = new CustomDbContext())
                                 {
-                                    var currentMentor = m.UserName;
-                                    using (CustomDbContext db2 = new CustomDbContext())
-                                    {
-                                        var ment = db2.ProfileModel.SingleOrDefault(x => x.UserName == currentMentor);
-                                        if (ment != null)
-                                            if (ment.UserName != currentPerson)
-                                                if (ment.MyTegs != null)
-                                                    if (ment.MyTegs.Contains(currentTeg))
-                                                        if (!mentorListWithTegs.Contains(ment))
-                                                            mentorListWithTegs.Add(ment);
-                                    }
+                                    var ment = db2.ProfileModel.SingleOrDefault(x => x.UserName == currentMentor);
+                                    if (ment != null && ment.Name != null)
+                                        if (ment.Name.Contains(model.searchMentor))
+                                        {
+                                            mentor = new MentorsModel();
+                                            mentor.Name = ment.Name;
+                                            mentor.UserName = ment.UserName;
+                                            mentor.UserPhoto = ment.UserPhoto;
+                                            model.mentors.Add(mentor);
+                                        }
                                 }
                             }
-
-
-                    foreach (var m in mentorListWithTegs)
-                    {
-                        mentor.Name = m.Name;
-                        mentor.UserName = m.UserName;
-                        mentor.UserPhoto = m.UserPhoto;
-                        model.mentors.Add(mentor);
                     }
-                }                
+                }
+                else
+
+                    using (CustomDbContext db = new CustomDbContext())
+                    {
+
+                        if (db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs != null)
+                        {
+                            string[] currentPersonTegs = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs.Split(' ');
+
+                            List<ProfileModel> mentorListWithTegs = new List<ProfileModel>();
+                            var mentorList = db.UserProfiles.Where(x => x.Role == "mentor");
+                            if (mentorList != null)
+                                foreach (var m in mentorList)
+                                    for (int i = 0; i < currentPersonTegs.Length; i++)
+                                    {
+                                        string currentTeg = currentPersonTegs[i];
+                                        if (currentTeg != "")
+                                        {
+                                            var currentMentor = m.UserName;
+                                            using (CustomDbContext db2 = new CustomDbContext())
+                                            {
+                                                var ment = db2.ProfileModel.SingleOrDefault(x => x.UserName == currentMentor);
+                                                if (ment != null)
+                                                    if (ment.UserName != currentPerson)
+                                                        if (ment.MyTegs != null)
+                                                            if (ment.MyTegs.Contains(currentTeg))
+                                                                if (!mentorListWithTegs.Any(x => x.UserName == ment.UserName))
+                                                                    mentorListWithTegs.Add(ment);
+                                            }
+                                        }
+                                    }
+
+
+                            foreach (var m in mentorListWithTegs)
+                            {
+                                mentor = new MentorsModel();
+                                mentor.Name = m.Name;
+                                mentor.UserName = m.UserName;
+                                mentor.UserPhoto = m.UserPhoto;
+                                model.mentors.Add(mentor);
+                            }
+                        }
+                    }
+                return View("Index", model);
             }
-            return View("Index", model);
+            return View();
         }
 
 
@@ -632,5 +654,21 @@ namespace MvcApplication1.Controllers
             return View("Index", model);
         }
 
+        public ActionResult GetMentor(string user)
+        {
+            MentorsModel model = new MentorsModel();
+            using (CustomDbContext db2 = new CustomDbContext())
+            {
+                var ment = db2.ProfileModel.SingleOrDefault(x => x.UserName == model.UserName);
+                if (ment != null && model.UserName != null)
+                    model.Name = ment.Name;
+                model.UserName = ment.UserName;
+                model.UserPhoto = ment.UserPhoto;
+                model.AboutMe = ment.About_me;
+                model.Tegs = ment.MyTegs;
+            }
+
+            return View("MentorPage", model);
+        }
     }
 }

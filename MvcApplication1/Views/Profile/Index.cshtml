@@ -42,10 +42,9 @@
                 {
                     <input type="submit" value="Знайти ментора" />
                     @Html.TextBoxFor(m => m.searchMentor, new { placeholder = "Знайти ментора" })
-                
-                    @Html.Partial("Mentors", Model.mentors)
-                    
                 }
+                @Html.Partial("Mentors", Model.mentors)
+                               
             </td>
          </tr>
 

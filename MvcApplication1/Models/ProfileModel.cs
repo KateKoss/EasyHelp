@@ -22,8 +22,7 @@ namespace MvcApplication1.Models
         public IEnumerable<string> SelectedTeg { get; set; }
         public IEnumerable<SelectListItem> TegList { get; set; }
         public string MyTegs { get; set; }
-        //public string TextSearhAssoasiates { get; set; }
-        //public string TextSearhAssistants { get; set; }
+        
         
         [Key]
         public string UserName { get; set; }        
