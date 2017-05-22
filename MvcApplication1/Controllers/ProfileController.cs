@@ -35,6 +35,40 @@ namespace MvcApplication1.Controllers
         {
             if (user != null && user != "")
             {
+                List<SelectListItem> listSelectListItems = new List<SelectListItem>();
+
+                for (int i = 0; i < 5; i++)
+                {
+                    SelectListItem selectList = new SelectListItem()
+                    {
+                        Text = (i + 1).ToString(),
+                        Value = (i + 1).ToString()
+                    };
+                    listSelectListItems.Add(selectList);
+                }
+                model.TegList = listSelectListItems;
+                var rate = "";
+                if (model.SelectedTeg != null)
+                    foreach (string s in model.SelectedTeg)
+                        rate = s;
+
+                using (CustomDbContext db = new CustomDbContext())
+                {
+
+                    string currentPerson;
+                    if (Request.Cookies["UserId"] != null)
+                        currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                    else currentPerson = "user1";
+                    var user1 = db.UserProfiles.SingleOrDefault(x => x.UserName == user);
+                    if (user1 != null)
+                    {
+                        var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
+                        if (rate != "")
+                            myModel.Rate = Convert.ToInt32(rate);
+                        db.SaveChanges();
+                    }
+                    else model = new ProfileModel() { };
+                }
                 using (CustomDbContext db2 = new CustomDbContext())
                 {
                     var ment = db2.ProfileModel.SingleOrDefault(x => x.UserName == user);
@@ -45,9 +79,17 @@ namespace MvcApplication1.Controllers
                         model.UserPhoto = ment.UserPhoto;
                         model.About_me = ment.About_me;
                         model.MyTegs = ment.MyTegs;
+                        model.Rate = ment.Rate;
+                        // Создать объект cookie-набора
+                        HttpCookie cookie = new HttpCookie("MentorId");
+
+                        // Установить значения в нем
+                        cookie.Value = ment.UserName;
+
+                        // Добавить куки в ответ
+                        Response.Cookies.Add(cookie);
                     }
                 }
-
                 return View("MentorPage", model);
             }
             else
@@ -158,7 +200,7 @@ namespace MvcApplication1.Controllers
 
 
         [HttpPost]
-        public ActionResult Index(ProfileModel model, LoginModel lm)
+        public ActionResult Index(ProfileModel model, string lm, LoginModel ll)
         {
             using (CustomDbContext db = new CustomDbContext())
             {                
@@ -654,21 +696,52 @@ namespace MvcApplication1.Controllers
             return View("Index", model);
         }
 
-        public ActionResult GetMentor(string user)
+        public ActionResult SetMentorRate(ProfileModel model)
         {
-            MentorsModel model = new MentorsModel();
-            using (CustomDbContext db2 = new CustomDbContext())
+            string currentMent;
+            if (Request.Cookies["MentorId"] != null)
+                currentMent = Convert.ToString(Request.Cookies["MentorId"].Value);
+            else currentMent = "";
+            if (currentMent != "")
             {
-                var ment = db2.ProfileModel.SingleOrDefault(x => x.UserName == model.UserName);
-                if (ment != null && model.UserName != null)
-                    model.Name = ment.Name;
-                model.UserName = ment.UserName;
-                model.UserPhoto = ment.UserPhoto;
-                model.AboutMe = ment.About_me;
-                model.Tegs = ment.MyTegs;
-            }
+                using (CustomDbContext db = new CustomDbContext())
+                {
+                    var ment = db.ProfileModel.SingleOrDefault(x => x.UserName == currentMent);
+                    if (ment != null)
+                        ment.Rate = Convert.ToInt32(model.SelectedTeg.Last());
+                    db.SaveChanges();
+                }
+                List<SelectListItem> listSelectListItems = new List<SelectListItem>();
 
+                for (int i = 0; i < 5; i++)
+                {
+                    SelectListItem selectList = new SelectListItem()
+                    {
+                        Text = (i + 1).ToString(),
+                        Value = (i + 1).ToString()
+                    };
+                    listSelectListItems.Add(selectList);
+                }
+                model.TegList = listSelectListItems;
+                
+                
+                using (CustomDbContext db2 = new CustomDbContext())
+                {
+                    var ment = db2.ProfileModel.SingleOrDefault(x => x.UserName == currentMent);
+                    if (ment != null && ment.UserName != null)
+                    {
+                        model.Name = ment.Name;
+                        model.UserName = ment.UserName;
+                        model.UserPhoto = ment.UserPhoto;
+                        model.About_me = ment.About_me;
+                        model.MyTegs = ment.MyTegs;
+                        model.Rate = ment.Rate;                         
+                    }
+                }
+                
+            }
             return View("MentorPage", model);
+            
         }
     }
 }

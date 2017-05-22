@@ -1,0 +1,13 @@
+﻿@model MvcApplication1.Models.ProfileModel
+
+
+@using (Html.BeginForm("SetMentorRate", "Profile", FormMethod.Post))
+{ 
+    <div>
+       
+        Оцінка користувача @Html.LabelFor(model => model.Rate, Model.Rate != null ? Model.Rate.ToString() : "")
+        @Html.DropDownListFor(model => model.SelectedTeg, Model.TegList, new { size = 1, style = "width:50px;" })
+        <button>-></button>
+     
+    </div>
+}
