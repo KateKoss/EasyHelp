@@ -17,11 +17,13 @@ namespace MvcApplication1.Models
         {
             public Request(string requestId, string requestName, string requestText, IEnumerable<SelectListItem> TegList, string requestState)
             {
+                this.requestId = requestId;
                 this.requestName = requestName;
                 this.requestText = requestText;
                 this.TegList = TegList;
                 this.requestState = requestState;
             }
+            public Request() { }
             public string requestId { get; set; }
             public string requestName { get; set; }
             public string requestText { get; set; }
@@ -31,17 +33,5 @@ namespace MvcApplication1.Models
         }
 
         public List<Request> reqests = new List<Request>();
-    }
-
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-    public class MultiButtonAttribute : ActionNameSelectorAttribute
-    {
-        public string MatchFormKey { get; set; }
-        public string MatchFormValue { get; set; }
-        public override bool IsValidName(ControllerContext controllerContext, string actionName, MethodInfo methodInfo)
-        {
-            return controllerContext.HttpContext.Request[MatchFormKey] != null &&
-                controllerContext.HttpContext.Request[MatchFormKey] == MatchFormValue;
-        }
     }
 }

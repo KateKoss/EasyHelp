@@ -337,12 +337,10 @@
     <Content Include="Views\Profile\MentorPage.cshtml" />
     <Content Include="Views\Profile\RateMentorPartial.cshtml" />
     <Content Include="packages.config" />
+    <Content Include="Views\Requests\CreateRequest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-    <EmbeddedResource Include="Migrations\201705221016060_1.resx">
-      <DependentUpon>201705221016060_1.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

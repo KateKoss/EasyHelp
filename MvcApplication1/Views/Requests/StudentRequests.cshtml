@@ -1,7 +1,4 @@
-﻿@using MvcApplication1.Models;
-@using System.Reflection;
-@using System.Collections;
-@model List<MvcApplication1.Models.RequestsModel.Request>
+﻿@model List<MvcApplication1.Models.RequestsModel.Request>
 @{
     ViewBag.Title = "Requests";
 }
@@ -10,13 +7,23 @@
 <nav>
     <ul id="menu">
         <li>@Html.ActionLink("Профіль", "Index", "Profile")</li>
+        <li>@Html.ActionLink("Чат", "Index", "Chat")</li>
         <li>@Html.ActionLink("Мої статті", "MyArticle", "Profile")</li>
         <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", "Profile")</li>
     </ul>
 </nav>
-<nav>@Html.ActionLink("Активні", "ActiveRequests", FormMethod.Get) 
-    | @Html.ActionLink("Розв'язані", "CreateArticle", FormMethod.Get) 
-    | @Html.ActionLink("Скасовані", "FindAssosiates", FormMethod.Get)</nav>
+
+@using (Html.BeginForm("CreateRequest", "Requests", FormMethod.Get))
+{
+    <p>
+        <button>Створити заявку</button>
+    </p>
+}
+
+<nav>@Html.ActionLink("Активні", "ActiveRequests", "Requests")
+    | @Html.ActionLink("Розв'язані", "ResolvedRequests", "Requests")
+    | @Html.ActionLink("Скасовані", "CanceledRequests", "Requests")
+</nav>
 <div>
     <table cellspacing="2" border="1" cellpadding="5" width="600">
         @foreach (var t in Model)
@@ -24,21 +31,15 @@
             <tr>
                 <td>
                     @t.requestName
-                    @*@Html.ActionLink("Check this", "MarkAsResolved", "Home", new { id = "2"}, new { style = "display:block" })*@
-                    @Html.ActionLink("Позначити як вирішену", "MarkAsResolved", new { thisUserLoggedOn = "" }, new { href = "?user=" + t.requestId })
-                    @*@using (Html.BeginForm("Index", "Home", FormMethod.Post))
-                    {
-                        <button id="@t.requestId" type="submit" name="action" value="resolv">Позначити як вирішену</button>
-                        <button id="@t.requestId" type="submit" name="action" value="cansel">Скасувати</button>
-                    }*@
-                    @*@Html.ActionLink("Позначити як вирішену", "MarkAsResolved", FormMethod.Get)
-             @Html.ActionLink("Скасувати", "MarkAsCanseled", FormMethod.Get)*@
+                    <nav>
+                        @Html.ActionLink("Позначити як вирішену", "MarkAsResolved", "Requests", new { requestId = t.requestId }, null)
+                        |@Html.ActionLink("Скасувати", "MarkAsCanceled", "Requests", new { requestId = t.requestId }, null)
+                    </nav>
                 </td>
                 <td>
                     @t.requestState
                 </td>
             </tr>
-
         }
     </table>
 </div>
