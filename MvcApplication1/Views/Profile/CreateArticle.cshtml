@@ -3,36 +3,29 @@
     ViewBag.Title = "Створити статтю";
 }
 
-<h2>Створити статтю</h2>
-<nav>
-    <ul id="menu">
-        <li>@Html.ActionLink("Профіль", "Index", FormMethod.Get)</li>
-        <li>@Html.ActionLink("Заявки", "LoadStudentRequests", "Requests")</li>
-        <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Get)</li>
-    </ul>
-</nav>
 <div>
 
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary(true)
-        <fieldset>
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
 
-            @using (Html.BeginForm("SaveActicleToDraft", "Profile", FormMethod.Post))
-            {
-
-                <p>
-                    @Html.TextBoxFor(model => model.articleTitle, new { @placeholder = "Навза статті" })                    
-                </p>
-                @Html.TextAreaFor(model => model.articleText, new { @placeholder = "Текст статті"})
-                @Html.ValidationMessageFor(model => model.articleText)
-                <p>
-                    <button type="submit" name="action" value="saveToDraft">Зберегти як чернетку</button>
-                    <button type="submit" name="action" value="publish">Публікувати</button>
-                </p>
-                @Html.TextBoxFor(model => model.articleID, new { @style ="visibility:hidden;" })
-            }
+        @using (Html.BeginForm("SaveActicleToDraft", "Profile", FormMethod.Post))
+        {
+            <p><h3>Назва статті</h3>
+                @Html.TextBoxFor(model => model.articleTitle, new { @placeholder = "Навза статті" })   
+                @Html.ValidationMessageFor(model => model.articleTitle)                             
+            </p>
+            <h3>Текст статті</h3>
+            @Html.TextAreaFor(model => model.articleText, new { @placeholder = "Текст статті"})
+                
+            <p>
+                <button type="submit" name="action" value="saveToDraft">Зберегти як чернетку</button>
+                <button type="submit" name="action" value="publish">Публікувати</button>
+            </p>
+            @Html.TextBoxFor(model => model.articleID, new { @style ="visibility:hidden;" })
+        }
             
-        </fieldset>
+    </fieldset>
 
 </div>
 <div>

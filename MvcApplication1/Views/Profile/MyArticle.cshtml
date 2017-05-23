@@ -1,5 +1,4 @@
-﻿@using System.Web.Mvc.Html;
-@model MvcApplication1.Models.ProfileModel
+﻿@model MvcApplication1.Models.ArticleModel
 @{
     ViewBag.Title = "Статті";
 }
@@ -21,7 +20,7 @@
 @using (Html.BeginForm("EditArticle", "Profile", FormMethod.Post))
 { 
     <br />    
-    @Html.ListBoxFor(m => m.articleName, Model.articleNames, new { size = 3 })
+    @Html.ListBoxFor(m => m.articleName, Model.articleNames, new { size = 3, style = "width:300px; height:100px;" })
     <p>
         <button>Редагувати статтю</button>
     </p>

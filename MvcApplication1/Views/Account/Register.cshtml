@@ -1,11 +1,11 @@
 ﻿@model MvcApplication1.Models.RegisterModel
 @{
-    ViewBag.Title = "Register";
+    ViewBag.Title = "Реєстрація";
 }
 
 <hgroup class="title">
     <h1>@ViewBag.Title.</h1>
-    <h2>Create a new account.</h2>
+    <h2>Створення нового акаунту.</h2>
 </hgroup>
 
 @using (Html.BeginForm()) {
@@ -38,8 +38,8 @@
                 @Html.LabelFor(m => m.Role, new { @class = "checkbox" })
             </li>
 
-</ol>
-        <input type="submit" value="Register" />
+    </ol>
+        <input type="submit" value="Зараєструватися" />
     </fieldset>
 }
 

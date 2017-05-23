@@ -1,5 +1,4 @@
-﻿@using System.Web.Mvc.Html;
-@model MvcApplication1.Models.ProfileModel
+﻿@model MvcApplication1.Models.ProfileModel
 
 @{
     ViewBag.Title = "Профіль";
@@ -19,7 +18,7 @@
 {
     <h3>Теги</h3>
     <p>
-        @Html.LabelFor(model => model.MyTegs, Model.MyTegs)
+        @Html.LabelFor(model => model.MyTegs, Model.MyTegs != null ? Model.MyTegs : "")
     </p>
     <p>
         @Html.DropDownListFor(model => model.SelectedTeg, Model.TegList, new { size = 1 })
@@ -51,7 +50,7 @@
             </p>
         </fieldset>
     }
-</div>
+
 </div>
 
 <div>

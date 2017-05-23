@@ -201,6 +201,7 @@
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\ArticleModel.cs" />
     <Compile Include="Models\ChatModel.cs" />
+    <Compile Include="Models\MentorsModel.cs" />
     <Compile Include="Models\ProfileModel.cs" />
     <Compile Include="Models\RequestsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -332,15 +333,16 @@
     <Content Include="Views\Chat\Lobby.cshtml" />
     <Content Include="Views\Chat\ChatHistory.cshtml" />
     <Content Include="Views\Profile\MyArticle.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
+    <Content Include="Views\Profile\Mentors.cshtml" />
+    <Content Include="Views\Profile\MentorPage.cshtml" />
+    <Content Include="Views\Profile\RateMentorPartial.cshtml" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Migrations\" />
+    <EmbeddedResource Include="Migrations\201705221016060_1.resx">
+      <DependentUpon>201705221016060_1.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

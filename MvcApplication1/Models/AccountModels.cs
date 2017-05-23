@@ -23,7 +23,7 @@ namespace MvcApplication1.Models
     public class RegisterExternalLoginModel
     {
         [Required]
-        [Display(Name = "User name")]
+        [Display(Name = "Ім'я користувача")]
         public string UserName { get; set; }
 
         public string ExternalLoginData { get; set; }
@@ -33,18 +33,18 @@ namespace MvcApplication1.Models
     {
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Current password")]
+        [Display(Name = "Поточний пароль")]
         public string OldPassword { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 3)]
+        [StringLength(100, ErrorMessage = "Пароль має складатися щонайменше з {2} символів.", MinimumLength = 3)]
         [DataType(DataType.Password)]
-        [Display(Name = "New password")]
+        [Display(Name = "Новий пароль")]
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm new password")]
-        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [Display(Name = "Підтвердіть новий пароль")]
+        [Compare("NewPassword", ErrorMessage = "Новий пароль і підтверджений не співпадають.")]
         public string ConfirmPassword { get; set; }
 
     }
@@ -52,50 +52,44 @@ namespace MvcApplication1.Models
     public class LoginModel
     {
         [Required]
-        [Display(Name = "User name")]
+        [Display(Name = "Ім'я користувача")]
         public string UserName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Пароль")]
         public string Password { get; set; }
 
-        [Display(Name = "Remember me?")]
+        [Display(Name = "Запам'ятати мене?")]
         public bool RememberMe { get; set; }
     }
 
     public class RegisterModel
     {
         [Required]
-        [Display(Name = "User name")]
+        [Display(Name = "Ім'я користувача")]
         public string UserName { get; set; }
 
         [Required]
         [StringLength(100)]
-        [RegularExpression(@"^([\w-\.]+)@((\[[0-9]{1,3]\.)|(([\w-]+\.)+))([a-zA-Z{2,4}|[0-9]{1,3})(\]?)$", ErrorMessage = "Please enter valid email.")]﻿
+        [RegularExpression(@"^([\w-\.]+)@((\[[0-9]{1,3]\.)|(([\w-]+\.)+))([a-zA-Z{2,4}|[0-9]{1,3})(\]?)$", ErrorMessage = "Введіть вірний email.")]﻿
         [DataType(DataType.EmailAddress)]
-        [Display(Name = "Email Address")]
+        [Display(Name = "Email")]
         public string EmailAddress { get; set; }
 
-        //[Required]
-        //[DataType(DataType.)]
-        //[Display(Name = "I want to be a mentor")]
-        //public bool Role { get; set; }
-
-
-        [Display(Name = "I want to be a mentor")]
+        [Display(Name = "Я хочу бути ментором")]
         public bool Role { get; set; }
 
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 3)]
+        [StringLength(100, ErrorMessage = "Пароль має складатися щонайменше з {2} символів.", MinimumLength = 3)]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Пароль")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Display(Name = "Підтвердження паролю")]
+        [Compare("Password", ErrorMessage = "Новий пароль і підтверджений не співпадають.")]
         public string ConfirmPassword { get; set; }
     }
 

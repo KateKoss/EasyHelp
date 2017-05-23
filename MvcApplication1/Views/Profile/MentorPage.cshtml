@@ -1,0 +1,43 @@
+﻿@model MvcApplication1.Models.ProfileModel
+@{
+    ViewBag.Title = "Сторінка ментора ";
+}
+<h2>Ментор</h2>
+
+@using (Html.BeginForm())
+{
+    <div>
+
+       
+        @if (Model.UserPhoto != null)
+        {
+        @Html.Raw("<img style='width:200px; height:180px;' src=\"data:image/jpeg;base64," + Convert.ToBase64String(Model.UserPhoto) + "\" />")
+        }
+        @if (Model.UserPhoto == null)
+        {
+        <img style='width:200px; height:180px;' src='Images/userphoto2.jpg' alt="фото" />
+        }
+        <h2>Ім'я</h2>
+        @Html.LabelFor(model => model.Name, Model.Name != null ? Model.Name : "")
+        <div>
+            <p>
+                <h3>Tеги</h3>
+                @Html.LabelFor(model => model.MyTegs, Model.MyTegs != null ? Model.MyTegs : "")
+            </p>
+        </div>
+        <h3>Про мене</h3>
+        @Html.LabelFor(model => model.About_me, Model.About_me != null ? Model.About_me : "")<br />
+
+    </div>
+}
+
+<div>
+    @Html.Partial("RateMentorPartial", Model)
+</div>
+<div>
+    @Html.ActionLink("Назад", "Index") 
+    @Html.ActionLink("Чат", "Index", "Chat")
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
