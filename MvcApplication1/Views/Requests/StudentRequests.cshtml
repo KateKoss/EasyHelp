@@ -14,13 +14,31 @@
         <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", "Profile")</li>
     </ul>
 </nav>
-<nav>@Html.ActionLink("Активні", "ActiveRequests", FormMethod.Get) | @Html.ActionLink("Розв'язані", "CreateArticle", FormMethod.Get) | @Html.ActionLink("Скасовані", "FindAssosiates", FormMethod.Get)</nav>
-<table cellspacing="3" border="1" cellpadding="5" width="600">
-    @foreach (var t in Model)
-    {
-        <tr>
-            <td>@t.requestName</td>
-            <td>@t.requestState</td>
-        </tr>
-    }
-</table>
+<nav>@Html.ActionLink("Активні", "ActiveRequests", FormMethod.Get) 
+    | @Html.ActionLink("Розв'язані", "CreateArticle", FormMethod.Get) 
+    | @Html.ActionLink("Скасовані", "FindAssosiates", FormMethod.Get)</nav>
+<div>
+    <table cellspacing="2" border="1" cellpadding="5" width="600">
+        @foreach (var t in Model)
+        {
+            <tr>
+                <td>
+                    @t.requestName
+                    @*@Html.ActionLink("Check this", "MarkAsResolved", "Home", new { id = "2"}, new { style = "display:block" })*@
+                    @Html.ActionLink("Позначити як вирішену", "MarkAsResolved", new { thisUserLoggedOn = "" }, new { href = "?user=" + t.requestId })
+                    @*@using (Html.BeginForm("Index", "Home", FormMethod.Post))
+                    {
+                        <button id="@t.requestId" type="submit" name="action" value="resolv">Позначити як вирішену</button>
+                        <button id="@t.requestId" type="submit" name="action" value="cansel">Скасувати</button>
+                    }*@
+                    @*@Html.ActionLink("Позначити як вирішену", "MarkAsResolved", FormMethod.Get)
+             @Html.ActionLink("Скасувати", "MarkAsCanseled", FormMethod.Get)*@
+                </td>
+                <td>
+                    @t.requestState
+                </td>
+            </tr>
+
+        }
+    </table>
+</div>

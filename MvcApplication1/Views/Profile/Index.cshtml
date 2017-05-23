@@ -38,7 +38,7 @@
             <input type="file" name="upload" />
             <input type="submit" value="Завантажити" />
            
-            @*@Html.DisplayFor(m => m.UserPhoto, Model.UserPhoto)*@
+            @Html.DisplayFor(m => m.UserPhoto, Model.UserPhoto)
             
             @*<img src="@Server.MapPath("/Images/short.jpg")" alt="фото" />*@
 
@@ -60,11 +60,11 @@
             <div>
 
                 <p><h3>Мої теги</h3>
-               @*     @Html.LabelFor(model => model.MyTegs, Model.MyTegs)*@
+                    @Html.LabelFor(model => model.MyTegs, Model.MyTegs)
                 </p>
             </div>
             <h3>Про мене</h3>
-            @*@Html.LabelFor(model => model.About_me, Model.About_me)*@
+            @Html.LabelFor(model => model.About_me, Model.About_me)
             
             
 </fieldset>

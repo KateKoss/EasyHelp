@@ -19,27 +19,82 @@ namespace MvcApplication1.Controllers
     public class RequestsController : Controller
     {
         [HttpGet]
-        public ActionResult LoadStudentRequests()
+        public ActionResult LoadStudentRequests(RequestsModel m, string user)
         {
             RequestsModel requestsModel = new RequestsModel();
-            RequestsModel.Request req = new RequestsModel.Request("Help with Java", "bla-bla1", null, "request not resolved");
+            RequestsModel.Request req = new RequestsModel.Request("user1_1", "Help with Java", "bla-bla1", null, "request not resolved");
             if (req.requestState != "request resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
-            req = new RequestsModel.Request("Help with C#", "bla-bla2", null, "request not resolved");
+            req = new RequestsModel.Request("user1_2", "Help with C#", "bla-bla2", null, "request not resolved");
             if (req.requestState != "request resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
             return View("StudentRequests", requestsModel.reqests);
 
         }
+
+        [HttpGet]
         public ActionResult ActiveRequests()
         {
-            return View();
+            RequestsModel requestsModel = new RequestsModel();
+            RequestsModel.Request req = new RequestsModel.Request("user1_1", "Help with 1...", "bla-bla1", null, "request not resolved");
+            if (req.requestState != "request resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);  //если заявка не решена и не отменена отображаем как активные
+            req = new RequestsModel.Request("user1_2", "Help with 2...", "bla-bla2", null, "request not resolved");
+            if (req.requestState != "request resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
+
+            return View("Index", requestsModel.reqests);
         }
+
+        [HttpGet]
         public ActionResult ResolvedRequests()
         {
-            return View();
+            RequestsModel requestsModel = new RequestsModel();
+            RequestsModel.Request req = new RequestsModel.Request("user1_3", "Help with 1...", "bla-bla1", null, "request resolved");
+            if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);  //если заявка не решена и не отменена отображаем как активные
+            if (Request.IsAjaxRequest() == true)
+            {
+                req = new RequestsModel.Request("user1_4", "Help with 2...", "bla-bla2", null, "request resolved");
+                if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
+            }
+            req = new RequestsModel.Request("user1_4", "Help with 2...", "bla-bla2", null, "request resolved");
+            if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
+            return View("Index", requestsModel.reqests);
         }
+        [HttpGet]
         public ActionResult CanceledRequests()
         {
-            return View();
+            RequestsModel requestsModel = new RequestsModel();
+            RequestsModel.Request req = new RequestsModel.Request("user1_5", "Help with 1...", "bla-bla1", null, "request canceled");
+            if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);  //если заявка не решена и не отменена отображаем как активные
+            req = new RequestsModel.Request("user1_6", "Help with 2...", "bla-bla2", null, "request canceled");
+            if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);
+            return View("Index", requestsModel.reqests);
+        }
+        [HttpPost]
+        //[HttpGet]
+        //[MultiButton(MatchFormKey = "action", MatchFormValue = "resolv")]
+        public ActionResult MarkAsResolved(RequestsModel resolvThisReq, string user)
+        {
+            RequestsModel requestsModel = new RequestsModel();
+            RequestsModel.Request req = new RequestsModel.Request("user1_5", "Help with 1...", "bla-bla1", null, "request canceled");
+            if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);  //если заявка не решена и не отменена отображаем как активные
+            req = new RequestsModel.Request("user1_6", "Help with 2...", "bla-bla2", null, "request canceled");
+            if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);
+            if (requestsModel.reqests.Contains(resolvThisReq.reqests[0]))
+            {
+                requestsModel.reqests.Remove(resolvThisReq.reqests[0]);
+            }
+
+            return View("Index", requestsModel.reqests);
+        }
+
+        [HttpPost]
+        [MultiButton(MatchFormKey = "action", MatchFormValue = "cansel")]
+        public ActionResult MarkAsCanseled(RequestsModel resolvThisModel)
+        {
+            RequestsModel requestsModel = new RequestsModel();
+            RequestsModel.Request req = new RequestsModel.Request("user1_5", "Help with 1...", "bla-bla1", null, "request canceled");
+            if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);  //если заявка не решена и не отменена отображаем как активные
+            req = new RequestsModel.Request("user1_6", "Help with 2...", "bla-bla2", null, "request canceled");
+            if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);
+            return View("Index", requestsModel.reqests);
         }
     }
 }

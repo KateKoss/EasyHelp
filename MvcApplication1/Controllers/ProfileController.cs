@@ -47,7 +47,7 @@ namespace MvcApplication1.Controllers
                     var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
                     if (myModel.UserPhoto == null)
                     {
-
+            
                     }
                     model = new ProfileModel()
                     {
@@ -59,8 +59,9 @@ namespace MvcApplication1.Controllers
                 }
                 else model = new ProfileModel() { };
             }
-
+            
             return View("Index", model);
+            return View("Index");
         }
 
 
