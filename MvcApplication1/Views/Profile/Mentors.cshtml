@@ -1,0 +1,30 @@
+﻿@model List<MvcApplication1.Models.MentorsModel>
+
+@using(Html.BeginForm())
+{
+<table border="1">
+    @foreach (var m in Model)
+    {
+      <tr>            
+          <td width=" 250" style="text-align:right">
+
+              @if (m.UserPhoto != null)
+              {
+                  Html.Raw("<img style='width:65px; height:50px;' src=\"data:image/jpeg;base64,"
+                  + Convert.ToBase64String(m.UserPhoto) + "\" />");
+              }
+              @if (m.UserPhoto == null)
+              {
+                  <img style='width:65px; height:50px;' src='Images/userphoto2.jpg' alt="фото" />
+              }
+              
+          </td>
+          <td>@Html.ActionLink("Перейти", "Index", new { thisUserLoggedOn = "" }, new { href = "?user=" + m.UserName })</td>
+
+        
+        <td style="text-align:right">@Html.LabelFor(model=> m.UserName , m.Name != null ? m.Name : m.UserName)</td>
+      </tr>
+    }
+
+</table>
+}
