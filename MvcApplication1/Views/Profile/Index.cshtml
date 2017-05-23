@@ -9,8 +9,8 @@
 <nav>
     <ul id="menu">
         <li>@Html.ActionLink("Мої статті", "MyArticle", FormMethod.Get)</li>
+        <li>@Html.ActionLink("Заявки", "LoadStudentRequests", "Requests")</li>
         <li>@Html.ActionLink("Чат", "Index", "Chat")</li>
-        <li>@Html.ActionLink("Заявки", "Requests", FormMethod.Get)</li>
         <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Get)</li>
 
     </ul>
@@ -67,7 +67,8 @@
         </div>
         <h3>Про мене</h3>
         @Html.LabelFor(model => model.About_me, Model.About_me != null ? Model.About_me : "")
-
+            
+            
     </fieldset>
 }  
 @section Scripts {

@@ -121,7 +121,7 @@ namespace MvcApplication1.Controllers
                     }
                     else model = new ProfileModel() { };
                 }
-
+            
                 MentorsModel mentor;
 
                 if (model.searchMentor != null && model.searchMentor != "")
