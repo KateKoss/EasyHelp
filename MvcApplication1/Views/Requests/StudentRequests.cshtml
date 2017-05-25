@@ -32,8 +32,10 @@
                 <td>
                     @t.requestName
                     <nav>
+                        @if(t.requestState == "request not resolved"){
                         @Html.ActionLink("Позначити як вирішену", "MarkAsResolved", "Requests", new { requestId = t.requestId }, null)
-                        |@Html.ActionLink("Скасувати", "MarkAsCanceled", "Requests", new { requestId = t.requestId }, null)
+    <span>|</span>@Html.ActionLink("Скасувати", "MarkAsCanceled", "Requests", new { requestId = t.requestId }, null)
+                        }
                     </nav>
                 </td>
                 <td>

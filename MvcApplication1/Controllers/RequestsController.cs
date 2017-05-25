@@ -76,12 +76,12 @@ namespace MvcApplication1.Controllers
             if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);  //если заявка не решена и не отменена отображаем как активные
             req = new RequestsModel.Request("user1_6", "Help with 2...", "bla-bla2", null, "request canceled");
             if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);
-            if (requestsModel.reqests.Contains(resolvThisReq.reqests[0]))
-            {
-                requestsModel.reqests.Remove(resolvThisReq.reqests[0]);
-            }
+            //if (requestsModel.reqests.Contains(resolvThisReq.reqests[0]))
+            //{
+            //    requestsModel.reqests.Remove(resolvThisReq.reqests[0]);
+            //}
 
-            return View("Index", requestsModel.reqests);
+            return View("StudentRequests", requestsModel.reqests);
         }
 
         [HttpGet]
@@ -92,7 +92,7 @@ namespace MvcApplication1.Controllers
             if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);  //если заявка не решена и не отменена отображаем как активные
             req = new RequestsModel.Request("user1_6", "Help with 2...", "bla-bla2", null, "request canceled");
             if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);
-            return View("Index", requestsModel.reqests);
+            return View("StudentRequests", requestsModel.reqests);
         }
 
         //--------------------------Создание/сохранение заявки-----------------------------------------------
