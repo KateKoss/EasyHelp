@@ -1,0 +1,27 @@
+﻿@model MvcApplication1.Models.ArticleModel
+@{
+    ViewBag.Title = "ShowArticles";
+}
+
+<h2>Публікації</h2>
+
+@using (Html.BeginForm("ShowArticles", "Profile", FormMethod.Post))
+{
+    <br />
+    if (Model.articleNames != null)
+    {
+        @Html.ListBoxFor(m => m.articleName, Model.articleNames, new { size = 3, style = "width:300px; height:100px;" })
+    }
+    <p>
+        <button>Переглянути</button>
+    </p>
+
+    if (Model.articleTitle != null)
+    {
+        <h2>@Html.LabelFor(m => m.articleTitle, Model.articleTitle)</h2>
+        @Html.LabelFor(m => m.articleText, Model.articleText!=null? Model.articleText : "")
+    }
+    <p>
+        @Html.ActionLink("Назад", "Index", "Profile", new { user = Model.createdBy }, null)
+    </p>
+}
