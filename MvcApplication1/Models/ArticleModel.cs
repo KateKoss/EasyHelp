@@ -20,6 +20,15 @@ namespace MvcApplication1.Models
         public string articleTitle { get; set; }
         public string articleText { get; set; }
         public bool isPublished { get; set; }
+        public string whoLikes { get; set; }
+        public string whoDislikes { get; set; }
+        public IEnumerable<string> SelectedTeg { get; set; }
+        public IEnumerable<SelectListItem> TegList { get; set; }
+
+        [NotMapped]
+        public bool youAreLikeThisArticle { get; set; }
+        [NotMapped]
+        public bool youAreDislikeThisArticle { get; set; }
         
     }
 }

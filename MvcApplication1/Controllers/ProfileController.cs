@@ -39,10 +39,8 @@ namespace MvcApplication1.Controllers
 
                 // Создать объект cookie-набора
                 HttpCookie cookie = new HttpCookie("MentorId");
-
                 // Установить значения в нем
                 cookie.Value = user;
-
                 // Добавить куки в ответ
                 Response.Cookies.Add(cookie);
 
@@ -752,6 +750,24 @@ namespace MvcApplication1.Controllers
             {
                 model = getArticle(currentMent);
 
+                List<SelectListItem> listSelectListItems = new List<SelectListItem>();
+                SelectListItem selectList = new SelectListItem()
+                {
+                    Text = "Подобається",
+                    Value = "1",
+                    Selected = true
+
+                };
+                listSelectListItems.Add(selectList);
+                selectList = new SelectListItem()
+                {
+                    Text = "Не подобається",
+                    Value = "2"
+
+                };
+                listSelectListItems.Add(selectList);
+
+                model.TegList = listSelectListItems;
             }
             else
                 model = new ArticleModel() { };
@@ -761,15 +777,110 @@ namespace MvcApplication1.Controllers
         [HttpPost]
         public ActionResult ShowArticles(ArticleModel model)
         {
-            string currentPerson;
+            string currentMent;
             if (Request.Cookies["MentorId"] != null)
-                currentPerson = Convert.ToString(Request.Cookies["MentorId"].Value);
-            else currentPerson = "";
-            if (currentPerson!="")
-                LoadArtcileIntoForm(model, currentPerson);
-            model.createdBy = currentPerson;
+                currentMent = Convert.ToString(Request.Cookies["MentorId"].Value);
+            else currentMent = "";
+            if (currentMent != "")
+            {
+                LoadArtcileIntoForm(model, currentMent);
+                model.createdBy = currentMent;
+
+                List<SelectListItem> listSelectListItems = new List<SelectListItem>();
+                SelectListItem selectList = new SelectListItem()
+                {
+                    Text = "Подобається",
+                    Value = "1",
+                    Selected = true
+
+                };
+                listSelectListItems.Add(selectList);
+                selectList = new SelectListItem()
+                {
+                    Text = "Не подобається",
+                    Value = "2"
+
+                };
+                listSelectListItems.Add(selectList);
+
+                model.TegList = listSelectListItems;
+                LikeDislike(model);
+            }
+
 
             return View("ShowArticles", model);
+        }
+
+        
+        public void LikeDislike(ArticleModel model)
+        {
+            string currentMent;
+            if (Request.Cookies["MentorId"] != null)
+                currentMent = Convert.ToString(Request.Cookies["MentorId"].Value);
+            else currentMent = "";
+            if (currentMent != "")
+            {
+                string currentPerson;
+                if (Request.Cookies["UserId"] != null)
+                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                else currentPerson = "user1";
+
+                using (CustomDbContext db = new CustomDbContext())
+                {
+                    var m = db.ArticleModel.SingleOrDefault(x => x.articleID == model.articleID);
+                    if (model.SelectedTeg != null)
+                    {
+                        if (model.SelectedTeg.FirstOrDefault() == "1")
+                        {
+                            if (m.whoLikes != null)
+                            {
+                                var whoLikes = m.whoLikes;
+                                if (!m.whoLikes.Contains(currentPerson))
+                                    m.whoLikes = whoLikes + currentPerson + " ";
+                            }
+                            else m.whoLikes = currentPerson + " ";
+                            if (m.whoDislikes != null)
+                                if (m.whoDislikes.Contains(currentPerson))
+                                {
+                                    var whoDislikes = m.whoDislikes;
+                                    m.whoDislikes = whoDislikes.Replace(currentPerson, " ");
+                                }
+                        }
+                        else if (model.SelectedTeg.FirstOrDefault() == "2")
+                        {
+                            if (m.whoDislikes != null)
+                            {
+                                var whoDislikes = m.whoDislikes;
+                                if (!m.whoDislikes.Contains(currentPerson))
+                                    m.whoDislikes = whoDislikes + currentPerson + " ";
+                            }
+                            else m.whoDislikes = currentPerson + " ";
+                            if (m.whoLikes != null)
+                                if (m.whoLikes.Contains(currentPerson))
+                                {
+                                    var whoLikes = m.whoLikes;
+                                    m.whoLikes = whoLikes.Replace(currentPerson, " ");
+                                }
+                        }
+                    }
+                    if (m.whoLikes != null)
+                        if (m.whoLikes.Contains(currentPerson))
+                        {
+                            model.youAreLikeThisArticle = true;
+                            model.youAreDislikeThisArticle = false;
+                        }
+                        else model.youAreLikeThisArticle = false;
+                    if (m.whoDislikes != null)
+                        if (m.whoDislikes.Contains(currentPerson))
+                        {
+                            model.youAreDislikeThisArticle = true;
+                            model.youAreLikeThisArticle = false;
+                        }
+                        else model.youAreDislikeThisArticle = false;
+                    db.SaveChanges();
+                }
+            }
+            //return View("ShowArticles", model);
         }
     }
 }

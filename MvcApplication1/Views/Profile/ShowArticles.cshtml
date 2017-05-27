@@ -16,12 +16,32 @@
         <button>Переглянути</button>
     </p>
 
+
+
     if (Model.articleTitle != null)
     {
+        //using (Html.BeginForm("LikeDislike", "Profile", FormMethod.Post))
+        {
+            <div>
+                @if (Model.youAreLikeThisArticle)
+                {
+                    <div>Тобі сподобалася ця стаття</div>
+                }
+                @if (Model.youAreDislikeThisArticle)
+                {
+                    <div>Тобі не сподобалася ця стаття</div>
+                }
+
+                @Html.DropDownListFor(model => model.SelectedTeg, Model.TegList, new { size = 1, style = "width:200px;" })
+                <button>-></button>
+            </div>
+        }
         <h2>@Html.LabelFor(m => m.articleTitle, Model.articleTitle)</h2>
-        @Html.LabelFor(m => m.articleText, Model.articleText!=null? Model.articleText : "")
+        @Html.LabelFor(m => m.articleText, Model.articleText != null ? Model.articleText : "")
     }
     <p>
         @Html.ActionLink("Назад", "Index", "Profile", new { user = Model.createdBy }, null)
     </p>
+
 }
+
