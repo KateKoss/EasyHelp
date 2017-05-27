@@ -410,24 +410,35 @@ namespace MvcApplication1.Controllers
             if (Request.Cookies["UserId"] != null)
                 currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
             else currentPerson = "user1";
-            ArticleModel myModel = getArticle(currentPerson);
+            ArticleModel myModel = getArticle(currentPerson, false);
             return View(myModel);
         }
 
-        public ArticleModel getArticle(string currentPerson)
+        public ArticleModel getArticle(string currentPerson, bool onlyPublsihed)
         {
             List<SelectListItem> listSelectListItems = new List<SelectListItem>();
             using (CustomDbContext db = new CustomDbContext())
             {
-                foreach (var article in db.ArticleModel.Where(x => x.createdBy == currentPerson))
-                {
-                    SelectListItem selectList = new SelectListItem()
+                if (!onlyPublsihed)
+                    foreach (var article in db.ArticleModel.Where(x => x.createdBy == currentPerson))
                     {
-                        Text = article.articleTitle,
-                        Value = article.articleID
-                    };
-                    listSelectListItems.Add(selectList);
-                }
+                        SelectListItem selectList = new SelectListItem()
+                        {
+                            Text = article.articleTitle,
+                            Value = article.articleID
+                        };
+                        listSelectListItems.Add(selectList);
+                    }
+                else
+                    foreach (var article in db.ArticleModel.Where(x => x.createdBy == currentPerson && x.isPublished == true))
+                    {
+                        SelectListItem selectList = new SelectListItem()
+                        {
+                            Text = article.articleTitle,
+                            Value = article.articleID
+                        };
+                        listSelectListItems.Add(selectList);
+                    }
             }
             ArticleModel myModel = new ArticleModel()
             {
@@ -450,10 +461,10 @@ namespace MvcApplication1.Controllers
         }
 
 
-        public void LoadArtcileIntoForm(ArticleModel model, string currentPerson)
+        public void LoadArtcileIntoForm(ArticleModel model, string currentPerson, bool onlyPublished)
         {
 
-            model.articleNames = getArticle(currentPerson).articleNames;
+            model.articleNames = getArticle(currentPerson, onlyPublished).articleNames;
             var str = "";
             if (model.articleName != null)
                 foreach (string s in model.articleName)
@@ -483,7 +494,7 @@ namespace MvcApplication1.Controllers
             if (Request.Cookies["UserId"] != null)
                 currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
             else currentPerson = "user1";
-            LoadArtcileIntoForm(model, currentPerson);
+            LoadArtcileIntoForm(model, currentPerson, false);
 
             return View("CreateArticle", model);
         }
@@ -748,7 +759,7 @@ namespace MvcApplication1.Controllers
             else currentMent = "";
             if (currentMent != "")
             {
-                model = getArticle(currentMent);
+                model = getArticle(currentMent, true);
 
                 List<SelectListItem> listSelectListItems = new List<SelectListItem>();
                 SelectListItem selectList = new SelectListItem()
@@ -783,7 +794,7 @@ namespace MvcApplication1.Controllers
             else currentMent = "";
             if (currentMent != "")
             {
-                LoadArtcileIntoForm(model, currentMent);
+                LoadArtcileIntoForm(model, currentMent, true);
                 model.createdBy = currentMent;
 
                 List<SelectListItem> listSelectListItems = new List<SelectListItem>();
