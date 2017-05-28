@@ -16,7 +16,7 @@ namespace MvcApplication1.Models
         public string createdBy { get; set; }
         public IEnumerable<string> articleName { get; set; }
         public IEnumerable<SelectListItem> articleNames { get; set; }
-        [Required(AllowEmptyStrings=false,ErrorMessage = "Введіть назву саттті.")]
+        [Required(AllowEmptyStrings=false,ErrorMessage = "Введіть назву статті.")]
         public string articleTitle { get; set; }
         public string articleText { get; set; }
         public bool isPublished { get; set; }

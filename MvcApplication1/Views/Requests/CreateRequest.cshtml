@@ -1,4 +1,4 @@
-﻿@model MvcApplication1.Models.RequestsModel.Request
+﻿@model MvcApplication1.Models.RequestModel
 @{
     ViewBag.Title = "Створення заявки";
 }
@@ -9,7 +9,7 @@
     <p>
         <h3>Заголовок заявки</h3>
         @Html.TextBoxFor(model => model.requestName, new { @placeholder = "Навза заявки" })
-        @Html.ValidationMessageFor(model => model.requestName)
+        @Html.ValidationMessageFor(model => model.requestName, "Введіть назву заявки.")
     </p>
     <h3>Текст заявки</h3>
     @Html.TextAreaFor(model => model.requestText, new { @placeholder = "Текст заявки" })
