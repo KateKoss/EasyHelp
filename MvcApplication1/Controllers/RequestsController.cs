@@ -153,10 +153,11 @@ namespace MvcApplication1.Controllers
                 }
                 else
                 {
-                    req.requestId = currentPerson + "_" + count + 1;
+                    req.requestId = currentPerson + "_" + (count + 1);
                 }
                 req.requestState = "request not resolved";
                 req.createdBy = currentPerson;
+                req.createdAt = DateTime.Now;
                 if (req.requestName == null)
                     req.requestName = req.requestText.Substring(0, 10);
                 db.RequestsModel.Add(

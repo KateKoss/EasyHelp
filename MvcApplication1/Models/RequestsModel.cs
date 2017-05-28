@@ -27,6 +27,7 @@ namespace MvcApplication1.Models
 
         [Key]
         public string requestId { get; set; }
+        public DateTime createdAt { get; set; }
         [Required(AllowEmptyStrings = false, ErrorMessage = "Введіть назву заявки.")]
         public string requestName { get; set; }
         public string requestText { get; set; }

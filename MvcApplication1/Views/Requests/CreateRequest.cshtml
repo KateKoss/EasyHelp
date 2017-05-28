@@ -3,25 +3,41 @@
     ViewBag.Title = "Створення заявки";
 }
 
-<h2>Створення заявки</h2>
-@using (Html.BeginForm("SaveReqest", "Requests", FormMethod.Post))
-{
-    <p>
-        <h3>Заголовок заявки</h3>
-        @Html.TextBoxFor(model => model.requestName, new { @placeholder = "Навза заявки" })
-        @Html.ValidationMessageFor(model => model.requestName, "Введіть назву заявки.")
-    </p>
-    <h3>Текст заявки</h3>
-    @Html.TextAreaFor(model => model.requestText, new { @placeholder = "Текст заявки" })
+<head>
+    <title></title>
+    @*<script src="../../Scripts/Chat.js"></script>
 
-    <p>
+    <style type="text/css">
+    </style>*@
 
-        <button type="submit" name="action" value="saveToDraft">Створити</button>
-    </p>
-    @Html.TextBoxFor(model => model.requestId, new { @style = "visibility:hidden;" })
-    @Html.TextBoxFor(model => model.TegList, new { @style = "visibility:hidden;" })
-    @Html.TextBoxFor(model => model.requestState, new { @style = "visibility:hidden;" })
+</head>
+<body>
+
+    <h2>Створення заявки</h2>
+    @using (Html.BeginForm("SaveReqest", "Requests", FormMethod.Post))
+    {
+        <p>
+            <h3>Заголовок заявки</h3>
+            @Html.TextBoxFor(model => model.requestName, new { @placeholder = "Навза заявки" })
+            @Html.ValidationMessageFor(model => model.requestName, "Введіть назву заявки.")
+        </p>
+        <h3>Текст заявки</h3>
+        @Html.TextAreaFor(model => model.requestText, new { @placeholder = "Текст заявки" })
+
+        <p>
+            <button type="submit" id="btnCreateRequest">Створити</button>
+        </p>
+        @Html.TextBoxFor(model => model.requestId, new { @style = "visibility:hidden;" })
+        @Html.TextBoxFor(model => model.TegList, new { @style = "visibility:hidden;" })
+        @Html.TextBoxFor(model => model.requestState, new { @style = "visibility:hidden;" })
+    }
+    
+    @*@Ajax.ActionLink("ActionLink", "Index", "Chat", new { user = "user1", logOn = true, logOff = "", chatMessage = "bllll" }, new AjaxOptions { UpdateTargetId = "RefreshArea", OnSuccess = "ChatOnSuccess", OnFailure = "ChatOnFailure" }, new { @id = "ActionLink2", @style = "visibility:hidden;" })*@
+
+    <div>
+        @Html.ActionLink("Назад", "LoadStudentRequests")
+    </div>
+</body>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
 }
-<div>
-    @Html.ActionLink("Назад", "LoadStudentRequests")
-</div>
