@@ -126,19 +126,33 @@ namespace MvcApplication1.Controllers
                     model.questionId = 1;
                     model.valueOfanswer = Convert.ToInt32(model.SelectedTeg1.Last());
                     model.id = model.user + '_' + model.questionId;
-
+                    var id = model.id;
                     int count = db.FindAssosiatesModel.Count(x => x.user == currentPerson && x.questionId == model.questionId);
                     if (count == 0)
                     {
-                        db.FindAssosiatesModel.Add(model);
+                        db.FindAssosiatesModel.Add(new FindAssosiatesModel { id = id });
+                        db.SaveChanges();
+                        var m = db.FindAssosiatesModel.SingleOrDefault(x => x.id == id);
+                        m.questionId = model.questionId;
+                        m.user = model.user;
+                        m.valueOfanswer = model.valueOfanswer;
                         db.SaveChanges();
                     }
                     else
                     {
                         var m = db.FindAssosiatesModel.SingleOrDefault(x => x.id == model.id);
-                        if (m!=null)
+                        if (m != null)
                             m.valueOfanswer = model.valueOfanswer;
-                        else db.FindAssosiatesModel.Add(model);
+                        else
+                        {
+                            db.FindAssosiatesModel.Add(new FindAssosiatesModel { id = id });
+                            db.SaveChanges();
+                            m = db.FindAssosiatesModel.SingleOrDefault(x => x.id == id);
+                            m.questionId = model.questionId;
+                            m.user = model.user;
+                            m.valueOfanswer = model.valueOfanswer;
+                            db.SaveChanges();
+                        }
                         db.SaveChanges();
                     }
                 }
@@ -147,19 +161,34 @@ namespace MvcApplication1.Controllers
                     model.questionId = 2;
                     model.valueOfanswer = Convert.ToInt32(model.SelectedTeg2.Last());
                     model.id = model.user + '_' + model.questionId;
-
+                    var id = model.id;
                     int count = db.FindAssosiatesModel.Count(x => x.user == currentPerson && x.questionId == model.questionId);
                     if (count == 0)
                     {
-                        db.FindAssosiatesModel.Add(model);
+                        
+                        db.FindAssosiatesModel.Add(new FindAssosiatesModel { id = id});
+                        db.SaveChanges();
+                        var m = db.FindAssosiatesModel.SingleOrDefault(x => x.id == id);
+                        m.questionId = model.questionId;
+                        m.user = model.user;
+                        m.valueOfanswer = model.valueOfanswer;
                         db.SaveChanges();
                     }
                     else
                     {
-                        var m = db.FindAssosiatesModel.SingleOrDefault(x => x.id == model.id);
+                        var m = db.FindAssosiatesModel.SingleOrDefault(x => x.id == id);
                         if (m != null)
                             m.valueOfanswer = model.valueOfanswer;
-                        //else db.FindAssosiatesModel.Add(model);
+                        else
+                        {
+                            db.FindAssosiatesModel.Add(new FindAssosiatesModel { id = id });
+                            db.SaveChanges();
+                            m = db.FindAssosiatesModel.SingleOrDefault(x => x.id == model.id);
+                            m.questionId = model.questionId;
+                            m.user = model.user;
+                            m.valueOfanswer = model.valueOfanswer;
+                            
+                        }
                         db.SaveChanges();
                     }
                 }

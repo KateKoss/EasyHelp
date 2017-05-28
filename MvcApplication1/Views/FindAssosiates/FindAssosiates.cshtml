@@ -6,8 +6,8 @@
 <h2>Знайти однодумців</h2>
 <nav>
     <ul id="menu">
-        <li>@Html.ActionLink("Профіль", "Index", FormMethod.Get)</li>
-        <li>@Html.ActionLink("Мої статті", "MyArticle", FormMethod.Get)</li>
+        <li>@Html.ActionLink("Профіль", "Index", "Profile")</li>
+        <li>@Html.ActionLink("Мої статті", "MyArticle", "Profile")</li>
         <li>@Html.ActionLink("Заявки", "LoadStudentRequests", "Requests")</li>
     </ul>
 </nav>
@@ -43,3 +43,6 @@
         @Html.Partial("Assosiates", Model.users)
     </p>
 }
+<div>
+    @Html.ActionLink("Назад", "Index", "Profile")
+</div>

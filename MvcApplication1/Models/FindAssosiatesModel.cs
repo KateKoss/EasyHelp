@@ -17,7 +17,7 @@ namespace MvcApplication1.Models
         public IEnumerable<SelectListItem> TegList2 { get; set; }
 
         [Key]
-        public string id { get; set; }
+        public string id { get; set; }       
         public string user { get; set; }
         public int questionId { get; set; }
         public int valueOfanswer { get; set; }
