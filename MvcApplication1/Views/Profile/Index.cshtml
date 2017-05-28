@@ -9,7 +9,8 @@
 <nav>
     <ul id="menu">
         <li>@Html.ActionLink("Мої статті", "MyArticle", FormMethod.Get)</li>
-        <li>@Html.ActionLink("Заявки", "LoadStudentRequests", "Requests")</li>
+        <li>@Html.ActionLink("Заявки", "LoadStudentRequests", "Requests")</li> @*возможно тут нужно сделать проверку является ли пользователь ментрорм, 
+                                                                                   если да - вызывать LoadMentorRequests*@ 
         <li>@Html.ActionLink("Чат", "Index", "Chat")</li>
         <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Get)</li>
 

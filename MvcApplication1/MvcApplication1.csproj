@@ -338,6 +338,9 @@
     <Content Include="Views\Profile\RateMentorPartial.cshtml" />
     <Content Include="packages.config" />
     <Content Include="Views\Requests\CreateRequest.cshtml" />
+    <Content Include="Views\Requests\MentorRequests.cshtml" />
+    <Content Include="Views\Requests\EditRequest.cshtml" />
+    <Content Include="Views\Requests\RequestDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

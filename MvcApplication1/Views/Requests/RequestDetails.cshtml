@@ -1,0 +1,18 @@
+﻿@model MvcApplication1.Models.RequestsModel.Request
+@{
+    ViewBag.Title = "Деталі заявки";
+}
+
+<h2>Деталі заявки</h2>
+
+<p>
+    <h3>Заголовок заявки</h3>
+    @Html.LabelFor(model => model.requestName, new { @placeholder = "Навза заявки" })
+    @Html.ValidationMessageFor(model => model.requestName)
+</p>
+<h3>Текст заявки</h3>
+@Html.LabelFor(model => model.requestText, new { @placeholder = "Текст заявки" })
+
+<div>
+    @Html.ActionLink("Назад", "LoadStudentRequests") @*должно быть LoadMentorRequests*@
+</div>

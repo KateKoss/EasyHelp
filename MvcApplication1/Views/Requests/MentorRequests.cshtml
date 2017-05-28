@@ -1,0 +1,37 @@
+﻿@model List<MvcApplication1.Models.RequestsModel.Request>
+@{
+    ViewBag.Title = "Requests";
+}
+
+<h2>Заявки</h2>
+<nav>
+    <ul id="menu">
+        <li>@Html.ActionLink("Профіль", "Index", "Profile")</li>
+        <li>@Html.ActionLink("Чат", "Index", "Chat")</li>
+        <li>@Html.ActionLink("Мої статті", "MyArticle", "Profile")</li>
+    </ul>
+</nav>
+
+<nav>
+    @Html.ActionLink("Відкриті", "MentorAvailableRequests", "Requests")
+    | @Html.ActionLink("Вирішені", "MentorResolvedRequests", "Requests")
+    | @Html.ActionLink("Закриті", "MentorCanceledRequests", "Requests")
+</nav>
+<div>
+    <table cellspacing="2" border="1" cellpadding="5" width="600">
+        @foreach (var t in Model)
+        {
+            <tr>
+                <td>
+                    @t.requestName
+                    @*<nav>
+                        @Html.ActionLink("Детальніше", "AboutRequest", "Requests", new { requestId = t.requestId }, null)
+                    </nav>*@
+                </td>
+                <td>
+                    @t.requestState
+                </td>
+            </tr>
+        }
+    </table>
+</div>
