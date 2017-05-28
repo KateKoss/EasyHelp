@@ -6,14 +6,6 @@
 
 <h2>Редагування</h2>
 
-<nav>
-    <ul id="menu">
-        @*<li>@Html.ActionLink("Профіль", "Index", FormMethod.Get)</li>*@
-        <li>@Html.ActionLink("Мої статті", "MyArticle", FormMethod.Get)</li>
-        <li>@Html.ActionLink("Заявки", "Requests", FormMethod.Get)</li>  
-        <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", FormMethod.Get)</li>  
-    </ul>
-</nav>
 @using (Html.BeginForm("AddTeg", "Profile", FormMethod.Post))
 {
     <h3>Теги</h3>

@@ -17,5 +17,6 @@ namespace MvcApplication1.Contexts
         public DbSet<ProfileModel> ProfileModel { get; set; }
         public DbSet<ArticleModel> ArticleModel { get; set; }        
         public DbSet<RequestModel> RequestsModel { get; set; }
+        public DbSet<FindAssosiatesModel> FindAssosiatesModel { get; set; }
     }
 }

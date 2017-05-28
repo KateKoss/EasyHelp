@@ -497,26 +497,7 @@ namespace MvcApplication1.Controllers
             LoadArtcileIntoForm(model, currentPerson, false);
 
             return View("CreateArticle", model);
-        }
-
-        [HttpGet]
-        public ActionResult FindAssosiates(ProfileModel model)
-        {
-            return View("FindAssosiates", model);
-        }
-
-        [HttpPost]
-        public ActionResult RetakeTest(ProfileModel model)
-        {
-            //пройти тест заново
-            return View("FindAssosiates", model);
-        }
-
-        public ActionResult ConfirmTestTest(ProfileModel model)
-        {
-            //пройти тест заново
-            return View("Index", model);
-        }
+        }        
 
         [HttpGet]
         public ActionResult Requests(ProfileModel model)

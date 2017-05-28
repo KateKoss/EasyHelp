@@ -1,0 +1,45 @@
+﻿@model MvcApplication1.Models.FindAssosiatesModel
+@{
+    ViewBag.Title = "Знайти однодумців";
+}
+
+<h2>Знайти однодумців</h2>
+<nav>
+    <ul id="menu">
+        <li>@Html.ActionLink("Профіль", "Index", FormMethod.Get)</li>
+        <li>@Html.ActionLink("Мої статті", "MyArticle", FormMethod.Get)</li>
+        <li>@Html.ActionLink("Заявки", "LoadStudentRequests", "Requests")</li>
+    </ul>
+</nav>
+
+<h3>
+    Дайте відповіді на питання:
+</h3>
+
+
+@using (Html.BeginForm("ConfirmTest", "FindAssosiates", FormMethod.Post))
+{
+    <fieldset>
+        <h3>Питання 1</h3>
+        Яка ваша улюблена страва?
+        @Html.DropDownListFor(model => model.SelectedTeg1, Model.TegList1, new { size = 1 })
+
+        <h3>Питання 2</h3>
+        Як ви любите відпочивати?
+        @Html.DropDownListFor(model => model.SelectedTeg2, Model.TegList2, new { size = 1 })
+
+        @*@using (Html.BeginForm("RetakeTest", "FindAssosiates", FormMethod.Post))
+        {
+            <p>
+                <button>Повторно пройти анкетування</button>
+            </p>
+        }*@
+
+        <p>
+            <button>Підтвердити</button>
+        </p>
+    </fieldset>
+    <p>
+        @Html.Partial("Assosiates", Model.users)
+    </p>
+}
