@@ -45,7 +45,7 @@ namespace MvcApplication1.Controllers
                 Response.Cookies.Add(cookie);
 
                 model = getMentorInf(user);
-                
+
                 return View("MentorPage", model);
             }
             else
@@ -280,9 +280,9 @@ namespace MvcApplication1.Controllers
                         //якщо користувач обрав існуючу статтю для редагування
                         if (model.articleID != null)
                         {
-                            articleid = currentPerson + "_" + model.articleID;
+                            //articleid = currentPerson + "_" + model.articleID;
                             //перевіряємо чи власне є ця стаття у бд
-                            myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleid);
+                            myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == model.articleID);
                             if (myModel != null)//якщо є
                             {
                                 myModel.articleTitle = model.articleTitle;
@@ -293,8 +293,8 @@ namespace MvcApplication1.Controllers
                             else
                             {
 
-                                db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson, articleTitle = model.articleTitle });
-                                myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleid);
+                                db.ArticleModel.Add(new ArticleModel { articleID = model.articleID, createdBy = currentPerson, articleTitle = model.articleTitle });
+                                myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == model.articleID);
                                 if (myModel != null)
                                 {
                                     myModel.articleTitle = model.articleTitle;
@@ -359,9 +359,9 @@ namespace MvcApplication1.Controllers
                         //якщо користувач обрав існуючу статтю для редагування
                         if (model.articleID != null)
                         {
-                            articleid = currentPerson + "_" + model.articleID;
+                            //articleid = currentPerson + "_" + model.articleID;
                             //перевіряємо чи власне є ця стаття у бд
-                            myModel = db.ArticleModel.SingleOrDefault(x => x.articleID == articleid);
+                            myModel = db.ArticleModel.SingleOrDefault(x => x.articleID == model.articleID);
                             if (myModel != null)//якщо є
                             {
                                 myModel.articleTitle = model.articleTitle;
@@ -370,8 +370,8 @@ namespace MvcApplication1.Controllers
                             }
                             else
                             {
-                                db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson, articleTitle = model.articleTitle });
-                                myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleid);
+                                db.ArticleModel.Add(new ArticleModel { articleID = model.articleID, createdBy = currentPerson, articleTitle = model.articleTitle });
+                                myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == model.articleID);
                                 if (myModel != null)
                                 {
                                     myModel.articleTitle = model.articleTitle;
@@ -497,7 +497,7 @@ namespace MvcApplication1.Controllers
             LoadArtcileIntoForm(model, currentPerson, false);
 
             return View("CreateArticle", model);
-        }        
+        }
 
         [HttpGet]
         public ActionResult Requests(ProfileModel model)
@@ -605,7 +605,7 @@ namespace MvcApplication1.Controllers
                 {
                     //model.TegList.SingleOrDefault(x => x.Value == s);
 
-                    str += model.TegList.SingleOrDefault(x => x.Value == s).Text + " ";
+                    str += model.TegList.SingleOrDefault(x => x.Value == s).Text;
                 }
 
             using (CustomDbContext db = new CustomDbContext())
@@ -621,10 +621,19 @@ namespace MvcApplication1.Controllers
                     var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
                     var tegs = myModel.MyTegs;
                     if (tegs != null)
-                        if (tegs.Contains(str))
-                            myModel.MyTegs = tegs.Replace(str, " ");
-                        else myModel.MyTegs = tegs + str;
-                    else myModel.MyTegs = str;
+                    {
+                        if (tegs.Contains(' ' + str + ' '))
+                            myModel.MyTegs = tegs.Replace(' ' + str + ' ', " ");
+                        else
+                        {
+                            if (tegs.Contains(' ' + str))
+                                myModel.MyTegs = tegs.Replace(' ' + str, " ");
+                            else if (tegs.Contains(str + ' '))
+                                myModel.MyTegs = tegs.Substring(str.Length+1);
+                            else myModel.MyTegs = tegs + str + " ";
+                        }                       
+                    }
+                    else myModel.MyTegs = str + " ";
 
 
                     db.SaveChanges();
@@ -680,7 +689,7 @@ namespace MvcApplication1.Controllers
                     else ModelState.AddModelError("Error", "Error");
                 }
             }
-            return View("Index", model);
+            return RedirectToAction("Index");
         }
 
         public ActionResult SetMentorRate(ProfileModel model)
@@ -803,7 +812,7 @@ namespace MvcApplication1.Controllers
             return View("ShowArticles", model);
         }
 
-        
+
         public void LikeDislike(ArticleModel model)
         {
             string currentMent;
