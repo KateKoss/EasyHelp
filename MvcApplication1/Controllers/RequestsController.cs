@@ -19,90 +19,115 @@ namespace MvcApplication1.Controllers
     public class RequestsController : Controller
     {
         [HttpGet]
-        public ActionResult LoadStudentRequests(RequestsModel m, string user)
+        public ActionResult LoadStudentRequests()
         {
-            //в модель передать все активные заявки из бд 
-            if (user != null) //если юзер ментор
+            RequestsList requestsModel = new RequestsList();
+            string currentPerson;
+            if (Request.Cookies["UserId"] != null)
+                currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+            else currentPerson = "user1";
+            using (CustomDbContext db = new CustomDbContext())
             {
-                RequestsModel.Request req = new RequestsModel.Request("user1_1", "Help with Java", "bla-bla1", null, "request not resolved");
-                if (req.requestState != "request resolved" && req.requestState != "request canceled") m.reqests.Add(req);
-                req = new RequestsModel.Request("user1_2", "Help with C#", "bla-bla2", null, "request not resolved");
-                if (req.requestState != "request resolved" && req.requestState != "request canceled") m.reqests.Add(req);
-                return View("MentorRequests", m.reqests);
+                var r = db.RequestsModel.Where(x => x.createdBy == currentPerson && x.requestState == "request not resolved");
+                if (r!=null)
+                    foreach (var item in r)
+                    {
+                        requestsModel.reqests.Add(item);
+                    }
             }
-            else
-            {
-                RequestsModel requestsModel = new RequestsModel();
-                RequestsModel.Request req = new RequestsModel.Request("user1_1", "Help with Java", "bla-bla1", null, "request not resolved");
-                if (req.requestState != "request resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
-                req = new RequestsModel.Request("user1_2", "Help with C#", "bla-bla2", null, "request not resolved");
-                if (req.requestState != "request resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
-                return View("StudentRequests", requestsModel.reqests);
-            }
-        }
-
-        [HttpGet]
-        public ActionResult ActiveRequests()
-        {
-            RequestsModel requestsModel = new RequestsModel();
-            RequestsModel.Request req = new RequestsModel.Request("user1_1", "Help with 1...", "bla-bla1", null, "request not resolved");
-            if (req.requestState != "request resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);  //если заявка не решена и не отменена отображаем как активные
-            req = new RequestsModel.Request("user1_2", "Help with 2...", "bla-bla2", null, "request not resolved");
-            if (req.requestState != "request resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
-
+                //в модель передать все активные заявки из бд 
+                
+                //RequestModel req = new RequestModel("user1_1", "Help with Java", "bla-bla1", null, "request not resolved");
+                //if (req.requestState != "request resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
+                //req = new RequestModel("user1_2", "Help with C#", "bla-bla2", null, "request not resolved");
+                //if (req.requestState != "request resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
+            
             return View("StudentRequests", requestsModel.reqests);
-        }
+        }        
 
         [HttpGet]
         public ActionResult ResolvedRequests()
         {
-            RequestsModel requestsModel = new RequestsModel();
-            RequestsModel.Request req = new RequestsModel.Request("user1_3", "Help with 1...", "bla-bla1", null, "request resolved");
-            if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
-            if (Request.IsAjaxRequest() == true)
+            RequestsList requestsModel = new RequestsList();
+            string currentPerson;
+            if (Request.Cookies["UserId"] != null)
+                currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+            else currentPerson = "user1";
+            using (CustomDbContext db = new CustomDbContext())
             {
-                req = new RequestsModel.Request("user1_4", "Help with 2...", "bla-bla2", null, "request resolved");
-                if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
+                var r = db.RequestsModel.Where(x => x.createdBy == currentPerson && x.requestState == "request resolved");
+                if (r!=null)
+                    foreach (var item in r)
+                    {
+                        requestsModel.reqests.Add(item);
+                    }
             }
-            req = new RequestsModel.Request("user1_4", "Help with 2...", "bla-bla2", null, "request resolved");
+            
+            RequestModel req = new RequestModel("user1_3", "Help with 1...", "bla-bla1", null, "request resolved");
             if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
+            
+            
             return View("StudentRequests", requestsModel.reqests);
         }
         [HttpGet]
         public ActionResult CanceledRequests()
         {
-            RequestsModel requestsModel = new RequestsModel();
-            RequestsModel.Request req = new RequestsModel.Request("user1_5", "Help with 1...", "bla-bla1", null, "request canceled");
-            if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);
-            req = new RequestsModel.Request("user1_6", "Help with 2...", "bla-bla2", null, "request canceled");
-            if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);
-            return View("StudentRequests", requestsModel.reqests);
-        }
-        [HttpGet]
-        public ActionResult MarkAsResolved(RequestsModel resolvThisReq, string requestId)
-        {
-            RequestsModel requestsModel = new RequestsModel();
-            RequestsModel.Request req = new RequestsModel.Request("user1_5", "Help with 1...", "bla-bla1", null, "request canceled");
-            if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);  //если заявка не решена и не отменена отображаем как активные
-            req = new RequestsModel.Request("user1_6", "Help with 2...", "bla-bla2", null, "request canceled");
-            if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);
-            if (requestsModel.reqests.Contains(resolvThisReq.reqests[0]))
+            RequestsList requestsModel = new RequestsList();
+            string currentPerson;
+            if (Request.Cookies["UserId"] != null)
+                currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+            else currentPerson = "user1";
+            using (CustomDbContext db = new CustomDbContext())
             {
-                requestsModel.reqests.Remove(resolvThisReq.reqests[0]);
+                var r = db.RequestsModel.Where(x => x.createdBy == currentPerson && x.requestState == "request canceled");
+                if (r!=null)
+                    foreach (var item in r)
+                    {
+                        requestsModel.reqests.Add(item);
+                    }
             }
-
             return View("StudentRequests", requestsModel.reqests);
+        }
+        [HttpGet]
+        public ActionResult MarkAsResolved(RequestsList resolvThisReq, string requestId)
+        {
+            //RequestsList requestsModel = new RequestsList();
+            
+            using (CustomDbContext db = new CustomDbContext())
+            {
+                var r = db.RequestsModel.SingleOrDefault(x => x.requestId == requestId);
+
+                if (r != null)
+                    r.requestState = "request resolved";
+                db.SaveChanges();
+            }
+            //RequestModel req = new RequestModel("user1_5", "Help with 1...", "bla-bla1", null, "request canceled");
+            //if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);  //если заявка не решена и не отменена отображаем как активные
+            //req = new RequestModel("user1_6", "Help with 2...", "bla-bla2", null, "request canceled");
+            //if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);
+
+            //return View("StudentRequests", requestsModel.reqests);
+            return RedirectToAction("ResolvedRequests");
         }
 
         [HttpGet]
-        public ActionResult MarkAsCanseled(RequestsModel resolvThisReq, string requestId)
+        public ActionResult MarkAsCanceled(RequestsList resolvThisReq, string requestId)
         {
-            RequestsModel requestsModel = new RequestsModel();
-            RequestsModel.Request req = new RequestsModel.Request("user1_5", "Help with 1...", "bla-bla1", null, "request canceled");
-            if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);  //если заявка не решена и не отменена отображаем как активные
-            req = new RequestsModel.Request("user1_6", "Help with 2...", "bla-bla2", null, "request canceled");
-            if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);
-            return View("StudentRequests", requestsModel.reqests);
+            using (CustomDbContext db = new CustomDbContext())
+            {
+                var r = db.RequestsModel.SingleOrDefault(x => x.requestId == requestId);
+
+                if (r != null)
+                    r.requestState = "request canceled";
+                db.SaveChanges();
+            }
+            //RequestsList requestsModel = new RequestsList();
+            //RequestModel req = new RequestModel("user1_5", "Help with 1...", "bla-bla1", null, "request canceled");
+            //if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);  //если заявка не решена и не отменена отображаем как активные
+            //req = new RequestModel("user1_6", "Help with 2...", "bla-bla2", null, "request canceled");
+            //if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);
+            return RedirectToAction("CanceledRequests");
+            //return View("StudentRequests", requestsModel.reqests);
         }
 
         //--------------------------Создание/сохранение заявки-----------------------------------------------
@@ -115,35 +140,68 @@ namespace MvcApplication1.Controllers
         }
 
 
-        public ActionResult SaveReqest(RequestsModel.Request req)
+        public ActionResult SaveReqest(RequestModel req)
         {
-            req.requestState = "request not resolved";
-            //сохранить заявку в бд
+            using (CustomDbContext db = new CustomDbContext())
+            {
+                string currentPerson;
+                if (Request.Cookies["UserId"] != null)
+                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                else currentPerson = "user1";
+                int count = db.RequestsModel.Count(x => x.createdBy == currentPerson);
+                if (count == 0)
+                {
+                    req.requestId = currentPerson + "_1";                    
+                }
+                else
+                {
+                    req.requestId = currentPerson + "_" + (count + 1);
+                }
+                req.requestState = "request not resolved";
+                req.createdBy = currentPerson;
+                req.createdAt = DateTime.Now;
+                if (req.requestName == null)
+                    req.requestName = req.requestText.Substring(0, 10);
+                db.RequestsModel.Add(
+                //    new RequestModel { 
+                //    requestId = req.requestId,
+                //    requestName = req.requestName,
+                //    requestText = req.requestText,
+                //    requestState = req.requestState,
+                //    createdBy = req.createdBy
+                //}
+                req
+                );
+                db.SaveChanges();                
+                
+            }
+
             return RedirectToAction("LoadStudentRequests");
         }
 
         [HttpGet]
-        public ActionResult EditRequest(RequestsModel resolvThisReq, string requestId)
+        public ActionResult EditRequest(RequestsList resolvThisReq, string requestId)
         {
             //подгрузить инфу из бд для айди req.requestId
-            RequestsModel.Request req = new RequestsModel.Request(requestId, "Help with smth", "bla-bla1", null, "request not resolved");
+            RequestModel req = new RequestModel(requestId, "Help with smth", "bla-bla1", null, "request not resolved");
             return View("EditRequest", req);
         }
-
+        
         [HttpPost]
-        public ActionResult SaveChangesReqest(RequestsModel.Request req)
+        public ActionResult SaveChangesReqest(RequestModel req)
         {
             //сохранить изменения в бд по айди req.requestId
             return RedirectToAction("LoadStudentRequests");
         }
         //--------------------------Заявки для ментора-----------------------------------------------
 
-        public ActionResult LoadMentorRequests(RequestsModel m, string user)
+        public ActionResult LoadMentorRequests(RequestsList m, string user)
         {
-            RequestsModel.Request req = new RequestsModel.Request("user1_1", "Help with Java", "bla-bla1", null, "request not resolved");
-            if (req.requestState != "request resolved" && req.requestState != "request canceled") m.reqests.Add(req);
-            req = new RequestsModel.Request("user1_2", "Help with C#", "bla-bla2", null, "request not resolved");
-            if (req.requestState != "request resolved" && req.requestState != "request canceled") m.reqests.Add(req);
+            RequestsList requestsModel = new RequestsList();
+            RequestModel req = new RequestModel("user1_3", "Help with 1...", "bla-bla1", null, "request resolved");
+            if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
+            req = new RequestModel("user1_4", "Help with 2...", "bla-bla2", null, "request resolved");
+            if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
             return View("MentorRequests", m.reqests);
         }
             
@@ -151,21 +209,21 @@ namespace MvcApplication1.Controllers
         [HttpGet]
         public ActionResult MentorAvailableRequests()
         {
-            RequestsModel requestsModel = new RequestsModel();
-            RequestsModel.Request req = new RequestsModel.Request("user1_1", "Help with Java", "bla-bla1", null, "request not resolved");
-            if (req.requestState != "request resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
-            req = new RequestsModel.Request("user1_2", "Help with C#", "bla-bla2", null, "request not resolved");
-            if (req.requestState != "request resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
+            RequestsList requestsModel = new RequestsList();
+            RequestModel req = new RequestModel("user1_3", "Help with 1...", "bla-bla1", null, "request resolved");
+            if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
+            req = new RequestModel("user1_4", "Help with 2...", "bla-bla2", null, "request resolved");
+            if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
             return View("MentorRequests", requestsModel.reqests);
         }
 
         [HttpGet]
         public ActionResult MentorResolvedRequests()
         {
-            RequestsModel requestsModel = new RequestsModel();
-            RequestsModel.Request req = new RequestsModel.Request("user1_3", "Help with 1...", "bla-bla1", null, "request resolved");
+            RequestsList requestsModel = new RequestsList();
+            RequestModel req = new RequestModel("user1_3", "Help with 1...", "bla-bla1", null, "request resolved");
             if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
-            req = new RequestsModel.Request("user1_4", "Help with 2...", "bla-bla2", null, "request resolved");
+            req = new RequestModel("user1_4", "Help with 2...", "bla-bla2", null, "request resolved");
             if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
             return View("MentorRequests", requestsModel.reqests);
         }
@@ -173,18 +231,18 @@ namespace MvcApplication1.Controllers
         [HttpGet]
         public ActionResult MentorCanceledRequests()
         {
-            RequestsModel requestsModel = new RequestsModel();
-            RequestsModel.Request req = new RequestsModel.Request("user1_3", "Help with 1...", "bla-bla1", null, "request resolved");
+            RequestsList requestsModel = new RequestsList();
+            RequestModel req = new RequestModel("user1_3", "Help with 1...", "bla-bla1", null, "request resolved");
             if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
-            req = new RequestsModel.Request("user1_4", "Help with 2...", "bla-bla2", null, "request resolved");
+            req = new RequestModel("user1_4", "Help with 2...", "bla-bla2", null, "request resolved");
             if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
             return View("MentorRequests", requestsModel.reqests);
         }
         
         [HttpGet]
-        public ActionResult AboutRequest(RequestsModel requestsModel, string requestId)
+        public ActionResult AboutRequest(RequestsList requestsModel, string requestId)
         {
-            RequestsModel.Request req = new RequestsModel.Request(requestId, "Help with smth", "bla-bla", null, "request resolved");
+            RequestModel req = new RequestModel(requestId, "Help with smth", "bla-bla", null, "request resolved");
             return View("RequestDetails", req);
         }
     }

@@ -1,0 +1,68 @@
+﻿@model MvcApplication1.Models.ProfileModel
+@{
+    ViewBag.Title = "Профіль";
+}
+
+<h2>Профіль</h2>@Html.ActionLink("Редагувати", "ForProfileEditing", FormMethod.Get)
+
+<nav>
+    <ul id="menu">
+        <li>@Html.ActionLink("Мої статті", "MyArticle", FormMethod.Get)</li>
+        <li>@Html.ActionLink("Заявки", "LoadStudentRequests", "Requests")</li>
+        <li>@Html.ActionLink("Чат", "Index", "Chat")</li>
+        <li>@Html.ActionLink("Знайти однодумців", "Index", "FindAssosiates")</li>
+
+    </ul>
+</nav>
+<table>
+    <tr>
+        <td width="400">
+            @using (Html.BeginForm("UploadPhoto", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+                <input type="file" name="upload" />
+                <input type="submit" value="Завантажити" />
+                <fieldset>
+                    @if (Model.UserPhoto != null)
+                    {
+                        @Html.Raw("<img style='width:200px; height:180px;' src=\"data:image/jpeg;base64," + Convert.ToBase64String(Model.UserPhoto) + "\" />")<br />
+                    }
+                    @if (Model.UserPhoto == null)
+                    {
+                        <img style='width:200px; height:180px;' src='../Images/userphoto2.jpg' alt="фото" /><br />
+                    }
+                </fieldset>
+            }
+        </td>
+</table>
+
+
+
+@using (Html.BeginForm("Index", "Profile", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <h2>Ім'я</h2>
+        @Html.LabelFor(model => model.Name, Model.Name != null ? Model.Name : "")
+        <div>
+            <p>
+                <h3>Мої теги</h3>
+                @Html.LabelFor(model => model.MyTegs, Model.MyTegs != null ? Model.MyTegs : "")
+            </p>
+        </div>
+        <h3>Мій рейтинг</h3>
+        @Html.LabelFor(model => model.Rate, Model.Rate != null ? Model.Rate.ToString() : "")
+        <h3>Про мене</h3>
+        @Html.LabelFor(model => model.About_me, Model.About_me != null ? Model.About_me : "")
+
+
+    </fieldset>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

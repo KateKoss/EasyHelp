@@ -33,63 +33,19 @@ namespace MvcApplication1.Controllers
         [HttpGet]
         public ActionResult Index(ProfileModel model, string user)
         {
+
             if (user != null && user != "")
             {
-                List<SelectListItem> listSelectListItems = new List<SelectListItem>();
 
-                for (int i = 0; i < 5; i++)
-                {
-                    SelectListItem selectList = new SelectListItem()
-                    {
-                        Text = (i + 1).ToString(),
-                        Value = (i + 1).ToString()
-                    };
-                    listSelectListItems.Add(selectList);
-                }
-                model.TegList = listSelectListItems;
-                var rate = "";
-                if (model.SelectedTeg != null)
-                    foreach (string s in model.SelectedTeg)
-                        rate = s;
+                // Создать объект cookie-набора
+                HttpCookie cookie = new HttpCookie("MentorId");
+                // Установить значения в нем
+                cookie.Value = user;
+                // Добавить куки в ответ
+                Response.Cookies.Add(cookie);
 
-                using (CustomDbContext db = new CustomDbContext())
-                {
+                model = getMentorInf(user);
 
-                    string currentPerson;
-                    if (Request.Cookies["UserId"] != null)
-                        currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-                    else currentPerson = "user1";
-                    var user1 = db.UserProfiles.SingleOrDefault(x => x.UserName == user);
-                    if (user1 != null)
-                    {
-                        var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
-                        if (rate != "")
-                            myModel.Rate = Convert.ToInt32(rate);
-                        db.SaveChanges();
-                    }
-                    else model = new ProfileModel() { };
-                }
-                using (CustomDbContext db2 = new CustomDbContext())
-                {
-                    var ment = db2.ProfileModel.SingleOrDefault(x => x.UserName == user);
-                    if (ment != null && ment.UserName != null)
-                    {
-                        model.Name = ment.Name;
-                        model.UserName = ment.UserName;
-                        model.UserPhoto = ment.UserPhoto;
-                        model.About_me = ment.About_me;
-                        model.MyTegs = ment.MyTegs;
-                        model.Rate = ment.Rate;
-                        // Создать объект cookie-набора
-                        HttpCookie cookie = new HttpCookie("MentorId");
-
-                        // Установить значения в нем
-                        cookie.Value = ment.UserName;
-
-                        // Добавить куки в ответ
-                        Response.Cookies.Add(cookie);
-                    }
-                }
                 return View("MentorPage", model);
             }
             else
@@ -105,6 +61,10 @@ namespace MvcApplication1.Controllers
                     var user1 = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
                     if (user1 != null)
                     {
+                        if (user1.Role == "mentor")
+                        {
+                            return RedirectToAction("MentorProfile");
+                        }
                         var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
                         if (myModel.UserPhoto == null)
                         {
@@ -150,9 +110,7 @@ namespace MvcApplication1.Controllers
                             }
                     }
                 }
-                else
-
-                    using (CustomDbContext db = new CustomDbContext())
+                else using (CustomDbContext db = new CustomDbContext())
                     {
 
                         if (db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs != null)
@@ -195,20 +153,73 @@ namespace MvcApplication1.Controllers
                     }
                 return View("Index", model);
             }
-            return View();
+            //return View();
         }
 
-
-        [HttpPost]
-        public ActionResult Index(ProfileModel model, string lm, LoginModel ll)
+        public ProfileModel getMentorInf(string user)
         {
+            ProfileModel model = new ProfileModel();
+            List<SelectListItem> listSelectListItems = new List<SelectListItem>();
+
+            for (int i = 0; i < 5; i++)
+            {
+                SelectListItem selectList = new SelectListItem()
+                {
+                    Text = (i + 1).ToString(),
+                    Value = (i + 1).ToString()
+                };
+                listSelectListItems.Add(selectList);
+            }
+            model.TegList = listSelectListItems;
+            var rate = "";
+            if (model.SelectedTeg != null)
+                foreach (string s in model.SelectedTeg)
+                    rate = s;
+
             using (CustomDbContext db = new CustomDbContext())
-            {                
+            {
+
                 string currentPerson;
                 if (Request.Cookies["UserId"] != null)
                     currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
                 else currentPerson = "user1";
-                
+                var user1 = db.UserProfiles.SingleOrDefault(x => x.UserName == user);
+                if (user1 != null)
+                {
+                    var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
+                    if (rate != "")
+                        myModel.Rate = Convert.ToInt32(rate);
+                    db.SaveChanges();
+
+                }
+                else model = new ProfileModel() { };
+            }
+            using (CustomDbContext db2 = new CustomDbContext())
+            {
+                var ment = db2.ProfileModel.SingleOrDefault(x => x.UserName == user);
+                if (ment != null && ment.UserName != null)
+                {
+                    model.Name = ment.Name;
+                    model.UserName = ment.UserName;
+                    model.UserPhoto = ment.UserPhoto;
+                    model.About_me = ment.About_me;
+                    model.MyTegs = ment.MyTegs;
+                    model.Rate = ment.Rate;
+
+                }
+            }
+            return model;
+        }
+        [HttpPost]
+        public ActionResult Index(ProfileModel model)
+        {
+            using (CustomDbContext db = new CustomDbContext())
+            {
+                string currentPerson;
+                if (Request.Cookies["UserId"] != null)
+                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                else currentPerson = "user1";
+
                 var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
                 if (user != null)
                 {
@@ -216,13 +227,25 @@ namespace MvcApplication1.Controllers
                     myModel.Name = model.Name;
                     myModel.About_me = model.About_me;
                     //myModel.MyTegs = model.MyTegs;
-                    
+
                     db.SaveChanges();
                 }
                 else ModelState.AddModelError("Error", "Error");
             }
             return RedirectToAction("Index");
         }
+
+
+        public ActionResult MentorProfile(ProfileModel model)
+        {
+            string currentPerson;
+            if (Request.Cookies["UserId"] != null)
+                currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+            else currentPerson = "user1";
+            model = getMentorInf(currentPerson);
+            return View("MentorProfile", model);
+        }
+
 
         [HttpPost]
         [MultiButton(MatchFormKey = "action", MatchFormValue = "saveToDraft")]
@@ -250,25 +273,41 @@ namespace MvcApplication1.Controllers
                             myModel.articleText = model.articleText;
                             myModel.isPublished = false;
                         }
-                        db.SaveChanges();  
-                    
-                    } else
-                    //якщо користувач обрав існуючу статтю для редагування
-                    if (model.articleID != null)
-                    {
-                        articleid = currentPerson + "_" + model.articleID;
-                        //перевіряємо чи власне є ця стаття у бд
-                        myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleid);
-                        if (myModel!=null)//якщо є
-                        {
-                            myModel.articleTitle = model.articleTitle;
-                            myModel.articleText = model.articleText;
-                            myModel.isPublished = false;
-                            db.SaveChanges();  
-                        }
-                        else
-                        {
+                        db.SaveChanges();
 
+                    }
+                    else
+                        //якщо користувач обрав існуючу статтю для редагування
+                        if (model.articleID != null)
+                        {
+                            //articleid = currentPerson + "_" + model.articleID;
+                            //перевіряємо чи власне є ця стаття у бд
+                            myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == model.articleID);
+                            if (myModel != null)//якщо є
+                            {
+                                myModel.articleTitle = model.articleTitle;
+                                myModel.articleText = model.articleText;
+                                myModel.isPublished = false;
+                                db.SaveChanges();
+                            }
+                            else
+                            {
+
+                                db.ArticleModel.Add(new ArticleModel { articleID = model.articleID, createdBy = currentPerson, articleTitle = model.articleTitle });
+                                myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == model.articleID);
+                                if (myModel != null)
+                                {
+                                    myModel.articleTitle = model.articleTitle;
+                                    myModel.articleText = model.articleText;
+                                    myModel.isPublished = false;
+                                }
+                                db.SaveChanges();
+                            }
+                        }
+                        else //якщо користувач створює нову статтю, проте в нього були вже створені статті
+                        {
+                            var articleCount = db.ArticleModel.Count(x => x.createdBy == currentPerson);
+                            articleid = currentPerson + '_' + (articleCount + 1);
                             db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson, articleTitle = model.articleTitle });
                             myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleid);
                             if (myModel != null)
@@ -277,25 +316,10 @@ namespace MvcApplication1.Controllers
                                 myModel.articleText = model.articleText;
                                 myModel.isPublished = false;
                             }
-                            db.SaveChanges();  
+                            db.SaveChanges();
                         }
-                    }
-                    else //якщо користувач створює нову статтю, проте в нього були вже створені статті
-                    {
-                        var articleCount = db.ArticleModel.Count(x => x.createdBy == currentPerson);
-                        articleid = currentPerson + '_' + (articleCount + 1);
-                        db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson, articleTitle = model.articleTitle });
-                        myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleid);
-                        if (myModel != null)
-                        {
-                            myModel.articleTitle = model.articleTitle;
-                            myModel.articleText = model.articleText;
-                            myModel.isPublished = false;
-                        }
-                        db.SaveChanges();  
-                    }
-                
-                                
+
+
                 }
 
             //сохранить статью в бд
@@ -306,7 +330,7 @@ namespace MvcApplication1.Controllers
         [MultiButton(MatchFormKey = "action", MatchFormValue = "publish")]
         public ActionResult PublishArticle(ArticleModel model)
         {
-            if (model.articleTitle!=null)
+            if (model.articleTitle != null)
                 using (CustomDbContext db = new CustomDbContext())
                 {
                     string articleid;
@@ -329,22 +353,38 @@ namespace MvcApplication1.Controllers
                             myModel.articleText = model.articleText;
                             myModel.isPublished = true;
                         }
-                    
-                    } else
-                    //якщо користувач обрав існуючу статтю для редагування
-                    if (model.articleID != null)
-                    {
-                        articleid = currentPerson + "_" + model.articleID;
-                        //перевіряємо чи власне є ця стаття у бд
-                        myModel = db.ArticleModel.SingleOrDefault(x => x.articleID == articleid);
-                        if (myModel != null)//якщо є
+
+                    }
+                    else
+                        //якщо користувач обрав існуючу статтю для редагування
+                        if (model.articleID != null)
                         {
-                            myModel.articleTitle = model.articleTitle;
-                            myModel.articleText = model.articleText;
-                            myModel.isPublished = true;
+                            //articleid = currentPerson + "_" + model.articleID;
+                            //перевіряємо чи власне є ця стаття у бд
+                            myModel = db.ArticleModel.SingleOrDefault(x => x.articleID == model.articleID);
+                            if (myModel != null)//якщо є
+                            {
+                                myModel.articleTitle = model.articleTitle;
+                                myModel.articleText = model.articleText;
+                                myModel.isPublished = true;
+                            }
+                            else
+                            {
+                                db.ArticleModel.Add(new ArticleModel { articleID = model.articleID, createdBy = currentPerson, articleTitle = model.articleTitle });
+                                myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == model.articleID);
+                                if (myModel != null)
+                                {
+                                    myModel.articleTitle = model.articleTitle;
+                                    myModel.articleText = model.articleText;
+                                    myModel.isPublished = true;
+                                }
+
+                            }
                         }
-                        else
+                        else //якщо користувач створює нову статтю, проте в нього були вже створені статті
                         {
+                            var articleCount = db.ArticleModel.Count(x => x.createdBy == currentPerson);
+                            articleid = currentPerson + '_' + (articleCount + 1);
                             db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson, articleTitle = model.articleTitle });
                             myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleid);
                             if (myModel != null)
@@ -355,25 +395,10 @@ namespace MvcApplication1.Controllers
                             }
 
                         }
-                    }
-                    else //якщо користувач створює нову статтю, проте в нього були вже створені статті
-                    {
-                        var articleCount = db.ArticleModel.Count(x => x.createdBy == currentPerson);
-                        articleid = currentPerson + '_' + (articleCount + 1);
-                        db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson, articleTitle = model.articleTitle });
-                        myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleid);
-                        if (myModel != null)
-                        {
-                            myModel.articleTitle = model.articleTitle;
-                            myModel.articleText = model.articleText;
-                            myModel.isPublished = true;
-                        }
-
-                    }
 
                     db.SaveChanges();
                 }
-            
+
             //опубликовать статью
             return RedirectToAction("Index");
         }
@@ -381,49 +406,46 @@ namespace MvcApplication1.Controllers
         [HttpGet]
         public ActionResult MyArticle()
         {
-            
+            string currentPerson;
+            if (Request.Cookies["UserId"] != null)
+                currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+            else currentPerson = "user1";
+            ArticleModel myModel = getArticle(currentPerson, false);
+            return View(myModel);
+        }
+
+        public ArticleModel getArticle(string currentPerson, bool onlyPublsihed)
+        {
             List<SelectListItem> listSelectListItems = new List<SelectListItem>();
-            //SelectListItem selectList = new SelectListItem()
-            //{
-            //    Text = "Взаємодія з даними",
-            //    Value = "1"
-            //};
-            //listSelectListItems.Add(selectList);
-            //selectList = new SelectListItem()
-            //{
-            //    Text = "Міграція даних",
-            //    Value = "2"
-            //};
-            
-            //listSelectListItems.Add(selectList);
-            //selectList = new SelectListItem()
-            //{
-            //    Text = "Принцип SOLID",
-            //    Value = "3"
-            //};
-            //listSelectListItems.Add(selectList);
             using (CustomDbContext db = new CustomDbContext())
             {
-                string currentPerson;
-                if (Request.Cookies["UserId"] != null)
-                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-                else currentPerson = "user1";
-                
-                foreach (var article in db.ArticleModel.Where(x => x.createdBy == currentPerson)) 
-                {
-                    SelectListItem selectList = new SelectListItem()
+                if (!onlyPublsihed)
+                    foreach (var article in db.ArticleModel.Where(x => x.createdBy == currentPerson))
                     {
-                        Text = article.articleTitle,
-                        Value = article.articleID
-                    };
-                    listSelectListItems.Add(selectList);
-                }
+                        SelectListItem selectList = new SelectListItem()
+                        {
+                            Text = article.articleTitle,
+                            Value = article.articleID
+                        };
+                        listSelectListItems.Add(selectList);
+                    }
+                else
+                    foreach (var article in db.ArticleModel.Where(x => x.createdBy == currentPerson && x.isPublished == true))
+                    {
+                        SelectListItem selectList = new SelectListItem()
+                        {
+                            Text = article.articleTitle,
+                            Value = article.articleID
+                        };
+                        listSelectListItems.Add(selectList);
+                    }
             }
             ArticleModel myModel = new ArticleModel()
             {
                 articleNames = listSelectListItems
             };
-            return View(myModel);
+
+            return myModel;
         }
 
         [HttpGet]
@@ -438,78 +460,43 @@ namespace MvcApplication1.Controllers
             return View("CreateArticle", model);
         }
 
-        [HttpPost]
-        public ActionResult EditArticle(ArticleModel model, LoginModel lm)
-        {
-            List<SelectListItem> listSelectListItems = new List<SelectListItem>();
-                        
-            using (CustomDbContext db = new CustomDbContext())
-            {
-                string currentPerson;
-                if (Request.Cookies["UserId"] != null)
-                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-                else currentPerson = "user1";
 
-                foreach (var article in db.ArticleModel.Where(x => x.createdBy == currentPerson))
-                {
-                    SelectListItem selectList = new SelectListItem()
-                    {
-                        Text = article.articleTitle,
-                        Value = article.articleID
-                    };
-                    listSelectListItems.Add(selectList);
-                }
-            }
-            model.articleNames = listSelectListItems;
+        public void LoadArtcileIntoForm(ArticleModel model, string currentPerson, bool onlyPublished)
+        {
+
+            model.articleNames = getArticle(currentPerson, onlyPublished).articleNames;
             var str = "";
             if (model.articleName != null)
                 foreach (string s in model.articleName)
                 {
-                    var str1 = model.articleNames.FirstOrDefault(x => x.Value == s).Text;
-                    str += str1;
+                    str = model.articleNames.FirstOrDefault(x => x.Value == s).Text;
                     model.articleID = s;
                 }
 
             using (CustomDbContext db = new CustomDbContext())
             {
-
-                string currentPerson;
-                if (Request.Cookies["UserId"] != null)
-                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-                else currentPerson = "user1";
-                
                 var myModel = db.ArticleModel.FirstOrDefault(x => x.createdBy == currentPerson);
                 if (myModel != null)
-                { 
-                    
+                {
                     model.articleTitle = str;
-                    if (str!="")
+                    if (str != "")
                         model.articleText = myModel.articleText;
-                    model.articleNames = listSelectListItems;
-                    
                 }
-                
-            }
-            return View("CreateArticle", model);
-        }
 
-        [HttpGet]
-        public ActionResult FindAssosiates(ProfileModel model)
-        {
-            return View("FindAssosiates", model);
+            }
+            //return model;
         }
 
         [HttpPost]
-        public ActionResult RetakeTest(ProfileModel model)
+        public ActionResult EditArticle(ArticleModel model, ProfileModel p)
         {
-            //пройти тест заново
-            return View("FindAssosiates", model);
-        }
+            string currentPerson;
+            if (Request.Cookies["UserId"] != null)
+                currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+            else currentPerson = "user1";
+            LoadArtcileIntoForm(model, currentPerson, false);
 
-        public ActionResult ConfirmTestTest(ProfileModel model)
-        {
-            //пройти тест заново
-            return View("Index", model);
+            return View("CreateArticle", model);
         }
 
         [HttpGet]
@@ -517,7 +504,7 @@ namespace MvcApplication1.Controllers
         {
             return View("Requests", model);
         }
-        
+
         [HttpGet]
         public ActionResult ForProfileEditing()
         {
@@ -618,7 +605,7 @@ namespace MvcApplication1.Controllers
                 {
                     //model.TegList.SingleOrDefault(x => x.Value == s);
 
-                    str += model.TegList.SingleOrDefault(x => x.Value == s).Text + " ";
+                    str += model.TegList.SingleOrDefault(x => x.Value == s).Text;
                 }
 
             using (CustomDbContext db = new CustomDbContext())
@@ -634,10 +621,19 @@ namespace MvcApplication1.Controllers
                     var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
                     var tegs = myModel.MyTegs;
                     if (tegs != null)
-                        if (tegs.Contains(str))
-                            myModel.MyTegs = tegs.Replace(str, " ");
-                        else myModel.MyTegs = tegs + str;
-                    else myModel.MyTegs = str;
+                    {
+                        if (tegs.Contains(' ' + str + ' '))
+                            myModel.MyTegs = tegs.Replace(' ' + str + ' ', " ");
+                        else
+                        {
+                            if (tegs.Contains(' ' + str))
+                                myModel.MyTegs = tegs.Replace(' ' + str, " ");
+                            else if (tegs.Contains(str + ' '))
+                                myModel.MyTegs = tegs.Substring(str.Length+1);
+                            else myModel.MyTegs = tegs + str + " ";
+                        }                       
+                    }
+                    else myModel.MyTegs = str + " ";
 
 
                     db.SaveChanges();
@@ -665,7 +661,7 @@ namespace MvcApplication1.Controllers
                 string fileName = System.IO.Path.GetFileName(upload.FileName);
                 // сохраняем файл в папку Files в проекте
                 upload.SaveAs(Server.MapPath("~/Files/" + fileName));
-                
+
                 byte[] imageData = null;
                 // считываем переданный файл в массив байтов
                 using (var binaryReader = new BinaryReader(upload.InputStream))
@@ -675,12 +671,12 @@ namespace MvcApplication1.Controllers
                 model.UserPhoto = imageData;
 
                 using (CustomDbContext db = new CustomDbContext())
-                {                    
+                {
                     string currentPerson;
                     if (Request.Cookies["UserId"] != null)
                         currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
                     else currentPerson = "user1";
-                    
+
                     var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
                     if (user != null)
                     {
@@ -693,7 +689,7 @@ namespace MvcApplication1.Controllers
                     else ModelState.AddModelError("Error", "Error");
                 }
             }
-            return View("Index", model);
+            return RedirectToAction("Index");
         }
 
         public ActionResult SetMentorRate(ProfileModel model)
@@ -723,8 +719,8 @@ namespace MvcApplication1.Controllers
                     listSelectListItems.Add(selectList);
                 }
                 model.TegList = listSelectListItems;
-                
-                
+
+
                 using (CustomDbContext db2 = new CustomDbContext())
                 {
                     var ment = db2.ProfileModel.SingleOrDefault(x => x.UserName == currentMent);
@@ -735,13 +731,157 @@ namespace MvcApplication1.Controllers
                         model.UserPhoto = ment.UserPhoto;
                         model.About_me = ment.About_me;
                         model.MyTegs = ment.MyTegs;
-                        model.Rate = ment.Rate;                         
+                        model.Rate = ment.Rate;
                     }
                 }
-                
+
             }
             return View("MentorPage", model);
-            
+
+        }
+
+        public ActionResult ShowArticles()
+        {
+            ArticleModel model;
+            string currentMent;
+            if (Request.Cookies["MentorId"] != null)
+                currentMent = Convert.ToString(Request.Cookies["MentorId"].Value);
+            else currentMent = "";
+            if (currentMent != "")
+            {
+                model = getArticle(currentMent, true);
+
+                List<SelectListItem> listSelectListItems = new List<SelectListItem>();
+                SelectListItem selectList = new SelectListItem()
+                {
+                    Text = "Подобається",
+                    Value = "1",
+                    Selected = true
+
+                };
+                listSelectListItems.Add(selectList);
+                selectList = new SelectListItem()
+                {
+                    Text = "Не подобається",
+                    Value = "2"
+
+                };
+                listSelectListItems.Add(selectList);
+
+                model.TegList = listSelectListItems;
+            }
+            else
+                model = new ArticleModel() { };
+            return View("ShowArticles", model);
+        }
+
+        [HttpPost]
+        public ActionResult ShowArticles(ArticleModel model)
+        {
+            string currentMent;
+            if (Request.Cookies["MentorId"] != null)
+                currentMent = Convert.ToString(Request.Cookies["MentorId"].Value);
+            else currentMent = "";
+            if (currentMent != "")
+            {
+                LoadArtcileIntoForm(model, currentMent, true);
+                model.createdBy = currentMent;
+
+                List<SelectListItem> listSelectListItems = new List<SelectListItem>();
+                SelectListItem selectList = new SelectListItem()
+                {
+                    Text = "Подобається",
+                    Value = "1",
+                    Selected = true
+
+                };
+                listSelectListItems.Add(selectList);
+                selectList = new SelectListItem()
+                {
+                    Text = "Не подобається",
+                    Value = "2"
+
+                };
+                listSelectListItems.Add(selectList);
+
+                model.TegList = listSelectListItems;
+                LikeDislike(model);
+            }
+
+
+            return View("ShowArticles", model);
+        }
+
+
+        public void LikeDislike(ArticleModel model)
+        {
+            string currentMent;
+            if (Request.Cookies["MentorId"] != null)
+                currentMent = Convert.ToString(Request.Cookies["MentorId"].Value);
+            else currentMent = "";
+            if (currentMent != "")
+            {
+                string currentPerson;
+                if (Request.Cookies["UserId"] != null)
+                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                else currentPerson = "user1";
+
+                using (CustomDbContext db = new CustomDbContext())
+                {
+                    var m = db.ArticleModel.SingleOrDefault(x => x.articleID == model.articleID);
+                    if (model.SelectedTeg != null)
+                    {
+                        if (model.SelectedTeg.FirstOrDefault() == "1")
+                        {
+                            if (m.whoLikes != null)
+                            {
+                                var whoLikes = m.whoLikes;
+                                if (!m.whoLikes.Contains(currentPerson))
+                                    m.whoLikes = whoLikes + currentPerson + " ";
+                            }
+                            else m.whoLikes = currentPerson + " ";
+                            if (m.whoDislikes != null)
+                                if (m.whoDislikes.Contains(currentPerson))
+                                {
+                                    var whoDislikes = m.whoDislikes;
+                                    m.whoDislikes = whoDislikes.Replace(currentPerson, " ");
+                                }
+                        }
+                        else if (model.SelectedTeg.FirstOrDefault() == "2")
+                        {
+                            if (m.whoDislikes != null)
+                            {
+                                var whoDislikes = m.whoDislikes;
+                                if (!m.whoDislikes.Contains(currentPerson))
+                                    m.whoDislikes = whoDislikes + currentPerson + " ";
+                            }
+                            else m.whoDislikes = currentPerson + " ";
+                            if (m.whoLikes != null)
+                                if (m.whoLikes.Contains(currentPerson))
+                                {
+                                    var whoLikes = m.whoLikes;
+                                    m.whoLikes = whoLikes.Replace(currentPerson, " ");
+                                }
+                        }
+                    }
+                    if (m.whoLikes != null)
+                        if (m.whoLikes.Contains(currentPerson))
+                        {
+                            model.youAreLikeThisArticle = true;
+                            model.youAreDislikeThisArticle = false;
+                        }
+                        else model.youAreLikeThisArticle = false;
+                    if (m.whoDislikes != null)
+                        if (m.whoDislikes.Contains(currentPerson))
+                        {
+                            model.youAreDislikeThisArticle = true;
+                            model.youAreLikeThisArticle = false;
+                        }
+                        else model.youAreDislikeThisArticle = false;
+                    db.SaveChanges();
+                }
+            }
+            //return View("ShowArticles", model);
         }
     }
 }

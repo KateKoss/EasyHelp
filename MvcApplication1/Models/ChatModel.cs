@@ -24,7 +24,7 @@ namespace MvcApplication1.Models
 
             ChatHistory.Add(new ChatMessage()
             {
-                Message = "The chat server started at " + DateTime.Now
+                Message = "Чат почався в " + DateTime.Now
             });
         }
 

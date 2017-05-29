@@ -24,7 +24,61 @@
     })
 
 });
+//$("#btnCreateRequest").click(function () {
+//    alert("Hello world!");
+//    ScrollChat();
+//    ShowLastRefresh();
 
+//    $("#txtSpeak").val('').focus();
+
+//    //the chat state is fetched from the server every 5 seconds (ping)
+//    setTimeout("Refresh();", 5000);
+
+//    //auto post when enter is pressed
+//    $('#txtSpeak').keydown(function (e) {
+//        if (e.keyCode == 13) {
+//            e.preventDefault();
+//            $("#btnSpeak").click();
+//        }
+//    });
+
+//    //setup the event for the "Speak" button that is rendered in the partial view 
+//    $("#btnSpeak").click(function () {
+//        var text = $("#txtSpeak").val();
+//        if (text) {
+
+//            //call the Index method of the controller and pass the attribute "chatMessage"
+//            var href = "/Chat?user=" + encodeURIComponent($("#YourNickname").text());
+//            href = href + "&chatMessage=" + encodeURIComponent(text);
+//            $("#ActionLink").attr("href", href).click();
+
+//            $("#txtSpeak").val('').focus();
+//        }
+//    });
+
+//    //setup the event for the "Speak" button that is rendered in the partial view 
+//    $("#btnLogOff").click(function () {
+
+//        //call the Index method of the controller and pass the attribute "logOff"
+//        var href = "/Chat?user=" + encodeURIComponent($("#YourNickname").text());
+//        href = href + "&logOff=true";
+//        $("#ActionLink").attr("href", href).click();
+
+//        document.location.href = "Chat";
+//    });
+//    var text = "nfjfj";
+//    if (text) {
+
+//        //call the Index method of the controller and pass the attribute "chatMessage"
+//        var href = "/Chat?user=user1";
+//        //+ encodeURIComponent($("#YourNickname").text());
+//        href = href + "&chatMessage=blabla";
+//        //+ encodeURIComponent(text);
+//        $("#ActionLink2").attr("href", href).click();
+
+//        //$("#txtSpeak").val('').focus();
+//    }
+//});
 //the login was successful. Setup events for the lobby and prepare other UI items
 function LoginOnSuccess(result) {
 

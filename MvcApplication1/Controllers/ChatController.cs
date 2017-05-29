@@ -28,6 +28,7 @@ namespace MvcApplication1.Controllers
         public ActionResult Index(string user, bool? logOn, bool? logOff, string chatMessage)
         {
             //logOn = true;
+            RequestsList requestsModel = new RequestsList();
             //user = "user2";
             try
             {
@@ -45,15 +46,36 @@ namespace MvcApplication1.Controllers
                 else 
                 if (logOn != null && (bool)logOn)
                 {
+                    
+                    //string currentPerson;
+                    //if (Request.Cookies["UserId"] != null)
+                    //    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                    //else currentPerson = "user1";
+                    //using (CustomDbContext db = new CustomDbContext())
+                    //{
+                    //    DateTime date = DateTime.Now;
+                    //    date.AddMinutes(-2);
+                    //    var r = db.RequestsModel.Where(x => x.createdAt == DateTime.Today);
+                    //    if (r != null)
+                    //        foreach (var item in r)
+                    //        {
+                    //            requestsModel.reqests.Add(item);
+                    //        }
+                    //    chatMessage = requestsModel.reqests.Count.ToString();
+                    //}
+                    
+
+                    //return View("StudentRequests", requestsModel.reqests);
+
                     //check if nickname already exists
                     if (chatModel.Users.FirstOrDefault(u => u.NickName == user) != null)
                     {
-                        throw new Exception("This nickname already exists");
+                        throw new Exception("Такий нік вже існує");
                     }
                     else 
                     if (chatModel.Users.Count > 100)
                     {
-                        throw new Exception("The room is full!");
+                        throw new Exception("Кімната повна!");
                     }
                     else
                     {
@@ -68,7 +90,7 @@ namespace MvcApplication1.Controllers
                         //inform lobby of new user
                         chatModel.ChatHistory.Add(new ChatModel.ChatMessage()
                         {
-                            Message = "User '" + user + "' logged on.",
+                            Message = "Користувач '" + user + "' ввійшов в чат.",
                             When = DateTime.Now
                         });
                         #endregion
@@ -136,7 +158,7 @@ namespace MvcApplication1.Controllers
             chatModel.Users.Remove(user);
             chatModel.ChatHistory.Add(new ChatModel.ChatMessage()
             {
-                Message = "User '" + user.NickName + "' logged off.",
+                Message = "Користувач '" + user.NickName + "' вийшов.",
                 When = DateTime.Now
             });
         }

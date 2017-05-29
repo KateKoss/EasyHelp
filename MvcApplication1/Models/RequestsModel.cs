@@ -10,28 +10,35 @@ using System.Collections;
 using System.Reflection;
 
 namespace MvcApplication1.Models
-{
-    public class RequestsModel
-    {
-        public class Request
-        {
-            public Request(string requestId, string requestName, string requestText, IEnumerable<SelectListItem> TegList, string requestState)
-            {
-                this.requestId = requestId;
-                this.requestName = requestName;
-                this.requestText = requestText;
-                this.TegList = TegList;
-                this.requestState = requestState;
-            }
-            public Request() { }
-            public string requestId { get; set; }
-            public string requestName { get; set; }
-            public string requestText { get; set; }
-            public IEnumerable<string> SelectedTeg { get; set; }
-            public IEnumerable<SelectListItem> TegList { get; set; }
-            public string requestState { get; set; } //Есть 3 состояния "request resolved", "request not resolved", "request canceled"
-        }
+{     
+    [Table("Request")]
+    public class RequestModel
+    {         
 
-        public List<Request> reqests = new List<Request>();
+        public RequestModel(string requestId, string requestName, string requestText, IEnumerable<SelectListItem> TegList, string requestState)
+        {
+            this.requestId = requestId;
+            this.requestName = requestName;
+            this.requestText = requestText;
+            this.TegList = TegList;
+            this.requestState = requestState;
+        }
+        public RequestModel() { }
+
+        [Key]
+        public string requestId { get; set; }
+        public DateTime createdAt { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Введіть назву заявки.")]
+        public string requestName { get; set; }
+        public string requestText { get; set; }
+        public IEnumerable<string> SelectedTeg { get; set; }
+        public IEnumerable<SelectListItem> TegList { get; set; }
+        public string requestState { get; set; } //Есть 3 состояния "request resolved", "request not resolved", "request canceled"
+        public string createdBy { get; set; }
+            
+    }
+    public class RequestsList
+    { 
+        public List<RequestModel> reqests = new List<RequestModel>();        
     }
 }

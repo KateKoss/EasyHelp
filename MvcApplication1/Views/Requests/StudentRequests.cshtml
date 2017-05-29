@@ -1,4 +1,4 @@
-﻿@model List<MvcApplication1.Models.RequestsModel.Request>
+﻿@model List<MvcApplication1.Models.RequestModel>
 @{
     ViewBag.Title = "Requests";
 }
@@ -9,7 +9,7 @@
         <li>@Html.ActionLink("Профіль", "Index", "Profile")</li>
         <li>@Html.ActionLink("Чат", "Index", "Chat")</li>
         <li>@Html.ActionLink("Мої статті", "MyArticle", "Profile")</li>
-        <li>@Html.ActionLink("Знайти однодумців", "FindAssosiates", "Profile")</li>
+        <li>@Html.ActionLink("Знайти однодумців", "Index", "FindAssosiates")</li>
     </ul>
 </nav>
 
@@ -20,7 +20,7 @@
     </p>
 }
 
-<nav>@Html.ActionLink("Активні", "ActiveRequests", "Requests")
+<nav>@Html.ActionLink("Активні", "LoadStudentRequests", "Requests")
     | @Html.ActionLink("Розв'язані", "ResolvedRequests", "Requests")
     | @Html.ActionLink("Скасовані", "CanceledRequests", "Requests")
 </nav>

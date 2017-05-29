@@ -201,6 +201,7 @@
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\ArticleModel.cs" />
     <Compile Include="Models\ChatModel.cs" />
+    <Compile Include="Models\FindAssosiatesModel.cs" />
     <Compile Include="Models\MentorsModel.cs" />
     <Compile Include="Models\ProfileModel.cs" />
     <Compile Include="Models\RequestsModel.cs" />
