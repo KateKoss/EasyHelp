@@ -1,4 +1,4 @@
-﻿@model List<MvcApplication1.Models.RequestsModel.Request>
+﻿@model List<MvcApplication1.Models.RequestModel>
 @{
     ViewBag.Title = "Requests";
 }
@@ -27,6 +27,7 @@
                     @*<nav>
                         @Html.ActionLink("Детальніше", "AboutRequest", "Requests", new { requestId = t.requestId }, null)
                     </nav>*@
+                    @t.createdBy
                 </td>
                 <td>
                     @t.requestState

@@ -329,7 +329,6 @@
     <Content Include="Views\Profile\ForProfileEditing.cshtml" />
     <Content Include="Views\Profile\CreateArticle.cshtml" />
     <Content Include="Views\Requests\StudentRequests.cshtml" />
-    <Content Include="Views\Profile\FindAssosiates.cshtml" />
     <Content Include="Views\Chat\Index.cshtml" />
     <Content Include="Views\Chat\Lobby.cshtml" />
     <Content Include="Views\Chat\ChatHistory.cshtml" />
@@ -342,10 +341,14 @@
     <Content Include="Views\Requests\MentorRequests.cshtml" />
     <Content Include="Views\Requests\EditRequest.cshtml" />
     <Content Include="Views\Requests\RequestDetails.cshtml" />
+    <Content Include="Views\Profile\MentorProfile.cshtml" />
+    <Content Include="Views\FindAssosiates\Assosiates.cshtml" />
+    <Content Include="Views\FindAssosiates\FindAssosiates.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

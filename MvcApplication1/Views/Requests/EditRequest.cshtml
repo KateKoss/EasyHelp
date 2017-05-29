@@ -1,26 +1,28 @@
-﻿@model MvcApplication1.Models.RequestsModel.Request
+﻿@model MvcApplication1.Models.RequestModel
 @{
     ViewBag.Title = "Редагування заявки";
 }
 
 
-@using (Html.BeginForm("SaveChangesReqest", "Requests", FormMethod.Post))
+@using (Html.BeginForm("SaveReqest", "Requests", FormMethod.Post))
 {
-    <p>
-        <h3>Заголовок заявки</h3>
-        @Html.TextBoxFor(model => model.requestName, new { @placeholder = "Навза заявки" })
-        @Html.ValidationMessageFor(model => model.requestName)
-    </p>
-    <h3>Текст заявки</h3>
-    @Html.TextAreaFor(model => model.requestText, new { @placeholder = "Текст заявки" })
+    <div>
+        <p>
+            <h3>Заголовок заявки</h3>
+            @Html.TextBoxFor(model => model.requestName, new { @placeholder = "Навза заявки" })
+            @Html.ValidationMessageFor(model => model.requestName)
+        </p>
+        <h3>Текст заявки</h3>
+        @Html.TextAreaFor(model => model.requestText, new { @placeholder = "Текст заявки" })
 
-    <p>
+        <p>
 
-        <button type="submit" name="action" value="saveToDraft">Зберегти зміни</button>
-    </p>
-    @Html.TextBoxFor(model => model.requestId, new { @style = "visibility:hidden;" })
-    @Html.TextBoxFor(model => model.TegList, new { @style = "visibility:hidden;" })
-    @Html.TextBoxFor(model => model.requestState, new { @style = "visibility:hidden;" })
+            <button type="submit" name="action" value="saveToDraft">Зберегти зміни</button>
+        </p>
+        @Html.TextBoxFor(model => model.requestId, new { @style = "visibility:hidden;" })
+        @Html.TextBoxFor(model => model.TegList, new { @style = "visibility:hidden;" })
+        @Html.TextBoxFor(model => model.requestState, new { @style = "visibility:hidden;" })
+    </div>
 }
 <div>
     @Html.ActionLink("Назад", "LoadStudentRequests") 

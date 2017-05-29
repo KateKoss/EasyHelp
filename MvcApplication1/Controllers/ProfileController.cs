@@ -70,12 +70,13 @@ namespace MvcApplication1.Controllers
                         {
 
                         }
+                        
                         model = new ProfileModel()
                         {
                             Name = myModel.Name,
                             MyTegs = myModel.MyTegs,
                             About_me = myModel.About_me,
-                            UserPhoto = myModel.UserPhoto,
+                            UserPhoto = myModel.UserPhoto,                            
                             searchMentor = model.searchMentor
                         };
                     }
