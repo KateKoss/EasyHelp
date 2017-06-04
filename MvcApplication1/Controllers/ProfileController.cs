@@ -332,7 +332,7 @@ namespace MvcApplication1.Controllers
             //    }
 
             //сохранить статью в бд
-            return RedirectToAction("Index");
+            return RedirectToAction("MyArticle");
         }
 
         [HttpPost]
@@ -411,7 +411,7 @@ namespace MvcApplication1.Controllers
             //    }
 
             //опубликовать статью
-            return RedirectToAction("Index");
+            return RedirectToAction("MyArticle");
         }
 
         [HttpGet]
@@ -421,8 +421,9 @@ namespace MvcApplication1.Controllers
             if (Request.Cookies["UserId"] != null)
                 currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
             else currentPerson = "user1";
-            ProxyPattern.Proxy p = new ProxyPattern.Proxy();
-            ArticleModel myModel = p.getArticle(currentPerson, false);
+            //ProxyPattern.Proxy p = new ProxyPattern.Proxy();
+            //ArticleModel myModel = p.getArticle(currentPerson, false);
+            ArticleModel myModel = getArticle(currentPerson, false);
             return View(myModel);
         }
 

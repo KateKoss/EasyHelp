@@ -123,7 +123,7 @@ namespace MvcApplication1.Controllers
                 if (model.articleTitle != null)
                     using (CustomDbContext db = new CustomDbContext())
                     {
-                        var myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == Decorator.id);
+                        var myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == model.articleID);
                             if (myModel != null)
                             {
                                 myModel.articleTitle = model.articleTitle;
@@ -155,7 +155,7 @@ namespace MvcApplication1.Controllers
                 if (model.articleTitle != null)
                     using (CustomDbContext db = new CustomDbContext())
                     {
-                        var myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == Decorator.id);
+                        var myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == model.articleID);
                         if (myModel != null)
                         {
                             myModel.articleTitle = model.articleTitle;

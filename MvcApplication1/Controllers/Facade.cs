@@ -81,13 +81,16 @@ namespace MvcApplication1.Controllers
             }
             public void Method(ArticleModel model, string currentPerson, bool onlyPublished)
             {
-                model.articleNames = getArticle(currentPerson, onlyPublished).articleNames;
+                ProxyPattern.Proxy p = new ProxyPattern.Proxy();
+                //ArticleModel myModel = p.getArticle(currentPerson, onlyPublished);
+                model.articleNames = p.getArticle(currentPerson, onlyPublished).articleNames;
                 //var str = "";
                 if (model.articleName != null)
                     foreach (string s in model.articleName)
                     {
                         str = model.articleNames.FirstOrDefault(x => x.Value == s).Text;
                         model.articleID = s;
+                        model.articleText = str;
                     }
             }
         }
@@ -100,7 +103,7 @@ namespace MvcApplication1.Controllers
                 using (CustomDbContext db = new CustomDbContext())
                 {
                     //string str = "";
-                    var myModel = db.ArticleModel.FirstOrDefault(x => x.createdBy == currentPerson);
+                    var myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == model.articleID);
                     if (myModel != null)
                     {
                         model.articleTitle = str;
