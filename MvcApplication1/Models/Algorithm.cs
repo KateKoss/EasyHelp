@@ -6,13 +6,43 @@ using System.Threading.Tasks;
 
 namespace MvcApplication1.Models
 {
-    class Algorithm
+    public class Algorithm
     {
         List<DataPoint> rawDataToCluster = new List<DataPoint>();
         List<DataPoint> normalizedDataToCluster = new List<DataPoint>();
         List<DataPoint> clusters = new List<DataPoint>();
         private int numberOfClusters = 0;
         private int N = 0;
+
+        public void setRawDataToCluster(List<DataPoint> value)
+        {
+            rawDataToCluster = value;
+        }
+
+        public List<DataPoint> getRawDataToCluster()
+        {
+            return normalizedDataToCluster;
+        }
+
+        public void setNormalizedDataToCluster(List<DataPoint> value)
+        {
+            normalizedDataToCluster = value;
+        }
+
+        public List<DataPoint> getNormalizedDataToCluster()
+        {
+            return normalizedDataToCluster;
+        }
+
+        public void setN(int n)
+        {
+            N = n;
+        }
+
+        public int getN()
+        {
+            return N;
+        }
 
         public string[] Init(string currentPerson, List<DataPoint> points)
         {
@@ -186,7 +216,7 @@ namespace MvcApplication1.Models
         }
 
 
-        private void NormalizeData()
+        public void NormalizeData()
         {
             double[] max = new double[N];
             for (int i = 0; i < max.Length; i++)
@@ -366,7 +396,7 @@ namespace MvcApplication1.Models
             return true;
         }
 
-        private int MinIndex(double[] distances)
+        public int MinIndex(double[] distances)
         {
             int indexOfMin = 0;
             double smallDist = distances[0];

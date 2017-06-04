@@ -161,3 +161,7 @@ C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\obj\Debug\MvcApplication1.Tests.csprojResolveAssemblyReference.cache
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\obj\Debug\MvcApplication1.Tests.dll
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\obj\Debug\MvcApplication1.Tests.pdb
+C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\bin\Debug\xunit.runner.visualstudio.testadapter.dll
+C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\bin\Debug\xunit.runner.reporters.net452.dll
+C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\bin\Debug\xunit.runner.utility.net452.dll
+C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\bin\Debug\xunit.abstractions.dll
