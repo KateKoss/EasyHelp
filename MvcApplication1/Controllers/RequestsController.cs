@@ -142,12 +142,57 @@ namespace MvcApplication1.Controllers
 
         public ActionResult SaveReqest(RequestModel req)
         {
+            Singleton s = Singleton.Instance;                  
+            string currentPerson;
+            currentPerson = s.user;
+
+            Observer observer;
+            Requests r = new Requests(req);
+
             using (CustomDbContext db = new CustomDbContext())
             {
-                string currentPerson;
-                if (Request.Cookies["UserId"] != null)
-                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-                else currentPerson = "user1";
+                if (db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs != null)
+                {
+                    string[] currentPersonTegs = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs.Split(' ');
+
+                    List<ProfileModel> mentorListWithTegs = new List<ProfileModel>();
+                    var mentorList = db.UserProfiles.Where(x => x.Role == "mentor");
+                    if (mentorList != null)
+                        foreach (var m in mentorList)
+                            for (int i = 0; i < currentPersonTegs.Length; i++)
+                            {
+                                string currentTeg = currentPersonTegs[i];
+                                if (currentTeg != "")
+                                {
+                                    var currentMentor = m.UserName;
+                                    using (CustomDbContext db2 = new CustomDbContext())
+                                    {
+                                        var ment = db2.ProfileModel.SingleOrDefault(x => x.UserName == currentMentor);
+                                        if (ment != null)
+                                            if (ment.UserName != currentPerson)
+                                                if (ment.MyTegs != null)
+                                                    if (ment.MyTegs.Contains(currentTeg))
+                                                        if (!mentorListWithTegs.Any(x => x.UserName == ment.UserName))
+                                                            mentorListWithTegs.Add(ment);
+                                    }
+                                }
+                            }
+
+
+                    foreach (var m in mentorListWithTegs)
+                    {
+                        observer = new Observer(m.UserName);                       
+                        r.Attach(observer);
+                    }
+                }
+            }
+
+            using (CustomDbContext db = new CustomDbContext())
+            {
+                //string currentPerson;
+                //if (Request.Cookies["UserId"] != null)
+                //    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                //else currentPerson = "user1";
                 int count = db.RequestsModel.Count(x => x.createdBy == currentPerson);
                 if (count == 0)
                 {

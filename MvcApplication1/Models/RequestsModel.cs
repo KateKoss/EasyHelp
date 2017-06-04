@@ -35,6 +35,8 @@ namespace MvcApplication1.Models
         public IEnumerable<SelectListItem> TegList { get; set; }
         public string requestState { get; set; } //Есть 3 состояния "request resolved", "request not resolved", "request canceled"
         public string createdBy { get; set; }
+        [NotMapped]
+        public bool isUpdate { get; set; }
             
     }
     public class RequestsList

@@ -105,7 +105,7 @@ namespace MvcApplication1.Models
             if (rawDataToCluster.Count == 0)
             {
                 StringBuilder str = new StringBuilder();
-                int numberOfPoints;
+                //int numberOfPoints;
 
                 //do
                 //{
@@ -162,7 +162,7 @@ namespace MvcApplication1.Models
                 //    numberOfClusters = Int32.Parse(str.ToString());
                 //} while (numberOfClusters > numberOfPoints || numberOfClusters <= 0);
                 N = 2;
-                numberOfPoints = 4;
+                //numberOfPoints = 4;
                 numberOfClusters = 2;
                 rawDataToCluster = points;
                 //for (int i = 0; i < numberOfPoints; i++)
