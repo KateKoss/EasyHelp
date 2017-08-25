@@ -16,35 +16,56 @@
 @using (Html.BeginForm("CreateRequest", "Requests", FormMethod.Get))
 {
     <p>
-        <button>Створити заявку</button>
+        <button type="button" class="btn btn-primary btn-sm">Створити заявку</button>
     </p>
 }
-
-<nav>@Html.ActionLink("Активні", "LoadStudentRequests", "Requests")
-    | @Html.ActionLink("Розв'язані", "ResolvedRequests", "Requests")
-    | @Html.ActionLink("Скасовані", "CanceledRequests", "Requests")
-</nav>
+<ul class="nav nav-tabs">
+    <li class="nav-item active">
+        @Html.ActionLink("Активні", "LoadStudentRequests", "Requests", new { @class="nav-link active" })
+    </li>
+    <li class="nav-item">
+        @Html.ActionLink("Розв'язані", "ResolvedRequests", "Requests", new { @class = "nav-link" })
+    </li>
+    <li class="nav-item">
+        @Html.ActionLink("Скасовані", "CanceledRequests", "Requests", new { @class = "nav-link" })
+    </li>
+</ul>
 <div>
-    <table cellspacing="2" border="1" cellpadding="5" width="600">
+    <table class="table">
+        <thead class="thead-default">
+            <tr>
+                <th colspan="2">Заявка</th>
+                <th>Стан</th>
+            </tr>
+        </thead>
+        <tbody>
         @foreach (var t in Model)
         {
             <tr>
                 <td>
                     @t.requestName
-                   
-                        @if (t.requestState == "request not resolved")
-                        {
-                            <nav>
-                                @Html.ActionLink("Позначити як вирішену", "MarkAsResolved", "Requests", new { requestId = t.requestId }, null)
-                                | @Html.ActionLink("Скасувати", "MarkAsCanceled", "Requests", new { requestId = t.requestId }, null)
-                                |@Html.ActionLink("Редагувати заявку", "EditRequest", "Requests", new { requestId = t.requestId }, null)
-                            </nav>
-                        }                    
+
+                    @*@if (t.requestState == "request not resolved")*@
                 </td>
+                <td>
+                    <ul class="nav justify-content-center">
+                        <li class="nav-item">
+                            @Html.ActionLink("Позначити як вирішену", "MarkAsResolved", "Requests", new { requestId = t.requestId }, new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Скасувати", "MarkAsCanceled", "Requests", new { requestId = t.requestId }, new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Редагувати заявку", "EditRequest", "Requests", new { requestId = t.requestId }, new { @class = "nav-link" })
+                        </li>
+                    </ul>
+                </td>
+
                 <td>
                     @t.requestState
                 </td>
             </tr>
         }
-    </table>
+        </tbody>
+</table>
 </div>

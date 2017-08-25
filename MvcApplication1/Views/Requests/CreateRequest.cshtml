@@ -25,7 +25,7 @@
         @Html.TextAreaFor(model => model.requestText, new { @placeholder = "Текст заявки" })
 
         <p>
-            <button type="submit" id="btnCreateRequest">Створити</button>
+            <button type="submit" id="btnCreateRequest" class="btn btn-primary btn-sm">Створити</button>
         </p>
         @Html.TextBoxFor(model => model.requestId, new { @style = "visibility:hidden;" })
         @Html.TextBoxFor(model => model.TegList, new { @style = "visibility:hidden;" })
