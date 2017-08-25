@@ -11,7 +11,7 @@ namespace MvcApplication1.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201705221016060_1"; }
+            get { return "201705281137147_1"; }
         }
         
         string IMigrationMetadata.Source
