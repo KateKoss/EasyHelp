@@ -67,8 +67,8 @@ namespace MvcApplication1.Controllers
                     }
             }
             
-            RequestModel req = new RequestModel("user1_3", "Help with 1...", "bla-bla1", null, "request resolved");
-            if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
+            //RequestModel req = new RequestModel("user1_3", "Help with 1...", "bla-bla1", null, "request resolved");
+            //if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
             
             
             return View("StudentRequests", requestsModel.reqests);
@@ -146,12 +146,57 @@ namespace MvcApplication1.Controllers
 
         public ActionResult SaveReqest(RequestModel req)
         {
+            Singleton s = Singleton.Instance;                  
+            string currentPerson;
+            currentPerson = s.user;
+
+            Observer observer;
+            Requests r = new Requests(req);
+
             using (CustomDbContext db = new CustomDbContext())
             {
-                string currentPerson;
-                if (Request.Cookies["UserId"] != null)
-                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-                else currentPerson = "user1";
+                if (db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs != null)
+                {
+                    string[] currentPersonTegs = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs.Split(' ');
+
+                    List<ProfileModel> mentorListWithTegs = new List<ProfileModel>();
+                    var mentorList = db.UserProfiles.Where(x => x.Role == "mentor");
+                    if (mentorList != null)
+                        foreach (var m in mentorList)
+                            for (int i = 0; i < currentPersonTegs.Length; i++)
+                            {
+                                string currentTeg = currentPersonTegs[i];
+                                if (currentTeg != "")
+                                {
+                                    var currentMentor = m.UserName;
+                                    using (CustomDbContext db2 = new CustomDbContext())
+                                    {
+                                        var ment = db2.ProfileModel.SingleOrDefault(x => x.UserName == currentMentor);
+                                        if (ment != null)
+                                            if (ment.UserName != currentPerson)
+                                                if (ment.MyTegs != null)
+                                                    if (ment.MyTegs.Contains(currentTeg))
+                                                        if (!mentorListWithTegs.Any(x => x.UserName == ment.UserName))
+                                                            mentorListWithTegs.Add(ment);
+                                    }
+                                }
+                            }
+
+
+                    foreach (var m in mentorListWithTegs)
+                    {
+                        observer = new Observer(m.UserName);                       
+                        r.Attach(observer);
+                    }
+                }
+            }
+
+            using (CustomDbContext db = new CustomDbContext())
+            {
+                //string currentPerson;
+                //if (Request.Cookies["UserId"] != null)
+                //    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                //else currentPerson = "user1";
                 int count = db.RequestsModel.Count(x => x.createdBy == currentPerson);
                 if (count == 0)
                 {
@@ -187,26 +232,78 @@ namespace MvcApplication1.Controllers
         public ActionResult EditRequest(RequestsList resolvThisReq, string requestId)
         {
             //подгрузить инфу из бд для айди req.requestId
-            RequestModel req = new RequestModel(requestId, "Help with smth", "bla-bla1", null, "request not resolved");
+            RequestModel req = new RequestModel();            
+            
+            using (CustomDbContext db = new CustomDbContext())
+            {
+                req = db.RequestsModel.SingleOrDefault(x => x.requestId == requestId);                
+            }
             return View("EditRequest", req);
         }
         
         [HttpPost]
         public ActionResult SaveChangesReqest(RequestModel req)
         {
+
             //сохранить изменения в бд по айди req.requestId
             return RedirectToAction("LoadStudentRequests");
         }
         //--------------------------Заявки для ментора-----------------------------------------------
 
-        public ActionResult LoadMentorRequests(RequestsList m, string user)
+        public List<RequestModel> LoadMentorRequests(string  rState)
         {
-            RequestsList requestsModel = new RequestsList();
-            RequestModel req = new RequestModel("user1_3", "Help with 1...", "bla-bla1", null, "request resolved");
-            if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
-            req = new RequestModel("user1_4", "Help with 2...", "bla-bla2", null, "request resolved");
-            if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
-            return View("MentorRequests", m.reqests);
+           RequestsList requestsModel = new RequestsList();
+            string currentPerson;
+            if (Request.Cookies["UserId"] != null)
+                currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+            else currentPerson = "user1";
+            
+            using (CustomDbContext db = new CustomDbContext())
+            {
+                if (db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs != null)
+                {
+                    string[] currentPersonTegs = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs.Split(' ');
+
+                    List<ProfileModel> mentorListWithTegs = new List<ProfileModel>();
+                    var mentorList = db.UserProfiles.Where(x => x.Role == "student" || x.Role == "user");
+                    if (mentorList != null)
+                        foreach (var m in mentorList)
+                            for (int i = 0; i < currentPersonTegs.Length; i++)
+                            {
+                                string currentTeg = currentPersonTegs[i];
+                                if (currentTeg != "")
+                                {
+                                    var currentMentor = m.UserName;
+                                    using (CustomDbContext db2 = new CustomDbContext())
+                                    {
+                                        var ment = db2.ProfileModel.SingleOrDefault(x => x.UserName == currentMentor);
+                                        if (ment != null)
+                                            if (ment.UserName != currentPerson)
+                                                if (ment.MyTegs != null)
+                                                    if (ment.MyTegs.Contains(currentTeg))
+                                                        if (!mentorListWithTegs.Any(x => x.UserName == ment.UserName))
+                                                            mentorListWithTegs.Add(ment);
+                                    }
+                                }
+                            }
+
+
+                    foreach (var m in mentorListWithTegs)
+                    {
+                        //mentor = new MentorsModel();
+                        using (CustomDbContext db3 = new CustomDbContext())
+                        {
+                            var r = db3.RequestsModel.Where(x => x.createdBy == m.UserName && x.requestState == rState);
+                            if (r != null)
+                                foreach (var item in r)
+                                {
+                                    requestsModel.reqests.Add(item);
+                                }
+                        }                        
+                    }
+                }
+            }
+            return requestsModel.reqests;
         }
             
 
@@ -214,10 +311,8 @@ namespace MvcApplication1.Controllers
         public ActionResult MentorAvailableRequests()
         {
             RequestsList requestsModel = new RequestsList();
-            RequestModel req = new RequestModel("user1_3", "Help with 1...", "bla-bla1", null, "request resolved");
-            if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
-            req = new RequestModel("user1_4", "Help with 2...", "bla-bla2", null, "request resolved");
-            if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
+            requestsModel.reqests = LoadMentorRequests("request not resolved");
+
             return View("MentorRequests", requestsModel.reqests);
         }
 
@@ -225,10 +320,8 @@ namespace MvcApplication1.Controllers
         public ActionResult MentorResolvedRequests()
         {
             RequestsList requestsModel = new RequestsList();
-            RequestModel req = new RequestModel("user1_3", "Help with 1...", "bla-bla1", null, "request resolved");
-            if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
-            req = new RequestModel("user1_4", "Help with 2...", "bla-bla2", null, "request resolved");
-            if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
+            requestsModel.reqests = LoadMentorRequests("request resolved");
+            
             return View("MentorRequests", requestsModel.reqests);
         }
 
@@ -236,10 +329,8 @@ namespace MvcApplication1.Controllers
         public ActionResult MentorCanceledRequests()
         {
             RequestsList requestsModel = new RequestsList();
-            RequestModel req = new RequestModel("user1_3", "Help with 1...", "bla-bla1", null, "request resolved");
-            if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
-            req = new RequestModel("user1_4", "Help with 2...", "bla-bla2", null, "request resolved");
-            if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
+            requestsModel.reqests = LoadMentorRequests("request canceled");
+
             return View("MentorRequests", requestsModel.reqests);
         }
         

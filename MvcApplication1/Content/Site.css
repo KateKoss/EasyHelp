@@ -3,6 +3,24 @@
     margin: 0;
     padding: 0;
 }
+.removeTeg{
+    cursor: pointer;
+    /*color:dimgray; 
+    background-color:lightgray;*/
+}
+input.btnEdit {
+  background: url("edit.png") no-repeat;
+  /*background-size: cover;*/
+  background-position: center;
+  
+  background-size: 100%; /* To fill the dimensions of container (button), or */
+  /*background-size: 40px auto;*/
+}
+
+.profileUserData{
+    font-weight: bold;
+    font-size: 16px;
+}
 
 body {
     background-color: #fff;
@@ -453,13 +471,13 @@ textarea {
     input[type="submit"],
     input[type="button"],
     button {
-        background-color: #d3dce0;
+        /*background-color: #d3dce0;
         border: 1px solid #787878;
         cursor: pointer;
         font-size: 1.2em;
         font-weight: 600;
         padding: 7px;
-        margin-right: 8px;
+        margin-right: 8px;*/
         width: auto;
     }
 

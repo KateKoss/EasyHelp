@@ -1,0 +1,16 @@
+﻿@model MvcApplication1.Models.ProfileModel
+<div id="tegs">
+    
+    @foreach (var item in Model.tegs)
+    {
+
+        <span id="@item" class="teg badge badge-success" >
+
+            <span id="userTegs" class="profileUserData">@item</span>
+            <span class="badge badge-pill badge-secondary removeTeg" onclick="removeTeg(this)" style=" color:dimgray; background-color:lightgray;">x</span>
+        </span>
+
+    }
+    <input id="inputAddTeg" value="" style="display:none; " />
+    <input id="btnEditTeg" onclick="AddTeg()" type="submit" value="" class="btn  btnEdit" />  
+</div>
