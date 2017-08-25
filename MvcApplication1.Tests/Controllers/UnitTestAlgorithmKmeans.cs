@@ -54,8 +54,8 @@ namespace MvcApplication1.Tests.Controllers
             rawDataToCluster.Add(p);
             p = new DataPoint(2);
             p.pointId = "1";
-            p.a[0] = 2;
-            p.a[1] = 3;
+            p.a[0] = 1;
+            p.a[1] = 5;
             rawDataToCluster.Add(p);
             a.setRawDataToCluster(rawDataToCluster);            
             

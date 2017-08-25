@@ -76,6 +76,13 @@ namespace MvcApplication1.Controllers
                         {
 
                         }
+                        var splitTegs = myModel.MyTegs.Split(' ');
+                        var list = new List<String>();
+                        foreach (var el in splitTegs)
+                        {
+                            list.Add(el);
+                            
+                        }
                         
                         model = new ProfileModel()
                         {
@@ -83,14 +90,15 @@ namespace MvcApplication1.Controllers
                             MyTegs = myModel.MyTegs,
                             About_me = myModel.About_me,
                             UserPhoto = myModel.UserPhoto,                            
-                            searchMentor = model.searchMentor
+                            searchMentor = model.searchMentor,
+                            tegs = list
                         };
                     }
                     else model = new ProfileModel() { };
                 }
 
                 MentorsModel mentor;
-
+                //пошук ментора
                 if (model.searchMentor != null && model.searchMentor != "")
                 {
                     using (CustomDbContext db = new CustomDbContext())
@@ -116,7 +124,7 @@ namespace MvcApplication1.Controllers
                                 }
                             }
                     }
-                }
+                }//якщо пошук пустий - то підвантажуємо список менторів які мають такий самий тег
                 else using (CustomDbContext db = new CustomDbContext())
                     {
                         if (db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs != null)
@@ -666,49 +674,71 @@ namespace MvcApplication1.Controllers
 
         public ActionResult UploadPhoto()
         {
-            return View();
-        }
+            ProfileModel model = new ProfileModel() { };
 
-        [HttpPost]
-        public ActionResult UploadPhoto(ProfileModel model, HttpPostedFileBase upload)
-        {
-
-            if (ModelState.IsValid && upload != null)
+            using (CustomDbContext db = new CustomDbContext())
             {
-                // получаем имя файла
-                string fileName = System.IO.Path.GetFileName(upload.FileName);
-                // сохраняем файл в папку Files в проекте
-                upload.SaveAs(Server.MapPath("~/Files/" + fileName));
+                string currentPerson;
+                if (Request.Cookies["UserId"] != null)
+                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                else currentPerson = "user1";
 
-                byte[] imageData = null;
-                // считываем переданный файл в массив байтов
-                using (var binaryReader = new BinaryReader(upload.InputStream))
+                var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
+                if (user != null)
                 {
-                    imageData = binaryReader.ReadBytes(upload.ContentLength);
+                    model = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
+                    //myModel.UserPhoto = imageData;
+                    //model = myModel;
+
+                    db.SaveChanges();
                 }
-                model.UserPhoto = imageData;
-
-                using (CustomDbContext db = new CustomDbContext())
-                {
-                    string currentPerson;
-                    if (Request.Cookies["UserId"] != null)
-                        currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-                    else currentPerson = "user1";
-
-                    var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
-                    if (user != null)
-                    {
-                        var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
-                        myModel.UserPhoto = imageData;
-                        model = myModel;
-
-                        db.SaveChanges();
-                    }
-                    else ModelState.AddModelError("Error", "Error");
-                }
+                else ModelState.AddModelError("Error", "Error");
             }
-            return RedirectToAction("Index");
+            return Content(Convert.ToBase64String(model.UserPhoto));
+            
         }
+
+        //[HttpPost]
+        ////public ActionResult UploadPhoto()
+        //public ActionResult UploadPhoto(ProfileModel model, HttpPostedFileBase upload)
+        //{
+        //    if (ModelState.IsValid && upload != null)
+        //    {
+        //        // получаем имя файла
+        //        string fileName = System.IO.Path.GetFileName(upload.FileName);
+        //        // сохраняем файл в папку Files в проекте
+        //        upload.SaveAs(Server.MapPath("~/Files/" + fileName));
+
+        //        byte[] imageData = null;
+        //        // считываем переданный файл в массив байтов
+        //        using (var binaryReader = new BinaryReader(upload.InputStream))
+        //        {
+        //            imageData = binaryReader.ReadBytes(upload.ContentLength);
+        //        }
+        //        model.UserPhoto = imageData;
+
+        //        using (CustomDbContext db = new CustomDbContext())
+        //        {
+        //            string currentPerson;
+        //            if (Request.Cookies["UserId"] != null)
+        //                currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+        //            else currentPerson = "user1";
+
+        //            var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
+        //            if (user != null)
+        //            {
+        //                var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
+        //                myModel.UserPhoto = imageData;
+        //                model = myModel;
+
+        //                db.SaveChanges();
+        //            }
+        //            else ModelState.AddModelError("Error", "Error");
+        //        }
+        //    }
+        //    return RedirectToAction("Index");
+            
+        //}
 
         public ActionResult SetMentorRate(ProfileModel model)
         {

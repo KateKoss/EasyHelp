@@ -15,6 +15,8 @@ namespace MvcApplication1.Models
         [NotMapped]
         public List<MvcApplication1.Models.MentorsModel> mentors = new List<MvcApplication1.Models.MentorsModel>();
         [NotMapped]
+        public List<String> tegs = new List<String>();
+        [NotMapped]
         public string searchMentor { get; set; }
         [NotMapped]
         public bool isMentor { get; set; }

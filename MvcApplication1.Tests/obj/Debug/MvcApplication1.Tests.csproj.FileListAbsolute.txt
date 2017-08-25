@@ -92,7 +92,6 @@ C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\bin\Debug\Microsoft.Data.OData.dll
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\bin\Debug\Microsoft.Web.Infrastructure.dll
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\bin\Debug\Microsoft.Web.Mvc.FixedDisplayModes.dll
-C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\bin\Debug\MvcApplication1.dll
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\bin\Debug\Newtonsoft.Json.dll
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\bin\Debug\System.Spatial.dll
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\bin\Debug\System.Web.Helpers.dll
@@ -111,7 +110,6 @@ C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\bin\Debug\DotNetOpenAuth.OAuth.dll
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\bin\Debug\DotNetOpenAuth.OpenId.RelyingParty.dll
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\bin\Debug\DotNetOpenAuth.OpenId.dll
-C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\bin\Debug\MvcApplication1.pdb
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\bin\Debug\Newtonsoft.Json.xml
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\bin\Debug\System.Web.Helpers.xml
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\bin\Debug\System.Web.Mvc.xml
@@ -165,3 +163,5 @@ C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\bin\Debug\xunit.runner.reporters.net452.dll
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\bin\Debug\xunit.runner.utility.net452.dll
 C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\bin\Debug\xunit.abstractions.dll
+C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\bin\Debug\MvcApplication1.dll
+C:\Users\Людмила\Documents\Git_ext_repos\EasyHelp2\MvcApplication1.Tests\bin\Debug\MvcApplication1.pdb
