@@ -23,7 +23,7 @@ namespace MvcApplication1.Tests.Controllers
             ViewResult result = controller.Index() as ViewResult;
 
             // Assert
-            Assert.AreEqual("Modify this template to jump-start your ASP.NET MVC application.", result.ViewBag.Message);
+            Assert.AreEqual("Modify this to jump-start your ASP.NET MVC application.", result.ViewBag.Message);
         }
 
         [TestMethod]
