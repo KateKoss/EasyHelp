@@ -15,6 +15,7 @@ namespace MvcApplication1.Tests.Controllers
         [TestMethod]
         public void Index()
         {
+            int y = 1;
             // Arrange
             HomeController controller = new HomeController();
 
