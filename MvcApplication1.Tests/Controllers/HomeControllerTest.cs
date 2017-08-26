@@ -18,6 +18,7 @@ namespace MvcApplication1.Tests.Controllers
             // Arrange
             HomeController controller = new HomeController();
 
+            int i = 5;
             // Act
             ViewResult result = controller.Index() as ViewResult;
 
