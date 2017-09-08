@@ -4,10 +4,10 @@
     @foreach (var item in Model.tegs)
     {
 
-        <span id="@item" class="teg badge badge-success" >
+        <span id="@item" class="teg badge badge-pill">
 
             <span id="userTegs" class="profileUserData">@item</span>
-            <span class="badge badge-pill badge-secondary removeTeg" onclick="removeTeg(this)" style=" color:dimgray; background-color:lightgray;">x</span>
+            <span class="badge badge-pill removeTeg" onclick="removeTeg(this)">x</span>
         </span>
 
     }

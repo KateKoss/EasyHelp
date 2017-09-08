@@ -754,7 +754,7 @@ intellisense.annotate(jQuery.fn, {
   'all': function() {
     /// <summary>Selects all elements.</summary>
   },
-  'andSelf': function() {
+  'addBack()': function() {
     /// <summary>Add the previous set of elements on the stack to the current set.</summary>
     /// <returns type="jQuery" />
   },

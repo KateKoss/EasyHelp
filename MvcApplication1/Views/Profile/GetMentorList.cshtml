@@ -1,0 +1,23 @@
+﻿@model List<MvcApplication1.Models.MentorsModel>
+
+@using (Html.BeginForm())
+{
+    <div class="dropdown-menu">
+        @foreach (var m in Model)
+        {
+            <a class="dropdown-item" href="#">
+
+            <img style='width:65px; height:50px;' src='../Images/userphoto2.jpg' alt="фото" />
+
+
+
+            <span>@Html.ActionLink("Перейти", "Index", new { thisUserLoggedOn = "" }, new { href = "?user=" + m.UserName })</span>
+
+
+            <span style="text-align:right">@Html.LabelFor(model => m.UserName, m.Name != null ? m.Name : m.UserName)</span>
+           
+        </a>
+        }
+
+        </div>
+}

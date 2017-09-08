@@ -76,14 +76,17 @@ namespace MvcApplication1.Controllers
                         {
 
                         }
-                        var splitTegs = myModel.MyTegs.Split(' ');
                         var list = new List<String>();
-                        foreach (var el in splitTegs)
+                        if (myModel.MyTegs != null)
                         {
-                            list.Add(el);
+                            var splitTegs = myModel.MyTegs.Split(' ');
                             
+                            foreach (var el in splitTegs)
+                            {
+                                list.Add(el);
+
+                            }
                         }
-                        
                         model = new ProfileModel()
                         {
                             Name = myModel.Name,
@@ -168,6 +171,58 @@ namespace MvcApplication1.Controllers
                 return View("Index", model);
             }
             //return View();
+        }
+        [HttpGet]
+        public ActionResult GetMentorList()
+        {
+            ProfileModel model = new ProfileModel() { };
+            MentorsModel mentor = new MentorsModel() { };
+            string currentPerson;
+            if (Request.Cookies["UserId"] != null)
+            {
+                currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                using (CustomDbContext db = new CustomDbContext())
+                {
+                    if (db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs != null)
+                    {
+                        string[] currentPersonTegs = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs.Split(' ');
+
+                        List<ProfileModel> mentorListWithTegs = new List<ProfileModel>();
+                        var mentorList = db.UserProfiles.Where(x => x.Role == "mentor");
+                        if (mentorList != null)
+                            foreach (var m in mentorList)
+                                for (int i = 0; i < currentPersonTegs.Length; i++)
+                                {
+                                    string currentTeg = currentPersonTegs[i];
+                                    if (currentTeg != "")
+                                    {
+                                        var currentMentor = m.UserName;
+                                        using (CustomDbContext db2 = new CustomDbContext())
+                                        {
+                                            var ment = db2.ProfileModel.SingleOrDefault(x => x.UserName == currentMentor);
+                                            if (ment != null)
+                                                if (ment.UserName != currentPerson)
+                                                    if (ment.MyTegs != null)
+                                                        if (ment.MyTegs.Contains(currentTeg))
+                                                            if (!mentorListWithTegs.Any(x => x.UserName == ment.UserName))
+                                                                mentorListWithTegs.Add(ment);
+                                        }
+                                    }
+                                }
+
+
+                        foreach (var m in mentorListWithTegs)
+                        {
+                            mentor = new MentorsModel();
+                            mentor.Name = m.Name;
+                            mentor.UserName = m.UserName;
+                            mentor.UserPhoto = m.UserPhoto;
+                            model.mentors.Add(mentor);
+                        }
+                    }
+                }
+            }
+            return PartialView(model.mentors);
         }
 
         public ProfileModel getMentorInf(string user)

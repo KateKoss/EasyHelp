@@ -1,10 +1,140 @@
-﻿html {
+﻿#userphotoImg{
+    width: 275px;
+    height: 275px;
+    margin-bottom: 20px;
+    border: 1px solid lightgray;
+}
+
+.teg {
+    background-color: #adb;
+    padding: 0.45em 0.7em;
+}
+.file-label {
+    -webkit-box-align: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    cursor: pointer;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    overflow: hidden;
+    position: relative;
+}
+.file-icon {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    height: 1em;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    margin-right: 0.5em;
+    width: 1em;
+}
+.file.is-boxed .file-cta {
+        background: white;
+    /* -webkit-box-direction: normal; */
+    -ms-flex-direction: column;
+    /* flex-direction: column; */
+    /* height: auto; */
+    padding: 1em 3em;
+}
+.file-input {
+    height: 0.01em;
+    left: 0;
+    outline: none;
+    position: absolute;
+    top: 0;
+    width: 0.01em;
+}
+.file.is-boxed .file-label {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+.file-cta {
+    background-color: whitesmoke;
+    color: #4a4a4a;
+}
+
+.file-cta, .file-name {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    font-size: 1rem;
+    height: 2.25em;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    line-height: 1.5;
+    padding-bottom: calc(0.375em - 1px);
+    padding-left: calc(0.625em - 1px);
+    padding-right: calc(0.625em - 1px);
+    padding-top: calc(0.375em - 1px);
+    position: relative;
+    vertical-align: top;
+    border-color: #dbdbdb;
+    border-radius: 3px;
+    font-size: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+    white-space: nowrap;
+}
+.file-label {
+    -webkit-box-align: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    cursor: pointer;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    overflow: hidden;
+    position: relative;
+}
+.file {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-box-align: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    position: relative;
+}
+html {
     background-color: #e2e2e2;
     margin: 0;
     padding: 0;
 }
 .removeTeg{
     cursor: pointer;
+    background-color: #88998c;
     /*color:dimgray; 
     background-color:lightgray;*/
 }
@@ -24,7 +154,7 @@ input.btnEdit {
 
 body {
     background-color: #fff;
-    border-top: solid 10px #000;
+    border-top: solid 10px #dc3545;
     color: #333;
     font-size: .85em;
     font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
@@ -117,7 +247,7 @@ h5, h6 {
 }
 
 #body {
-    background-color: #efeeef;
+    background-color: #ffffff;
     clear: both;
     padding-bottom: 35px;
 }
@@ -129,7 +259,7 @@ h5, h6 {
     }
 
     .featured + .main-content {
-        background: url("../Images/heroAccent.png") no-repeat;
+        /*background: url("../Images/heroAccent.png") no-repeat;*/
     }
 
 header .content-wrapper {
@@ -232,7 +362,7 @@ ul#menu {
 
     .featured .content-wrapper {
         
-        background-color: #e80c4d;
+        background-color: #dc3545;
         /*background-image: -ms-linear-gradient(left, #7ac0da 0%, #a4d4e6 100%);
         background-image: -o-linear-gradient(left, #7ac0da 0%, #a4d4e6 100%);
         background-image: -webkit-gradient(linear, left top, right top, color-stop(0, #7ac0da), color-stop(1, #a4d4e6));
