@@ -11,6 +11,8 @@ using WebMatrix.WebData;
 using MvcApplication1.Filters;
 using MvcApplication1.Models;
 using MvcApplication1.Contexts;
+using System.Drawing;
+using System.Web.Hosting;
 
 namespace MvcApplication1.Controllers
 {
@@ -113,6 +115,16 @@ namespace MvcApplication1.Controllers
                     if (model.Role)
                         role = "mentor";
                     else role = "student";
+                    using (CustomDbContext db = new CustomDbContext())
+                    {
+                        var user = db.ProfileModel.SingleOrDefault(x => x.UserName == model.UserName);
+                        Image image = Image.FromFile(HostingEnvironment.MapPath("~/Images/userphoto.png"));
+                        System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
+                        image.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                        byte[] b = memoryStream.ToArray();
+                        user.UserPhoto = b;
+                        db.SaveChanges();
+                    }
                     WebSecurity.CreateUserAndAccount(model.UserName, model.Password, propertyValues: new
                                                                                         {
                                                                                             EmailAddress = model.EmailAddress,
