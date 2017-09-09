@@ -187,14 +187,15 @@ namespace MvcApplication1.Controllers
                     model = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
                     if (model != null)
                     {
-                        var splitTegs = model.MyTegs.Split(' ');
-                        foreach (var el in splitTegs)
+                        if (model.MyTegs != null)
                         {
-                            model.tegs.Add(el);
+                            var splitTegs = model.MyTegs.Split(' ');
+                            foreach (var el in splitTegs)
+                            {
+                                model.tegs.Add(el);
+                            }
                         }
-
                     }
-
                 }
             }           
 

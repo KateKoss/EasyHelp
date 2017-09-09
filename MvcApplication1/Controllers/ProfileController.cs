@@ -35,10 +35,8 @@ namespace MvcApplication1.Controllers
         [HttpGet]
         public ActionResult Index(ProfileModel model, string user)
         {
-
             if (user != null && user != "")
             {
-
                 // Создать объект cookie-набора
                 HttpCookie cookie = new HttpCookie("MentorId");
                 // Установить значения в нем
@@ -76,23 +74,25 @@ namespace MvcApplication1.Controllers
                         {
 
                         }
-                        var splitTegs = myModel.MyTegs.Split(' ');
                         var list = new List<String>();
-                        foreach (var el in splitTegs)
+                        if (myModel.MyTegs != null)
                         {
-                            list.Add(el);
-                            
+                            var splitTegs = myModel.MyTegs.Split(' ');
+                            foreach (var el in splitTegs)
+                            {
+                                list.Add(el);
+                            }
                         }
-                        
                         model = new ProfileModel()
                         {
                             Name = myModel.Name,
                             MyTegs = myModel.MyTegs,
                             About_me = myModel.About_me,
-                            UserPhoto = myModel.UserPhoto,                            
+                            UserPhoto = myModel.UserPhoto,
                             searchMentor = model.searchMentor,
                             tegs = list
                         };
+                        
                     }
                     else model = new ProfileModel() { };
                 }
