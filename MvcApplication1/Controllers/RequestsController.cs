@@ -18,29 +18,37 @@ namespace MvcApplication1.Controllers
 {
     public class RequestsController : Controller
     {
+        public class Data
+        {
+            public string inputRequestName { get; set; }
+            public string inputRequestText { get; set; }
+        }
+
         [HttpGet]
         public ActionResult LoadStudentRequests()
         {
-            //RequestsList requestsModel = new RequestsList();
-            //string currentPerson;
-            //if (Request.Cookies["UserId"] != null)
-            //    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-            //else currentPerson = "user1";
-            //using (CustomDbContext db = new CustomDbContext())
-            //{
-            //    var r = db.RequestsModel.Where(x => x.createdBy == currentPerson && x.requestState == "request not resolved");
-            //    if (r!=null)
-            //        foreach (var item in r)
-            //        {
-            //            requestsModel.reqests.Add(item);
-            //        }
-            //}
+            RequestsList requestsModel = new RequestsList() { };
+            string currentPerson;
+            if (Request.Cookies["UserId"] != null)
+            {
+                currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                using (CustomDbContext db = new CustomDbContext())
+                {
+                    var r = db.RequestsModel.Where(x => x.createdBy == currentPerson && x.requestState == "request not resolved");
+                    if (r != null)
+                        foreach (var item in r)
+                        {
+                            requestsModel.reqests.Add(item);
+                        }
+                }
+            }
             //в модель передать все активные заявки из бд 
-            RequestsList requestsModel = new RequestsList();
-            requestsModel.reqests.Add(new RequestModel("user1_1", "Help with Java", "bla-bla1", null, "request not resolved"));
-            requestsModel.reqests.Add(new RequestModel("user1_2", "Help with C#", "bla-bla2", null, "request not resolved"));
-            requestsModel.reqests.Add(new RequestModel("user1_2", "Help with C++", "bla-bla3", null, "request not resolved")); 
-
+            //RequestsList requestsModel = new RequestsList();
+            //requestsModel.reqests.Add(new RequestModel("user1_1", "Help with Java", "bla-bla1", null, "request not resolved"));
+            //requestsModel.reqests.Add(new RequestModel("user1_2", "Help with C#", "bla-bla2", null, "request not resolved"));
+            //requestsModel.reqests.Add(new RequestModel("user1_2", "Help with C++", "bla-bla3", null, "request not resolved"));
+            if (Request.IsAjaxRequest())
+                return PartialView("_RequestsPartial", requestsModel.reqests);
             //RequestModel req = new RequestModel("user1_1", "Help with Java", "bla-bla1", null, "request not resolved");
             //    if (req.requestState != "request resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
             //    req = new RequestModel("user1_2", "Help with C#", "bla-bla2", null, "request not resolved");
@@ -136,11 +144,39 @@ namespace MvcApplication1.Controllers
 
         //--------------------------Создание/сохранение заявки-----------------------------------------------
 
-        [HttpGet]
-        public ActionResult CreateRequest()
+        [HttpPost]
+        public ActionResult RequestsPartial(Data data)
         {
-
-            return View("CreateRequest");
+            RequestModel reqModel = new RequestModel();
+            using (CustomDbContext db = new CustomDbContext())
+            {
+                string currentPerson;
+                if (Request.Cookies["UserId"] != null)
+                {
+                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                    int count = db.RequestsModel.Count(x => x.createdBy == currentPerson);
+                    if (count == 0)     //если это первая заявка у пользователя
+                    {
+                        reqModel.requestId = currentPerson + "_1";
+                    }
+                    else
+                    {
+                        reqModel.requestId = currentPerson + "_" + (count + 1);
+                    }
+                    reqModel.requestName = data.inputRequestName;
+                    reqModel.requestText = data.inputRequestText;
+                    reqModel.requestState = "request not resolved";
+                    reqModel.createdBy = currentPerson;
+                    reqModel.createdAt = DateTime.Now;
+                    //if (reqModel.requestName == null)
+                    //    reqModel.requestName = reqModel.requestText.Substring(0, 10);
+                    db.RequestsModel.Add(reqModel);
+                    db.SaveChanges();
+                }
+            }
+            //return PartialView("_RequestsPartial");
+            return RedirectToAction("LoadStudentRequests");
+            //return View("CreateRequest");//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
 
 

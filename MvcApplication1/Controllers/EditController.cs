@@ -145,13 +145,17 @@ namespace MvcApplication1.Controllers
                             {
                                 data.addTeg.Replace(' ', '_');
                             }
-                            if (!model.MyTegs.Contains(data.addTeg))
+                            if (model.MyTegs != null)
                             {
-                                string tegs = model.MyTegs;
-                                model.MyTegs = tegs + ' ' + data.addTeg;
-                                db.SaveChanges();
-                                
+                                if (!model.MyTegs.Contains(data.addTeg))
+                                {
+                                    string tegs = model.MyTegs;
+                                    model.MyTegs = tegs + ' ' + data.addTeg;
+                                    db.SaveChanges();
+
+                                }
                             }
+                            else model.MyTegs = " " + data.addTeg;
                         }
 
                         var splitTegs = model.MyTegs.Split(' ');

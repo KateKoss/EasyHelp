@@ -20,6 +20,7 @@ namespace MvcApplication1.Contexts
             : base("DefaultConnection")
         {
             //Database.SetInitializer(new DropCreateDatabaseAlways<CustomDbContext>());
+            Database.SetInitializer<CustomDbContext>(null);
         }
         
         public DbSet<UserProfile> UserProfiles { get; set; }

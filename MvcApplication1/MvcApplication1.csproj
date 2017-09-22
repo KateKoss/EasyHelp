@@ -383,6 +383,7 @@
     <Content Include="Views\FindAssosiates\Assosiates.cshtml" />
     <Content Include="Views\FindAssosiates\FindAssosiates.cshtml" />
     <Content Include="Views\Edit\Tegs.cshtml" />
+    <Content Include="Views\Requests\_RequestsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -1,4 +1,4 @@
-﻿@model List<MvcApplication1.Models.RequestModel>
+﻿@*@model List<MvcApplication1.Models.RequestModel>*@
 @{
     ViewBag.Title = "Requests";
 }
@@ -13,59 +13,111 @@
     </ul>
 </nav>
 
+<h3 id="nameLabel" style="display:none;">Навза заявки</h3>
+<input id="inputRequestName" value="" style="display:none;" placeholder = "Навза заявки"/>
+<h3 id="textLabel" style="display:none;">Текст заявки</h3>
+<input id="inputRequestText" value="" style="display:none;" placeholder="Текст заявки" />
+<p>
+    <button type="button" id="creareButton" class="btn btn-primary btn-sm">Створити заявку</button>
+</p>
+
+
+
+@*
 @using (Html.BeginForm("CreateRequest", "Requests", FormMethod.Get))
 {
     <p>
         <button type="button" class="btn btn-primary btn-sm">Створити заявку</button>
     </p>
-}
+}*@
+
 <ul class="nav nav-tabs">
     <li class="nav-item active">
-        @Html.ActionLink("Активні", "LoadStudentRequests", "Requests", new { @class="nav-link active" })
+        @Ajax.ActionLink("Активні", "LoadStudentRequests", "Requests", new AjaxOptions { UpdateTargetId = "requests" }, new { @class="nav-link active" })
     </li>
     <li class="nav-item">
-        @Html.ActionLink("Розв'язані", "ResolvedRequests", "Requests", new { @class = "nav-link" })
+        @Ajax.ActionLink("Розв'язані", "ResolvedRequests", "Requests", new AjaxOptions { UpdateTargetId = "requests" }, new { @class = "nav-link" })
     </li>
     <li class="nav-item">
-        @Html.ActionLink("Скасовані", "CanceledRequests", "Requests", new { @class = "nav-link" })
+        @Ajax.ActionLink("Скасовані", "CanceledRequests", "Requests", new AjaxOptions { UpdateTargetId = "requests" }, new { @class = "nav-link" })
     </li>
 </ul>
-<div>
-    <table class="table">
-        <thead class="thead-default">
-            <tr>
-                <th colspan="2">Заявка</th>
-                <th>Стан</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var t in Model)
-        {
-            <tr>
-                <td>
-                    @t.requestName
 
-                    @*@if (t.requestState == "request not resolved")*@
-                </td>
-                <td>
-                    <ul class="nav justify-content-center">
-                        <li class="nav-item">
-                            @Html.ActionLink("Позначити як вирішену", "MarkAsResolved", "Requests", new { requestId = t.requestId }, new { @class = "nav-link" })
-                        </li>
-                        <li class="nav-item">
-                            @Html.ActionLink("Скасувати", "MarkAsCanceled", "Requests", new { requestId = t.requestId }, new { @class = "nav-link" })
-                        </li>
-                        <li class="nav-item">
-                            @Html.ActionLink("Редагувати заявку", "EditRequest", "Requests", new { requestId = t.requestId }, new { @class = "nav-link" })
-                        </li>
-                    </ul>
-                </td>
-
-                <td>
-                    @t.requestState
-                </td>
-            </tr>
-        }
-        </tbody>
-</table>
+<div id="requests">
+    @Html.Partial("_RequestsPartial")
 </div>
+
+@section Scripts {
+    @Scripts.Render("~/scripts/jquery-1.8.2.js")
+    @Scripts.Render("~/scripts/jquery.unobtrusive-ajax.js")
+    <script type="text/javascript">
+        var i = 0;
+
+        $('#creareButton').click(function () {
+            
+            $("#nameLabel").toggle();
+            $('#inputRequestName').toggle();
+            $('#textLabel').toggle();
+            $('#inputRequestText').toggle();
+            if (i % 2 != 0) {
+                var reqName = $('#inputRequestName').val();
+                var reqText = $('#inputRequestText').val();
+                var data = {
+                    inputRequestName: reqName,
+                    inputRequestText: reqText
+                };
+                $.ajax({ //returns  jQuery XMLHttpRequest (jqXHR) object
+                    type: 'POST',
+                    url: '@Url.Action("RequestsPartial", "Requests")',
+                    dataType: "text",
+                    data: data,
+                    success: function (d) {
+                        //if (d.success ==true)
+                        $('#requests').text("");
+                        $('#requests').append(d);
+                        //$('#p').remove();
+                        // $('<span id="userName"></span>').after('<span id="labelNameEdit" style="display:;">');
+
+                        //console.log("replace", d)
+                        //console.log("hhh", $('#userName').val(d));
+                    }
+                });
+            }
+            i++;
+        });
+
+    @*function editName() {
+        if (document.getElementById('inputRequestName').style.display == "none") {
+            $('#nameLabel').hide();
+            document.getElementById('labelNameEdit').style.display = "";
+            document.getElementById('inputNameEdit').style.display = "none";
+            var uName = document.getElementById('inputNameEdit').value;
+            //console.log("name", uName);
+            var data = {
+                username: uName
+            };
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("EditName", "Request")',
+                dataType: "text",
+                data: data,
+                success: function (d)
+                {
+                    //if (d.success ==true)
+                    $('#requests').text(d);
+                    //$('#p').remove();
+                    // $('<span id="userName"></span>').after('<span id="labelNameEdit" style="display:;">');
+
+                        //console.log("replace", d)
+                        //console.log("hhh", $('#userName').val(d));
+                }
+            });
+        }
+        else {
+            document.getElementById('labelNameEdit').style.display = "none";
+            document.getElementById('inputNameEdit').style.display = "";
+        }
+    }*@
+    </script>
+}
+
