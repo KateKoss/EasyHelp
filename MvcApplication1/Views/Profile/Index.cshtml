@@ -12,7 +12,9 @@
 
         <li>@Html.ActionLink("Заявки", "LoadStudentRequests", "Requests")</li> @*возможно тут нужно сделать проверку является ли пользователь ментрорм,
             если да - вызывать LoadMentorRequests*@
+        
         <li>@Html.ActionLink("Чат", "Index", "Chat")</li>
+        <li><a href="#" id="addClass">чат 2</a></li>
         <li>@Html.ActionLink("Знайти однодумців", "Index", "FindAssosiates")</li> @*"FindAssosiates"*@
         <li>@Html.ActionLink("ааа", "пп")</li>
 
@@ -26,92 +28,8 @@
 
        
 </div>
+<div id="divForChat"></div>
 
-<aside id="sidebar_secondary" class="tabbed_sidebar ng-scope chat_sidebar">
-    <div class="popup-head">
-        <div class="popup-head-left pull-left">
-            <a design and developmenta title="Gurdeep Osahan (Web Designer)" target="_blank" href="https://web.facebook.com/iamgurdeeposahan">
-                <img class="md-user-image" alt="Gurdeep Osahan (Web Designer)" title="Gurdeep Osahan (Web Designer)" src="http://bootsnipp.com/img/avatars/bcf1c0d13e5500875fdd5a7e8ad9752ee16e7462.jpg" title="Gurdeep Osahan (Web Designer)" alt="Gurdeep Osahan (Web Designer)">
-                <h1>Gurdeep Osahan</h1><small><br> <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span> Web Designer</small>
-            </a>
-        </div>
-        <div class="popup-head-right pull-right">
-            
-            
-                <button class="chat-header-button" data-toggle="dropdown" type="button" aria-expanded="false">
-                    <i class="glyphicon glyphicon-paperclip"></i>
-                </button>
-                <ul role="menu" class="dropdown-menu pull-right">
-                    <li><a href="#"><span class="glyphicon glyphicon-picture" aria-hidden="true"></span> Gallery</a></li>
-                    <li><a href="#"><span class="glyphicon glyphicon-camera" aria-hidden="true"></span> Photo</a></li>
-                    <li><a href="#"><span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span> Video</a></li>
-                    <li><a href="#"><span class="glyphicon glyphicon-headphones" aria-hidden="true"></span> Audio</a></li>
-                    <li><a href="#"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Location</a></li>
-                    <li><a href="#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Contact</a></li>
-                </ul>
-            
-
-            <button data-widget="remove" id="removeClass" class="chat-header-button pull-right" type="button"><i class="glyphicon glyphicon-remove"></i></button>
-        </div>
-    </div>
-    <div id="chat" class="chat_box_wrapper chat_box_small chat_box_active" style="opacity: 1; display: block; transform: translateX(0px);">
-        <div class="chat_box touchscroll chat_box_colors_a">
-            <div class="chat_message_wrapper">
-                <div class="chat_user_avatar">
-                    <a href="https://web.facebook.com/iamgurdeeposahan" target="_blank">
-                        <img alt="Gurdeep Osahan (Web Designer)" title="Gurdeep Osahan (Web Designer)" src="http://www.webncc.in/images/gurdeeposahan.jpg" class="md-user-image">
-                    </a>
-                </div>
-                <ul class="chat_message">
-                    <li>
-                        <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Distinctio, eum? </p>
-                    </li>
-                    <li>
-                        <p> Lorem ipsum dolor sit amet.<span class="chat_message_time">13:38</span> </p>
-                    </li>
-                </ul>
-            </div>
-            <div class="chat_message_wrapper chat_message_right">
-                <div class="chat_user_avatar">
-                    <a href="https://web.facebook.com/iamgurdeeposahan" target="_blank">
-                        <img alt="Gurdeep Osahan (Web Designer)" title="Gurdeep Osahan (Web Designer)" src="http://bootsnipp.com/img/avatars/bcf1c0d13e5500875fdd5a7e8ad9752ee16e7462.jpg" class="md-user-image">
-                    </a>
-                </div>
-                <ul class="chat_message">
-                    <li>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem delectus distinctio dolor earum est hic id impedit ipsum minima mollitia natus nulla perspiciatis quae quasi, quis recusandae, saepe, sunt totam.
-                            <span class="chat_message_time">13:34</span>
-                        </p>
-                    </li>
-                </ul>
-            </div>
-
-
-        </div>
-    </div>
-    <div class="chat_submit_box">
-        <div class="uk-input-group">
-            
-                    <div class="gurdeep-chat-box">
-                        <span style="vertical-align: sub;" class="uk-input-group-addon">
-                            <a href="#"><i class="fa fa-smile-o"></i></a>
-                        </span>
-                        <input type="text" placeholder="Type a message" id="submit_message" name="submit_message" class="md-input">
-                        <span style="vertical-align: sub;" class="uk-input-group-addon">
-                            <a href="#"><i class="fa fa-camera"></i></a>
-                        </span>
-                    </div>
-                
-                
-                    <span class="uk-input-group-addon">
-                        <a href="#"><i class="glyphicon glyphicon-send"></i></a>
-                    </span>
-             
-        </div>
-    </div>
-
-</aside>
     <div class="container">
         <div class="row">
             <div class="col-lg-6">
@@ -187,6 +105,21 @@
         <script src="~/Scripts/jquery-3.1.1.js"></script>
         <script type="text/javascript">
 
+            $("#addClass").click(function () {
+                
+                $.ajax({
+                    url: '@Url.Action("Index", "Chat")',
+                    type: "GET",
+
+                    success: function (response) {
+                        $("#divForChat").text("");
+                        $("#divForChat").append(response);
+                        
+                        $('#sidebar_secondary').addClass('popup-box-on');
+                    }
+                    
+                });
+            });
             $("#userphotoDiv").ready(function () {
                 $.ajax({
                     url: '@Url.Action("UploadPhoto", "Profile")',
@@ -382,22 +315,22 @@
                 else $(".dropdown-menu").hide();
                 i++;
             });
-            $("#addClass").click(function () {
-                console.log('1');
-                $('#sidebar_secondary').addClass('popup-box-on');
-            });
+            //$("#addClass").click(function () {
+            //    console.log('1');
+            //    $('#sidebar_secondary').addClass('popup-box-on');
+            //});
 
-            $("#removeClass").click(function () {
-                $('#sidebar_secondary').removeClass('popup-box-on');
-            });
-            $(function () {
-                $("#addClass").click(function () {
-                    $('#sidebar_secondary').addClass('popup-box-on');
-                });
+            //$("#removeClass").click(function () {
+            //    $('#sidebar_secondary').removeClass('popup-box-on');
+            //});
+            //$(function () {
+            //    $("#addClass").click(function () {
+            //        $('#sidebar_secondary').addClass('popup-box-on');
+            //    });
 
-                $("#removeClass").click(function () {
-                    $('#sidebar_secondary').removeClass('popup-box-on');
-                });
-            })
-        </script>
+            //    $("#removeClass").click(function () {
+            //        $('#sidebar_secondary').removeClass('popup-box-on');
+            //    });
+            //})
+</script>
     }

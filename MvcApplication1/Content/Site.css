@@ -106,9 +106,9 @@ a:focus {
 }
 .chat_box_wrapper.chat_box_small.chat_box_active {
     
-    /*height: 342px;
+    height: 342px;
     overflow-y: scroll;
-    width: 316px;*/
+    /*width: 316px;*/
 }
 
 .chat_box {
