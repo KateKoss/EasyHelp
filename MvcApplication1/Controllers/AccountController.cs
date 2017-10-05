@@ -11,6 +11,8 @@ using WebMatrix.WebData;
 using MvcApplication1.Filters;
 using MvcApplication1.Models;
 using MvcApplication1.Contexts;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace MvcApplication1.Controllers
 {
@@ -46,7 +48,21 @@ namespace MvcApplication1.Controllers
             {
                 //return RedirectToLocal(returnUrl);
                 // Создать объект cookie-набора
-                HttpCookie cookie = new HttpCookie("UserId");
+                HttpCookie cookie = new HttpCookie("UT");
+
+                GenerateToken gt = new GenerateToken();
+                var jsonObj = gt.GenerateLocalAccessTokenResponse(model.UserName);
+
+                JsonSerializer serializer = new JsonSerializer();
+                UserToken u = (UserToken)serializer.Deserialize(new JTokenReader(jsonObj), typeof(UserToken));
+                // Установить значения в нем
+                cookie.Value = u.access_token;
+                //cookie["Country"] = "ru-ru";
+
+                // Добавить куки в ответ
+                Response.Cookies.Add(cookie);
+
+                cookie = new HttpCookie("UserId");
 
                 // Установить значения в нем
                 cookie.Value = model.UserName;
@@ -120,8 +136,22 @@ namespace MvcApplication1.Controllers
                                                                                         });
                     WebSecurity.Login(model.UserName, model.Password);
 
+                    HttpCookie cookie = new HttpCookie("UT");
+
+                    GenerateToken gt = new GenerateToken();
+                    var jsonObj = gt.GenerateLocalAccessTokenResponse(model.UserName);
+
+                    JsonSerializer serializer = new JsonSerializer();
+                    UserToken u = (UserToken)serializer.Deserialize(new JTokenReader(jsonObj), typeof(UserToken));
+                    // Установить значения в нем
+                    cookie.Value = u.access_token;
+                    //cookie["Country"] = "ru-ru";
+
+                    // Добавить куки в ответ
+                    Response.Cookies.Add(cookie);
+
                     // Создать объект cookie-набора
-                    HttpCookie cookie = new HttpCookie("UserId");
+                    cookie = new HttpCookie("UserId");
 
                     // Установить значения в нем
                     cookie.Value = model.UserName;

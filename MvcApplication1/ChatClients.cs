@@ -9,6 +9,6 @@ namespace MvcApplication1
     public class ChatClients
     {
         public WebSocket SocketClient { get; set; }
-        public string userName { get; set; }
+        public string UserName { get; set; }
     }
 }

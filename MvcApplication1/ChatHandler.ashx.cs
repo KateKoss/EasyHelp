@@ -1,4 +1,7 @@
-﻿using System;
+﻿using MvcApplication1.Contexts;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
@@ -6,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.WebSockets;
+
 
 namespace MvcApplication1
 {
@@ -17,6 +21,8 @@ namespace MvcApplication1
         // Список всех клиентов
         private static readonly List<ChatClients> Clients = new List<ChatClients>();
 
+        private bool isMassegeSent = false;
+
         // Блокировка для обеспечения потокабезопасности
         private static readonly ReaderWriterLockSlim Locker = new ReaderWriterLockSlim();
 
@@ -24,7 +30,10 @@ namespace MvcApplication1
         {
             //Если запрос является запросом веб сокета
             if (context.IsWebSocketRequest)
+            {
                 context.AcceptWebSocketRequest(WebSocketRequest);
+                
+            }
         }
 
         public bool IsReusable
@@ -36,30 +45,49 @@ namespace MvcApplication1
         }
 
         private async Task WebSocketRequest(AspNetWebSocketContext context)
-        {
+        {//якщо користувач онлайн то відправляємо повідомлення, якщо ні, то запис у бд  і дістаємо з бд тільки коли буде онлайн
             // Получаем сокет клиента из контекста запроса
             var socket = context.WebSocket;
-            string token = "rfkd";
-            ChatClients chc = new ChatClients
-            {
-                SocketClient = socket,
-                userName = token
-            };
+            //List<string> l = new List<string>();
+            //string user6 = "user6";
+            //l.Add(user6);
+            //string user5 = "user5";
+            //l.Add(user5);
+            //from db
 
-            // Добавляем его в список клиентов
-            Locker.EnterWriteLock();
-            try
+            //foreach (var item in l)
             {
-                //MessageWebSocket cl = new MessageWebSocket();
-                //cl.SetRequestHeader("Cookie", "CookieName" + "=" + "CookieValue");
-                //from user token
-                Clients.Add(chc);
-            }
-            finally
-            {
-                Locker.ExitWriteLock();
-            }
+                //GenerateToken g = new GenerateToken();
+                //var jsonObj = g.GenerateLocalAccessTokenResponse(item);
 
+                //JsonSerializer serializer = new JsonSerializer();
+                //UserToken u = (UserToken)serializer.Deserialize(new JTokenReader(jsonObj), typeof(UserToken));
+
+                var cookie = HttpContext.Current.Request.Cookies["UserId"].Value;
+                ChatClients chc = new ChatClients
+                {
+                    SocketClient = socket,
+                    UserName = cookie
+                };
+
+
+
+                // Добавляем его в список клиентов
+                Locker.EnterWriteLock();
+                try
+                {
+                    //MessageWebSocket cl = new MessageWebSocket();
+                    //cl.SetRequestHeader("Cookie", "CookieName" + "=" + "CookieValue");
+                    //from user token
+                    Clients.Add(chc);
+                    //Clients.Add(socket);
+
+                }
+                finally
+                {
+                    Locker.ExitWriteLock();
+                }
+            }
             // Слушаем его
             while (true)
             {
@@ -70,57 +98,72 @@ namespace MvcApplication1
                 
                 //Передаём сообщение всем клиентам
                 for (int i = 0; i < Clients.Count; i++)
-                {
-                    GenerateToken g = new GenerateToken();
-                    g.GenerateLocalAccessTokenResponse(Clients[i].userName);
-                    if (Clients[i].userName == "skd")
+                { 
+                    //конвертувати ід в токен 
+                    // ыд взяти токен і порівняти
+                    WebSocket client = Clients[i].SocketClient;
+
+                    try
                     {
-
-
-                        //конвертувати ід в токен 
-                        // ыд взяти токен і порівняти
-                        WebSocket client = Clients[i].SocketClient;
-
-                        try
+                        if (client.State == WebSocketState.Open)
                         {
-                            if (client.State == WebSocketState.Open)
+                            byte[] payloadData = buffer.Array.Where(b => b != 0).ToArray();
+
+                            //Because we know that is a string, we convert it. 
+                            string receiveString =
+                                System.Text.Encoding.UTF8.GetString(payloadData, 0, payloadData.Length);
+                            dynamic json = System.Web.Helpers.Json.Decode(@receiveString);
+
+                            //GenerateToken g = new GenerateToken();
+                            //var jsonObj = g.GenerateLocalAccessTokenResponse(json.ToUser);
+
+                            //JsonSerializer serializer = new JsonSerializer();
+                            //UserToken u = (UserToken)serializer.Deserialize(new JTokenReader(jsonObj), typeof(UserToken));
+
+                            //var cookie = HttpContext.Current.Request.Cookies["UT"];
+                            //if (cookie != null)
                             {
-                                byte[] payloadData = buffer.Array.Where(b => b != 0).ToArray();
+                                if (Clients[i].UserName == json.ToUser)
+                                {
 
-                                //Because we know that is a string, we convert it. 
-                                string receiveString =
-                                  System.Text.Encoding.UTF8.GetString(payloadData, 0, payloadData.Length);
-                                dynamic json = System.Web.Helpers.Json.Decode(@receiveString);
-                                client = json.ToUser;
+                                    //only for windows 8
+                                    //JsonValue jsonValue = JsonValue.Parse("{\"Width\": 800, \"Height\": 600, \"Title\": \"View from 15th Floor\", \"IDs\": [116, 943, 234, 38793]}");
+                                    //double width = jsonValue.GetObject().GetNamedNumber("Width");
+                                    //double height = jsonValue.GetObject().GetNamedNumber("Height");
+                                    //string title = jsonValue.GetObject().GetNamedString("Title");
+                                    //JsonArray ids = jsonValue.GetObject().GetNamedArray("IDs");
 
-
-                                //only for windows 8
-                                //JsonValue jsonValue = JsonValue.Parse("{\"Width\": 800, \"Height\": 600, \"Title\": \"View from 15th Floor\", \"IDs\": [116, 943, 234, 38793]}");
-                                //double width = jsonValue.GetObject().GetNamedNumber("Width");
-                                //double height = jsonValue.GetObject().GetNamedNumber("Height");
-                                //string title = jsonValue.GetObject().GetNamedString("Title");
-                                //JsonArray ids = jsonValue.GetObject().GetNamedArray("IDs");
-
-                                await client.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
+                                    await client.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
+                                    isMassegeSent = true;
+                                }
                             }
                         }
 
-                        catch (ObjectDisposedException)
+                        using (CustomDbContext db = new CustomDbContext())
                         {
-                            Locker.EnterWriteLock();
-                            try
-                            {
-                                Clients.RemoveAll(x => x.SocketClient == socket);
-                                i--;
-                            }
-                            finally
-                            {
-                                Locker.ExitWriteLock();
-                            }
+                            
+                        }
+
+                        if (!isMassegeSent)
+                        {
+
+                        }
+                    }
+
+                    catch (ObjectDisposedException)
+                    {
+                        Locker.EnterWriteLock();
+                        try
+                        {
+                            Clients.RemoveAll(x => x.SocketClient == socket);
+                            i--;
+                        }
+                        finally
+                        {
+                            Locker.ExitWriteLock();
                         }
                     }
                 }
-
             }
         }
     }
