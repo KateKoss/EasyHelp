@@ -1,24 +1,14 @@
 ﻿@model List<MvcApplication1.Models.MentorsModel>
 
-@using (Html.BeginForm())
-{
-    <div class="dropdown-menu mydropdown">
-        @foreach (var m in Model)
-        {
-            <div class="dropdown-item" href="#">
+<div class="dropdown-menu">
+    @foreach (var m in Model)
+    {
+        <div class="dropdown-item" href="#">
+            <img class="avatarList" src='../Images/userphoto2.jpg' alt="фото" />
+            <span>@Html.ActionLink(m.Name != null ? m.Name : m.UserName, "Index", new { thisUserLoggedOn = "" }, new { href = "?user=" + m.UserName })</span>
+            
+            <a id="addClass" onclick="addClass()"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></a>
+        </div>
+    }
+</div>
 
-                <img class="avatarList" src='../Images/userphoto2.jpg' alt="фото" />
-
-
-
-                <span>@Html.ActionLink("Перейти", "Index", new { thisUserLoggedOn = "" }, new { href = "?user=" + m.UserName })</span>
-
-
-                <span style="text-align:right">@Html.LabelFor(model => m.UserName, m.Name != null ? m.Name : m.UserName)</span>
-                <a id="addClass" onclick="addClass()"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></a>
-                
-            </div>
-        }
-
-    </div>
-}

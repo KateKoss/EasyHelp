@@ -4,336 +4,258 @@
     ViewBag.Title = "Профіль";
 }
 
-<h2>Профіль</h2>
+<h2>Профіль</h2>   
 
-   
+<div id="divForChat"></div>
 
-    <div id="divForChat"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6">
 
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6">
-
-                <div id="userphotoDiv">
-
-                    <img id="userphotoImg" src="" /><br />
-                    <div class="file is-boxed">
-                        <label class="file-label">
-                            @*<input class="file-input" type="file" name="resume">*@
-                            <input type="file" id="uploadEditorImage" class="file-input" />
-                            <span class="file-cta">
-                                <span class="file-icon">
-                                    <i class="fa fa-upload"></i>
-                                </span>
-                                <span class="file-label">
-                                    Choose a file…
-                                </span>
+            <div id="userphotoDiv">
+                <img id="userphotoImg" src="" /><br />
+                <div class="file is-boxed">
+                    <label class="file-label">
+                        @*<input class="file-input" type="file" name="resume">*@
+                        <input type="file" id="uploadEditorImage" class="file-input" />
+                        <span class="file-cta">
+                            <span class="file-icon">
+                                <i class="fa fa-upload"></i>
                             </span>
-                        </label>
-                    </div>
-
-
+                            <span class="file-label">
+                                Choose a file…
+                            </span>
+                        </span>
+                    </label>
                 </div>
-
-                <h2>Ім'я</h2>
-                <span id="labelNameEdit" style="display:;" class="profileUserData">
-                    <span value="" id="userName">@(Model.Name != null ? Model.Name : "")</span>
-                </span>
-                <input id="inputNameEdit" value="@(Model.Name != null ? Model.Name : "")" style="display:none; " />
-                <input id="btnEditName" onclick="editName()" type="submit" value="" class="btn btnEdit" />
-
-                <h3>Мої теги</h3>
-                <div id="tegs"></div>
-
-
-                <h3>Про мене</h3>
-                <span id="labelAboutMeEdit" style="display:;" class="profileUserData">
-                    <span value="" id="AboutMe">@(Model.About_me != null ? Model.About_me : "")</span>
-                </span>
-                <input id="inputAboutMeEdit" value="@(Model.About_me != null ? Model.About_me : "")" style="display:none; " />
-                <input id="btnEditAboutMe" onclick="editAboutMe()" type="submit" value="" class="btn  btnEdit" />
             </div>
 
-            <div class="col-lg-6">
-                <div class="input-group myinput">
-                    <input type="text" class="form-control" aria-label="Text input with dropdown button">
-                    <div class="input-group-btn mygroupbtn">
-                        <button type="button" class="btn btn-secondary" id="find" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Знайти
-                        </button>
-                        <div class="dropdown-menu mydropdown" id="dropdown-menu">
+            <h2>Ім'я</h2>
+            <span id="labelNameEdit" style="display:;" class="profileUserData">
+                <span value="" id="userName">@(Model.Name != null ? Model.Name : "")</span>
+            </span>
+            <input id="inputNameEdit" value="@(Model.Name != null ? Model.Name : "")" style="display:none; " />
+            <input id="btnEditName" onclick="editName()" type="submit" value="" class="btn btnEdit" />
 
-                        </div>
-                    </div>
+            <h3>Мої теги</h3>
+            <div id="tegs"></div>
+
+
+            <h3>Про мене</h3>
+            <span id="labelAboutMeEdit" style="display:;" class="profileUserData">
+                <span value="" id="AboutMe">@(Model.About_me != null ? Model.About_me : "")</span>
+            </span>
+            <input id="inputAboutMeEdit" value="@(Model.About_me != null ? Model.About_me : "")" style="display:none; " />
+            <input id="btnEditAboutMe" onclick="editAboutMe()" type="submit" value="" class="btn  btnEdit" />
+        </div>
+
+        <div class="col-lg-6">
+            <div class="input-group">
+                <input type="text" class="form-control" aria-label="Text input with dropdown button">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-secondary" id="find">Знайти ментора</button>
+                    <div class="dropdown-menu" id="dropdown-menu"></div>
                 </div>
             </div>
         </div>
-        @*<div class="col-lg-6">
-                @using (Html.BeginForm("Index", "Profile", FormMethod.Get))
-                {
-                    <input type="submit" value="Знайти ментора" />
-                    @Html.TextBoxFor(m => m.searchMentor, new { placeholder = "Знайти ментора" })
-                }
-                @Html.Partial("Mentors", Model.mentors)
-            </div>*@
-
     </div>
+</div>
 
 
-    @section Scripts {
-        @Scripts.Render("~/bundles/jqueryval")
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
 
-        <script src="~/Scripts/jquery-3.1.1.js"></script>
-        <script type="text/javascript">
+    <script src="~/Scripts/jquery-3.1.1.js"></script>
+    <script type="text/javascript">
 
-            function removeClass() {
-                $('#sidebar_secondary').removeClass('popup-box-on');
-            }
-            function addClass(){
-                //alert("edc");
-                $.ajax({
-                    url: '@Url.Action("Index", "Chat")',
-                    type: "GET",
+        function removeClass() {
+            $('#sidebar_secondary').removeClass('popup-box-on');
+        }
+        function addClass(){
+            $.ajax({
+                url: '@Url.Action("Index", "Chat")',
+                type: "GET",
+                success: function (response) {
+                    $("#divForChat").text("");
+                    $("#divForChat").append(response);
+                    $('#sidebar_secondary').addClass('popup-box-on');
+                }
+            });
+        }
 
-                    success: function (response) {
-                        $("#divForChat").text("");
-                        $("#divForChat").append(response);
-
-                        $('#sidebar_secondary').addClass('popup-box-on');
-                    }
-
-                });
-            }
-
-            $("#addClass").click(function () {
-                alert("edc");
-                $.ajax({
-                    url: '@Url.Action("Index", "Chat")',
-                    type: "GET",
-
-                    success: function (response) {
-                        $("#divForChat").text("");
-                        $("#divForChat").append(response);
-                        
-                        $('#sidebar_secondary').addClass('popup-box-on');
-                    }
+        $("#addClass").click(function () {
+            alert("edc");
+            $.ajax({
+                url: '@Url.Action("Index", "Chat")',
+                type: "GET",
+                success: function (response) {
+                    $("#divForChat").text("");
+                    $("#divForChat").append(response);                        
+                    $('#sidebar_secondary').addClass('popup-box-on');
+                }
                     
-                });
             });
-            $("#userphotoDiv").ready(function () {
-                $.ajax({
-                    url: '@Url.Action("UploadPhoto", "Profile")',
-                    type: "GET",
-
-                    success: function (response) {
-
-                        document.getElementById("userphotoImg").src = "data:image/png;base64," + response;
-
-                    },
-                    error: function (er) {
-                        // alert(er);
-                    }
-
-                });
+        });
+        $("#userphotoDiv").ready(function () {
+            $.ajax({
+                url: '@Url.Action("UploadPhoto", "Profile")',
+                type: "GET",
+                success: function (response) {
+                    document.getElementById("userphotoImg").src = "data:image/png;base64," + response;
+                }
             });
+        });
 
-            $("#uploadEditorImage").change(function () {
-                //console.log("1 - photo")
-                var data = new FormData();
-                var files = $("#uploadEditorImage").get(0).files;
-                if (files.length > 0) {
-                    data.append("HelpSectionImages", files[0]);
+        $("#uploadEditorImage").change(function () {
+
+            var data = new FormData();
+            var files = $("#uploadEditorImage").get(0).files;
+            if (files.length > 0) {
+                data.append("HelpSectionImages", files[0]);
+            }
+            $.ajax({
+                url: '@Url.Action("EditPhoto", "Edit")',
+                type: "POST",
+                processData: false,
+                contentType: false,
+                data: data,
+                success: function (response) {
+                    document.getElementById("userphotoImg").src = "data:image/png;base64," + response;
                 }
-                $.ajax({
-                    url: '@Url.Action("EditPhoto", "Edit")',
-                    type: "POST",
-                    processData: false,
-                    contentType: false,
-                    data: data,
-                    success: function (response) {
-
-                        document.getElementById("userphotoImg").src = "data:image/png;base64," + response;
-
-                    },
-                    error: function (er) {
-                        // alert(er);
-                    }
-
-                });
             });
+        });
 
-            function editName() {
-                //console.log("1");
-
-
-                if (document.getElementById('labelNameEdit').style.display == "none") {
-                    document.getElementById('labelNameEdit').style.display = "";
-                    document.getElementById('inputNameEdit').style.display = "none";
-                    var uName = document.getElementById('inputNameEdit').value;
-                    //console.log("name", uName);
-                    var data = {
-                        username: uName
-                    };
-                    $.ajax({
-                        type: 'POST',
-                        url: '@Url.Action("EditName", "Edit")',
-                        dataType: "text",
-                        data: data,
-                        success: function (d) {
-                            //if (d.success ==true)
-                            $('#userName').text(d);
-                            //$('#p').remove();
-                            // $('<span id="userName"></span>').after('<span id="labelNameEdit" style="display:;">');
-
-                            //console.log("replace", d)
-                            //console.log("hhh", $('#userName').val(d));
-                        }
-
-                    });
-                }
-                else {
-                    document.getElementById('labelNameEdit').style.display = "none";
-                    document.getElementById('inputNameEdit').style.display = "";
-                }
-
-
-
-            }
-
-            function editAboutMe() {
-                //console.log("1");
-
-
-                if (document.getElementById('labelAboutMeEdit').style.display == "none") {
-                    document.getElementById('labelAboutMeEdit').style.display = "";
-                    document.getElementById('inputAboutMeEdit').style.display = "none";
-                    var AboutMe = document.getElementById('inputAboutMeEdit').value;
-                    console.log("AboutMe", AboutMe);
-                    var data = {
-                        AboutMe: AboutMe
-                    };
-                    $.ajax({
-                        type: 'POST',
-                        url: '@Url.Action("EditAboutMe", "Edit")',
-                        dataType: "text",
-                        data: data,
-                        success: function (d) {
-
-                            $('#AboutMe').text(d);
-
-                        }
-
-                    });
-                }
-                else {
-                    document.getElementById('labelAboutMeEdit').style.display = "none";
-                    document.getElementById('inputAboutMeEdit').style.display = "";
-                }
-            }
-
-            function AddTeg() {
-                console.log("1 - add teg");
-
-                if (document.getElementById('inputAddTeg').style.display != "none") {
-                    document.getElementById('inputAddTeg').style.display = "none";
-
-                    var addTeg = document.getElementById('inputAddTeg').value;
-                    console.log("AboutMe", AboutMe);
-                    var data = {
-                        addTeg: addTeg
-                    };
-                    $.ajax({
-                        type: 'POST',
-                        url: '@Url.Action("Tegs", "Edit")',
-                        dataType: "text",
-                        data: data,
-                        success: function (d) {
-                            console.log("2 - add teg");
-
-                            $('#tegs').replaceWith(d);
-
-                        }
-
-                    });
-                }
-                else {
-                    document.getElementById('inputAddTeg').style.display = "";
-                }
-            }
-
-            function removeTeg(obj) {
-                var teg = $(obj).parent().attr('id');
-                console.log("1 delete teg", $(obj).parent().attr('id'));
-
+        function editName() {
+            if (document.getElementById('labelNameEdit').style.display == "none") {
+                document.getElementById('labelNameEdit').style.display = "";
+                document.getElementById('inputNameEdit').style.display = "none";
+                var uName = document.getElementById('inputNameEdit').value;
                 var data = {
-                    removeTeg: teg
+                    username: uName
                 };
                 $.ajax({
                     type: 'POST',
-                    url: '@Url.Action("RemoveTegs", "Edit")',
+                    url: '@Url.Action("EditName", "Edit")',
                     dataType: "text",
                     data: data,
                     success: function (d) {
-                        console.log("2 delete teg", d);
-                        $('#tegs').replaceWith(d);
+                        $('#userName').text(d);
+                    }
+                });
+            }
+            else {
+                document.getElementById('labelNameEdit').style.display = "none";
+                document.getElementById('inputNameEdit').style.display = "";
+            }            
+        }
 
+        function editAboutMe() {
+
+            if (document.getElementById('labelAboutMeEdit').style.display == "none") {
+                document.getElementById('labelAboutMeEdit').style.display = "";
+                document.getElementById('inputAboutMeEdit').style.display = "none";
+                var AboutMe = document.getElementById('inputAboutMeEdit').value;
+                console.log("AboutMe", AboutMe);
+                var data = {
+                    AboutMe: AboutMe
+                };
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("EditAboutMe", "Edit")',
+                    dataType: "text",
+                    data: data,
+                    success: function (d) {
+                        $('#AboutMe').text(d);
                     }
 
                 });
             }
+            else {
+                document.getElementById('labelAboutMeEdit').style.display = "none";
+                document.getElementById('inputAboutMeEdit').style.display = "";
+            }
+        }
 
-            $("#tegs").ready(function () {
-                //console.log("1 ready tegs");
+        function AddTeg() {
+
+            if (document.getElementById('inputAddTeg').style.display != "none") {
+                document.getElementById('inputAddTeg').style.display = "none";
+
+                var addTeg = document.getElementById('inputAddTeg').value;
+                console.log("AboutMe", AboutMe);
+                var data = {
+                    addTeg: addTeg
+                };
                 $.ajax({
+                    type: 'POST',
                     url: '@Url.Action("Tegs", "Edit")',
-                    type: "GET",
+                    dataType: "text",
+                    data: data,
                     success: function (d) {
-                        //console.log("2 ready tegs");
-                        $('#tegs').replaceWith(d);
-                        //console.log("2 ready tegs", d);
+                         $('#tegs').replaceWith(d);
+                    }
+                });
+            }
+            else {
+                document.getElementById('inputAddTeg').style.display = "";
+            }
+        }
 
-                    },
-                    error: function (er) {
-                        // alert(er);
+        function removeTeg(obj) {
+            var teg = $(obj).parent().attr('id');
+            console.log("1 delete teg", $(obj).parent().attr('id'));
+
+            var data = {
+                removeTeg: teg
+            };
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("RemoveTegs", "Edit")',
+                dataType: "text",
+                data: data,
+                success: function (d) {
+                    $('#tegs').replaceWith(d);
+                }
+            });
+        }
+
+        $("#tegs").ready(function () {
+
+            $.ajax({
+                url: '@Url.Action("Tegs", "Edit")',
+                type: "GET",
+                success: function (d) {
+                    $('#tegs').replaceWith(d);
+                }
+            });
+        });
+
+        var i = 3;
+        $("#find").click(function () {
+
+            if (i % 2 > 0) {
+                console.log("i");
+
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetMentorList", "Profile")',
+                    success: function (d) {
+                        $('#dropdown-menu').replaceWith(d);
+                        $(".dropdown-menu").show();
                     }
 
                 });
-            });
+            }
+            else {
+                $(".dropdown-menu").hide();
+            }
+            i++;
+        });
 
-            var i = 3;
-            $("#find").click(function () {
-                
-                if (i % 2 != 0 ) {
-                    $.ajax({
-                        type: 'GET',
-                        url: '@Url.Action("GetMentorList", "Profile")',
-                        success: function (d) {
-                            $('#dropdown-menu').replaceWith(d);
-                        }
+        $("#removeClass").click(function () {
+            $('#sidebar_secondary').removeClass('popup-box-on');
+        });
 
-                    });
-                    $(".dropdown-menu").show();
-                }
-                else $(".dropdown-menu").hide();
-                i++;
-            });
-            //$("#addClass").click(function () {
-            //    console.log('1');
-            //    $('#sidebar_secondary').addClass('popup-box-on');
-            //});
-
-            $("#removeClass").click(function () {
-                $('#sidebar_secondary').removeClass('popup-box-on');
-            });
-            //$(function () {
-            //    $("#addClass").click(function () {
-            //        $('#sidebar_secondary').addClass('popup-box-on');
-            //    });
-
-            //    $("#removeClass").click(function () {
-            //        $('#sidebar_secondary').removeClass('popup-box-on');
-            //    });
-            //})
-</script>
-@Styles.Render("~/Content/Profile.css")
-    }
+    </script>
+    @Styles.Render("~/Content/Profile.css")
+}
