@@ -1,4 +1,5 @@
 ﻿using MvcApplication1.Contexts;
+using MvcApplication1.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -56,7 +57,7 @@ namespace MvcApplication1
             //from db
 
             //foreach (var item in l)
-            {
+            //{
                 //GenerateToken g = new GenerateToken();
                 //var jsonObj = g.GenerateLocalAccessTokenResponse(item);
 
@@ -87,7 +88,7 @@ namespace MvcApplication1
                 {
                     Locker.ExitWriteLock();
                 }
-            }
+            //}
             // Слушаем его
             while (true)
             {
@@ -96,6 +97,13 @@ namespace MvcApplication1
                 // Ожидаем данные от него
                 var result = await socket.ReceiveAsync(buffer, CancellationToken.None);
                 
+
+                byte[] payloadData = buffer.Array.Where(b => b != 0).ToArray();
+
+                //Because we know that is a string, we convert it. 
+                string receiveString =
+                    System.Text.Encoding.UTF8.GetString(payloadData, 0, payloadData.Length);
+                dynamic json = System.Web.Helpers.Json.Decode(@receiveString);
                 //Передаём сообщение всем клиентам
                 for (int i = 0; i < Clients.Count; i++)
                 { 
@@ -107,12 +115,7 @@ namespace MvcApplication1
                     {
                         if (client.State == WebSocketState.Open)
                         {
-                            byte[] payloadData = buffer.Array.Where(b => b != 0).ToArray();
-
-                            //Because we know that is a string, we convert it. 
-                            string receiveString =
-                                System.Text.Encoding.UTF8.GetString(payloadData, 0, payloadData.Length);
-                            dynamic json = System.Web.Helpers.Json.Decode(@receiveString);
+                            
 
                             //GenerateToken g = new GenerateToken();
                             //var jsonObj = g.GenerateLocalAccessTokenResponse(json.ToUser);
@@ -141,7 +144,14 @@ namespace MvcApplication1
 
                         using (CustomDbContext db = new CustomDbContext())
                         {
-                            
+                            db.ChatMasseges.Add(new ChatMassegeModel { 
+                                
+                                FromUser = cookie,
+                                ToUser = json.ToUser,
+                                Massege = json.Message,
+                                DateTimeSent = DateTime.Now
+                            });                    
+                            db.SaveChanges();
                         }
 
                         if (!isMassegeSent)

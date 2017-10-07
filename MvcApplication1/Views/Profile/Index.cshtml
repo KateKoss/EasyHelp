@@ -4,31 +4,11 @@
     ViewBag.Title = "Профіль";
 }
 
-<h2>Профіль</h2>@Html.ActionLink("Редагувати", "ForProfileEditing", FormMethod.Get)
+<h2>Профіль</h2>
 
-<nav>
-    <ul id="menu">
-        <li class="my1">@Html.ActionLink("Мої статті", "MyArticle", FormMethod.Get)</li>
+   
 
-        <li>@Html.ActionLink("Заявки", "LoadStudentRequests", "Requests")</li> @*возможно тут нужно сделать проверку является ли пользователь ментрорм,
-            если да - вызывать LoadMentorRequests*@
-        
-        <li>@Html.ActionLink("Чат", "Index", "Chat")</li>
-        <li><a href="#" id="addClass">чат 2</a></li>
-        <li>@Html.ActionLink("Знайти однодумців", "Index", "FindAssosiates")</li> @*"FindAssosiates"*@
-        <li>@Html.ActionLink("ааа", "пп")</li>
-
-    </ul>
-</nav>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-<div class="container text-center">
-    <div class="row">
-            <a href="#" class="open-btn" id="addClass"><i class="fa fa-whatsapp" aria-hidden="true"></i> Click Here</a>
-        </div>
-
-       
-</div>
-<div id="divForChat"></div>
+    <div id="divForChat"></div>
 
     <div class="container">
         <div class="row">
@@ -75,13 +55,13 @@
             </div>
 
             <div class="col-lg-6">
-                <div class="input-group">
+                <div class="input-group myinput">
                     <input type="text" class="form-control" aria-label="Text input with dropdown button">
-                    <div class="input-group-btn">
-                        <button type="button" class="btn btn-secondary dropdown-toggle" id="find" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="input-group-btn mygroupbtn">
+                        <button type="button" class="btn btn-secondary" id="find" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Знайти
                         </button>
-                        <div class="dropdown-menu" id="dropdown-menu">
+                        <div class="dropdown-menu mydropdown" id="dropdown-menu">
 
                         </div>
                     </div>
@@ -102,11 +82,31 @@
 
     @section Scripts {
         @Scripts.Render("~/bundles/jqueryval")
+
         <script src="~/Scripts/jquery-3.1.1.js"></script>
         <script type="text/javascript">
 
+            function removeClass() {
+                $('#sidebar_secondary').removeClass('popup-box-on');
+            }
+            function addClass(){
+                //alert("edc");
+                $.ajax({
+                    url: '@Url.Action("Index", "Chat")',
+                    type: "GET",
+
+                    success: function (response) {
+                        $("#divForChat").text("");
+                        $("#divForChat").append(response);
+
+                        $('#sidebar_secondary').addClass('popup-box-on');
+                    }
+
+                });
+            }
+
             $("#addClass").click(function () {
-                
+                alert("edc");
                 $.ajax({
                     url: '@Url.Action("Index", "Chat")',
                     type: "GET",
@@ -299,9 +299,11 @@
 
                 });
             });
-            var i = 1;
+
+            var i = 3;
             $("#find").click(function () {
-                if (i % 2 != 0) {
+                
+                if (i % 2 != 0 ) {
                     $.ajax({
                         type: 'GET',
                         url: '@Url.Action("GetMentorList", "Profile")',
@@ -320,9 +322,9 @@
             //    $('#sidebar_secondary').addClass('popup-box-on');
             //});
 
-            //$("#removeClass").click(function () {
-            //    $('#sidebar_secondary').removeClass('popup-box-on');
-            //});
+            $("#removeClass").click(function () {
+                $('#sidebar_secondary').removeClass('popup-box-on');
+            });
             //$(function () {
             //    $("#addClass").click(function () {
             //        $('#sidebar_secondary').addClass('popup-box-on');
@@ -333,4 +335,5 @@
             //    });
             //})
 </script>
+@Styles.Render("~/Content/Profile.css")
     }

@@ -1,0 +1,61 @@
+﻿.avatarList {
+    border-radius: 100%;
+    border: 1px solid lightgray;
+    width: 65px;
+    height: 50px;
+}
+
+.dropdown-item{
+    padding: 10px;
+}
+
+#addClass{
+    float: right;
+    
+}
+
+.form-control{
+        float: left;
+        display: block;
+}
+.input-group-btn {
+        width: 73%;
+    /* white-space: nowrap; */
+    vertical-align: middle;
+}
+
+.input-group {
+        position: relative;
+    /* display: table; */
+    display: block;
+    border-collapse: separate;
+        width: 60%;
+
+}
+
+.dropdown-menu{
+        /* position: absolute; */
+    top: 100%;
+    left: 0;
+    z-index: 2;
+    display: none;
+    float: left;
+    min-width: 136%;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+     border: 0px solid #ccc; 
+    border: 0px solid rgba(0, 0, 0, .15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+}
+
+.input-group-addon, .input-group-btn, .input-group .form-control {
+    display: block;
+}

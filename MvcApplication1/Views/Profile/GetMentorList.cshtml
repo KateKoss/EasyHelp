@@ -2,22 +2,23 @@
 
 @using (Html.BeginForm())
 {
-    <div class="dropdown-menu">
+    <div class="dropdown-menu mydropdown">
         @foreach (var m in Model)
         {
-            <a class="dropdown-item" href="#">
+            <div class="dropdown-item" href="#">
 
-            <img style='width:65px; height:50px;' src='../Images/userphoto2.jpg' alt="фото" />
-
-
-
-            <span>@Html.ActionLink("Перейти", "Index", new { thisUserLoggedOn = "" }, new { href = "?user=" + m.UserName })</span>
+                <img class="avatarList" src='../Images/userphoto2.jpg' alt="фото" />
 
 
-            <span style="text-align:right">@Html.LabelFor(model => m.UserName, m.Name != null ? m.Name : m.UserName)</span>
-           
-        </a>
+
+                <span>@Html.ActionLink("Перейти", "Index", new { thisUserLoggedOn = "" }, new { href = "?user=" + m.UserName })</span>
+
+
+                <span style="text-align:right">@Html.LabelFor(model => m.UserName, m.Name != null ? m.Name : m.UserName)</span>
+                <a id="addClass" onclick="addClass()"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></a>
+                
+            </div>
         }
 
-        </div>
+    </div>
 }

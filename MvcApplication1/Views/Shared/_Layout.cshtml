@@ -10,9 +10,10 @@
         <meta name="viewport" content="width=device-width" />
         <script src="~/Scripts/jquery-3.1.1.js"></script>
         <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
-        @Styles.Render("~/Content/css")
+        
         @Styles.Render("~/Content/font-awesome.css")
         @Scripts.Render("~/bundles/modernizr")
+        @Styles.Render("~/Content/css")
     </head>
     <body>
         <header>
@@ -29,7 +30,15 @@
                             <li>@Html.ActionLink("Home", "Index", "Home")</li>
                             <li>@Html.ActionLink("Profile", "Index", "Profile")</li>
                             <li>@Html.ActionLink("About", "About", "Home")</li>
-                            <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                            
+                            <li class="my1">@Html.ActionLink("Мої статті", "MyArticle", FormMethod.Get)</li>
+
+                            <li>@Html.ActionLink("Заявки", "LoadStudentRequests", "Requests")</li> @*возможно тут нужно сделать проверку является ли пользователь ментрорм,
+        если да - вызывать LoadMentorRequests*@
+
+
+                            <li><a href="#" id="">Чат</a></li>
+                            <li>@Html.ActionLink("Знайти однодумців", "Index", "FindAssosiates")</li>
                         </ul>
                     </nav>
                 </div>

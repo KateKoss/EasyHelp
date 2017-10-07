@@ -29,8 +29,8 @@
                 </ul>
 
 
-                <button data-widget="remove" id="removeClass" class="chat-header-button pull-right" type="button"><i class="glyphicon glyphicon-remove"></i></button>
-            </div>
+                <button data-widget="remove" id="removeClass" onclick="removeClass()" class="chat-header-button pull-right" type="button"><i class="glyphicon glyphicon-remove"></i></button>
+            </div>а
         </div>
         <div id="chat" class="chat_box_wrapper chat_box_small chat_box_active" style="opacity: 1; display: block; transform: translateX(0px);">
             <div id="messages"class="chat_box touchscroll chat_box_colors_a">
@@ -111,65 +111,110 @@
         socket.onmessage = function (msg) {
             var $el = document.createElement('p');
             //$el.innerHTML = msg.data;
-            console.log(msg.data.replace(/\s/g, ''));
-            msg.data = msg.data.replace(/\\n/g, "\\n")
-               .replace(/\\'/g, "\\'")
-               .replace(/\\"/g, '\\"')
-               .replace(/\\&/g, "\\&")
-               .replace(/\\r/g, "\\r")
-               .replace(/\\t/g, "\\t")
-               .replace(/\\b/g, "\\b")
-               .replace(/\\f/g, "\\f");
+            //console.log(msg.data);
+            //msg.data = msg.data.replace(/\\n/g, "\\n")
+            //   .replace(/\\'/g, "\\'")
+            //   .replace(/\\"/g, '\\"')
+            //   .replace(/\\&/g, "\\&")
+            //   .replace(/\\r/g, "\\r")
+            //   .replace(/\\t/g, "\\t")
+            //   .replace(/\\b/g, "\\b")
+            //   .replace(/\\f/g, "\\f");
             // remove non-printable and other non-valid JSON chars
-            msg.data = msg.data.replace(/[\u0000-\u0019]+/g, "");
-            var obj = JSON.parse(msg.data);
+            //msg.data = msg.data.replace(/[\u0000-\u0019]+/g, "");
+            var str = msg.data;
+
+            //console.log('str', str);
+            //console.log('typeof', typeof(str));
+            //var obj = JSON.parse("'" + str + "'");
+            //var s = '{"FromUser":"user","Message":"100","Time":"10","ToUser":"user6"}';
+            var n = str.indexOf("}");
+            var subStr = str.substring(0, n+1);
+            var obj = JSON.parse(subStr);
             //console.log(obj);
             //$messages.appendChild($el);
-            $('#messages').append('<div class="chat_message_wrapper chat_message_right">'+
-                    '<div class="chat_user_avatar">'+
-                        '<a href="https://web.facebook.com/iamgurdeeposahan" target="_blank">'+
-                           ' <img alt="Gurdeep Osahan (Web Designer)" title="Gurdeep Osahan (Web Designer)" src="http://bootsnipp.com/img/avatars/bcf1c0d13e5500875fdd5a7e8ad9752ee16e7462.jpg" class="md-user-image">'+
-                        '</a>'+
-                    '</div>'+
-                   ' <ul class="chat_message">'+
-                       ' <li>'+
-                           ' <p>'+
-                                msg.data+
-                                '<span class="chat_message_time">13:34</span>'+
-                            '</p>'+
-                       ' </li>'+
-                   ' </ul>'+
-                '</div>');
+            //var cur_ques_details = msg.data;
+            //document.write(cur_ques_details['ques_title']);
+            console.log(document.cookie.UserId);
+            if (document.cookie.UserId == obj.FromUser) {
+
+
+                $('#messages').append('<div class="chat_message_wrapper chat_message_right">' +
+                        '<div class="chat_user_avatar">' +
+                            '<a href="https://web.facebook.com/iamgurdeeposahan" target="_blank">' +
+                               ' <img alt="Gurdeep Osahan (Web Designer)" title="Gurdeep Osahan (Web Designer)" src="http://bootsnipp.com/img/avatars/bcf1c0d13e5500875fdd5a7e8ad9752ee16e7462.jpg" class="md-user-image">' +
+                            '</a>' +
+                        '</div>' +
+                       ' <ul class="chat_message">' +
+                           ' <li>' +
+                               ' <p>' +
+                                    obj.Message +
+                                    '<span class="chat_message_time">'+obj.Time+'</span>' +
+                                '</p>' +
+                           ' </li>' +
+                       ' </ul>' +
+                    '</div>');
+            }
+            else {
+                $('#messages').append('<div class="chat_message_wrapper">' +
+                        '<div class="chat_user_avatar">' +
+                            '<a href="https://web.facebook.com/iamgurdeeposahan" target="_blank">' +
+                               ' <img alt="Gurdeep Osahan (Web Designer)" title="Gurdeep Osahan (Web Designer)" src="http://bootsnipp.com/img/avatars/bcf1c0d13e5500875fdd5a7e8ad9752ee16e7462.jpg" class="md-user-image">' +
+                            '</a>' +
+                        '</div>' +
+                       ' <ul class="chat_message">' +
+                           ' <li>' +
+                               ' <p>' +
+                                    obj.Message +
+                                    '<span class="chat_message_time">' + obj.Time + '</span>' +
+                                '</p>' +
+                           ' </li>' +
+                       ' </ul>' +
+                    '</div>');
+            }
         };
 
         socket.onclose = function (event) {
             alert('Мы потеряли её. Пожалуйста, обновите страницу');
         };
 
+        var d = new Date();
+
+        function getCookie(name) {
+            var matches = document.cookie.match(new RegExp(
+              "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+            ));
+            return matches ? decodeURIComponent(matches[1]) : undefined;
+        }
+
         document.getElementById('send').onclick = function () {
+            //console.log('1 - send');
+            console.log(getCookie("UserId"));
+            console.log($('#submit_message').val());
+            console.log(d.toString());
             console.log('1 - send');
             var data = {
-                FromUser: "user",
-                Message: "100",
-                Time: "10",
-                ToUser: "user6"
-            }
-            var cache = [];
+                "FromUser": getCookie("UserId"),
+                "Message": $('#submit_message').val(),
+                "Time": d.toString(),
+                "ToUser": "user6"
+            };
+            //var cache = [];
             console.log(JSON.stringify(data));
             var str = JSON.stringify(data);
             socket.send(str);
-            console.log(JSON.stringify(data, function (key, value) {
-                if (typeof value === 'object' && value !== null) {
-                    if (cache.indexOf(value) !== -1) {
-                        // Circular reference found, discard key
-                        return;
-                    }
-                    // Store value in our collection
-                    cache.push(value);
-                }
-                return value;
-            }));
-            cache = null;
+            //console.log(JSON.stringify(data, function (key, value) {
+            //    if (typeof value === 'object' && value !== null) {
+            //        if (cache.indexOf(value) !== -1) {
+            //            // Circular reference found, discard key
+            //            return;
+            //        }
+            //        // Store value in our collection
+            //        cache.push(value);
+            //    }
+            //    return value;
+            //}));
+            //cache = null;
             $txt.value = '';
         };
     </script>
