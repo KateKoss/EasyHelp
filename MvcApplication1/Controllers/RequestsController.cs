@@ -74,11 +74,12 @@ namespace MvcApplication1.Controllers
                         requestsModel.reqests.Add(item);
                     }
             }
-            
+
             //RequestModel req = new RequestModel("user1_3", "Help with 1...", "bla-bla1", null, "request resolved");
             //if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
-            
-            
+
+            if (Request.IsAjaxRequest())
+                return PartialView("_RequestsPartial", requestsModel.reqests);
             return View("StudentRequests", requestsModel.reqests);
         }
         [HttpGet]
@@ -98,6 +99,8 @@ namespace MvcApplication1.Controllers
                         requestsModel.reqests.Add(item);
                     }
             }
+            if (Request.IsAjaxRequest())
+                return PartialView("_RequestsPartial", requestsModel.reqests);
             return View("StudentRequests", requestsModel.reqests);
         }
         [HttpGet]
@@ -148,30 +151,41 @@ namespace MvcApplication1.Controllers
         public ActionResult RequestsPartial(Data data)
         {
             RequestModel reqModel = new RequestModel();
-            using (CustomDbContext db = new CustomDbContext())
+            if (string.IsNullOrEmpty(data.inputRequestName))
             {
-                string currentPerson;
-                if (Request.Cookies["UserId"] != null)
+                ModelState.AddModelError("inputRequestName", "Введіть назву заявки!");
+            }
+            if (string.IsNullOrEmpty(data.inputRequestText))
+            {
+                ModelState.AddModelError("inputRequestText", "Введіть текст заявки!");
+            }
+            if (ModelState.IsValid)
+            {
+                using (CustomDbContext db = new CustomDbContext())
                 {
-                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-                    int count = db.RequestsModel.Count(x => x.createdBy == currentPerson);
-                    if (count == 0)     //если это первая заявка у пользователя
+                    string currentPerson;
+                    if (Request.Cookies["UserId"] != null)
                     {
-                        reqModel.requestId = currentPerson + "_1";
+                        currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                        int count = db.RequestsModel.Count(x => x.createdBy == currentPerson);
+                        if (count == 0)     //если это первая заявка у пользователя
+                        {
+                            reqModel.requestId = currentPerson + "_1";
+                        }
+                        else
+                        {
+                            reqModel.requestId = currentPerson + "_" + (count + 1);
+                        }
+                        reqModel.requestName = data.inputRequestName;
+                        reqModel.requestText = data.inputRequestText;
+                        reqModel.requestState = "request not resolved";
+                        reqModel.createdBy = currentPerson;
+                        reqModel.createdAt = DateTime.Now;
+                        //if (reqModel.requestName == null)
+                        //    reqModel.requestName = reqModel.requestText.Substring(0, 10);
+                        db.RequestsModel.Add(reqModel);
+                        db.SaveChanges();
                     }
-                    else
-                    {
-                        reqModel.requestId = currentPerson + "_" + (count + 1);
-                    }
-                    reqModel.requestName = data.inputRequestName;
-                    reqModel.requestText = data.inputRequestText;
-                    reqModel.requestState = "request not resolved";
-                    reqModel.createdBy = currentPerson;
-                    reqModel.createdAt = DateTime.Now;
-                    //if (reqModel.requestName == null)
-                    //    reqModel.requestName = reqModel.requestText.Substring(0, 10);
-                    db.RequestsModel.Add(reqModel);
-                    db.SaveChanges();
                 }
             }
             //return PartialView("_RequestsPartial");

@@ -12,10 +12,9 @@
             <tr>
                 <td>
                     @t.requestName
-
-                    @*@if (t.requestState == "request not resolved")*@
                 </td>
                 <td>
+                    @if (t.requestState == "request not resolved") { 
                     <ul class="nav justify-content-center">
                         <li class="nav-item">
                             @Html.ActionLink("Позначити як вирішену", "MarkAsResolved", "Requests", new { requestId = t.requestId }, new { @class = "nav-link" })
@@ -27,8 +26,8 @@
                             @Html.ActionLink("Редагувати заявку", "EditRequest", "Requests", new { requestId = t.requestId }, new { @class = "nav-link" })
                         </li>
                     </ul>
+                    }
                 </td>
-
                 <td>
                     @t.requestState
                 </td>

@@ -13,13 +13,47 @@
     </ul>
 </nav>
 
-<h3 id="nameLabel" style="display:none;">Навза заявки</h3>
-<input id="inputRequestName" value="" style="display:none;" placeholder = "Навза заявки"/>
-<h3 id="textLabel" style="display:none;">Текст заявки</h3>
-<input id="inputRequestText" value="" style="display:none;" placeholder="Текст заявки" />
-<p>
-    <button type="button" id="creareButton" class="btn btn-primary btn-sm">Створити заявку</button>
-</p>
+<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Створити заявку</button>
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Створення заявки</h4>
+            </div>
+
+            <div class="modal-body">
+                <h4>Додати теги</h4>
+                <div id="tags">
+                    <div id="conteinerForTags"></div>
+                    <input required id="inputTags" value="" placeholder="Теги" />
+                    <button type="button" id="createTagButton" class="btn btn-primary btn-sm">Додати тег</button>
+                </div>
+                <h4 id="nameLabel">Навза заявки</h4>
+                <p>
+                    <input required id="inputRequestName" value="" placeholder="Навза заявки" />
+                    <div id="errReqName"></div>
+                </p>
+
+                <h4 id="textLabel">Текст заявки</h4>
+                <p>
+                    <input required id="inputRequestText" value="" name="reqtext" placeholder="Текст заявки" />
+                    <div id="errReqText" ></div>
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="createButton" class="btn btn-primary btn-md">Створити заявку</button>
+                <button type="button" id="closeButton" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 
 
@@ -48,76 +82,117 @@
 </div>
 
 @section Scripts {
-    @Scripts.Render("~/scripts/jquery-1.8.2.js")
-    @Scripts.Render("~/scripts/jquery.unobtrusive-ajax.js")
+    @Scripts.Render("~/scripts/bootstrap.js")
     <script type="text/javascript">
-        var i = 0;
+        //var isShowedCreateFields = false;
 
-        $('#creareButton').click(function () {
-            
-            $("#nameLabel").toggle();
-            $('#inputRequestName').toggle();
-            $('#textLabel').toggle();
-            $('#inputRequestText').toggle();
-            if (i % 2 != 0) {
-                var reqName = $('#inputRequestName').val();
-                var reqText = $('#inputRequestText').val();
-                var data = {
-                    inputRequestName: reqName,
-                    inputRequestText: reqText
-                };
-                $.ajax({ //returns  jQuery XMLHttpRequest (jqXHR) object
-                    type: 'POST',
-                    url: '@Url.Action("RequestsPartial", "Requests")',
-                    dataType: "text",
-                    data: data,
-                    success: function (d) {
-                        //if (d.success ==true)
-                        $('#requests').text("");
-                        $('#requests').append(d);
-                        //$('#p').remove();
-                        // $('<span id="userName"></span>').after('<span id="labelNameEdit" style="display:;">');
+        //$('#cancelButton').toggle();
 
-                        //console.log("replace", d)
-                        //console.log("hhh", $('#userName').val(d));
-                    }
-                });
+        //$('#cancelButton').click(function () {
+        //    $('#inputRequestName').val("");
+        //    $('#inputRequestText').val("");
+        //    $('#errReqText').text("");
+        //    $('#errReqName').text("");
+        //    showHide();
+        //    isShowedCreateFields = false;
+        //});
+
+        //function showHide() {
+        //    $('#errReqText').toggle();
+        //    $('#errReqName').toggle();
+        //    $('#cancelButton').toggle();
+        //    $('#nameLabel').toggle();
+        //    $('#inputRequestName').toggle();
+        //    $('#textLabel').toggle();
+        //    $('#inputRequestText').toggle();
+        //}
+
+        var tagList = [];
+        var k = 0;
+        var amountOfTags = 0;
+        $('#createTagButton').click(function () {
+            $('#inputTags').toggle();
+            if (k % 2 != 0) {
+                if ($('#inputTags').val() != "") {
+                    amountOfTags++;
+                    $('#conteinerForTags').append('<span id="tag' + k + '" class="badge badge-success">' + $('#inputTags').val() + '<span class="badge badge-pill badge-secondary removeTeg" onclick="removeTag(this)" style=" color:dimgray; background-color:lightgray;">x</span> </span>');
+                    tagList.push($('#inputTags').val());
+                    console.log(tagList);
+                    $('#inputTags').val("");
+                }
             }
-            i++;
+            k++;
         });
 
-    @*function editName() {
-        if (document.getElementById('inputRequestName').style.display == "none") {
-            $('#nameLabel').hide();
-            document.getElementById('labelNameEdit').style.display = "";
-            document.getElementById('inputNameEdit').style.display = "none";
-            var uName = document.getElementById('inputNameEdit').value;
-            //console.log("name", uName);
-            var data = {
-                username: uName
-            };
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("EditName", "Request")',
-                dataType: "text",
-                data: data,
-                success: function (d)
-                {
-                    //if (d.success ==true)
-                    $('#requests').text(d);
-                    //$('#p').remove();
-                    // $('<span id="userName"></span>').after('<span id="labelNameEdit" style="display:;">');
+        $("#tags").ready(function () {
+            $('#inputTags').hide();
+        });
 
-                        //console.log("replace", d)
-                        //console.log("hhh", $('#userName').val(d));
-                }
+        function removeTag(obj) {
+            $($(obj).parent()).remove();
+            amountOfTags--;
+            //var valOfTegToDelete = $(obj).parent().text();
+            //valOfTegToDelete = valOfTegToDelete.slice(0, -2);
+            tagList = jQuery.grep(tagList, function (value) {
+                return value != $(obj).parent().text().slice(0, -2); // последний символ "x" - крестик, который закрывает этот элемент поэтому .slice(0,-1)
             });
         }
-        else {
-            document.getElementById('labelNameEdit').style.display = "none";
-            document.getElementById('inputNameEdit').style.display = "";
-        }
-    }*@
+
+        $('#closeButton').click(function () {
+            $('#inputRequestName').val("");
+            $('#inputRequestText').val("");
+            $('#errReqText').text("");
+            $('#errReqName').text("");
+            $('#inputTags').hide();
+            $('#conteinerForTags').text("");
+        });
+        $('#createButton').click(function () {
+            //if (i == 0) {
+            //if (!isShowedCreateFields) {
+            //    showHide();
+            //    isShowedCreateFields = true;
+            //}
+            //else
+            //{
+                if ($('#inputRequestName').val() != "" && $('#inputRequestText').val() != "")
+                {
+                    var reqName = $('#inputRequestName').val();
+                    var reqText = $('#inputRequestText').val();
+                    //var tags = $("#conteinerForTags").children("tag1").text();
+                    //console.log($("#conteinerForTags").children().text());
+                    for (i = 0; i < amountOfTags; i++){
+                        //tags.push($('#tag' + i).val());
+
+                        console.log(tags);
+                    }
+                    var data = {
+                        inputRequestName: reqName,
+                        inputRequestText: reqText
+                    };
+                    @*$.ajax({ //returns  jQuery XMLHttpRequest (jqXHR) object
+                        type: 'POST',
+                        url: '@Url.Action("RequestsPartial", "Requests")',
+                        dataType: "text",
+                        data: data,
+                        success: function (d) {
+                            showHide();
+                            $('#requests').text("");
+                            $('#requests').append(d);
+                            //isShowCreateFields == false;
+                        }
+                    });*@
+                }
+                if ($('#inputRequestName').val() == "") {
+                    $('#errReqName').text("Введіть назву заявки!");
+                }
+                else $('#errReqName').text("");
+                if ($('#inputRequestText').val() == "") {
+                    $('#errReqText').text("Введіть текст заявки!");
+                }
+                else $('#errReqText').text("");
+            //}
+            //i++;
+        });
     </script>
 }
 
