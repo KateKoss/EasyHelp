@@ -22,6 +22,7 @@ namespace MvcApplication1.Controllers
         {
             public string inputRequestName { get; set; }
             public string inputRequestText { get; set; }
+            public string[] tagList { get; set; }
         }
 
         [HttpGet]
@@ -153,11 +154,15 @@ namespace MvcApplication1.Controllers
             RequestModel reqModel = new RequestModel();
             if (string.IsNullOrEmpty(data.inputRequestName))
             {
-                ModelState.AddModelError("inputRequestName", "Введіть назву заявки!");
+                ModelState.AddModelError("inputRequestName", "Введіть назву заявки.");
             }
             if (string.IsNullOrEmpty(data.inputRequestText))
             {
-                ModelState.AddModelError("inputRequestText", "Введіть текст заявки!");
+                ModelState.AddModelError("inputRequestText", "Введіть текст заявки.");
+            }
+            if (data.tagList == null)
+            {
+                ModelState.AddModelError("tagList", "Оберіть теги.");
             }
             if (ModelState.IsValid)
             {
@@ -167,7 +172,7 @@ namespace MvcApplication1.Controllers
                     if (Request.Cookies["UserId"] != null)
                     {
                         currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-                        int count = db.RequestsModel.Count(x => x.createdBy == currentPerson);
+                        int count = db.RequestsModel.Count(x => x.createdBy == currentPerson);//?
                         if (count == 0)     //если это первая заявка у пользователя
                         {
                             reqModel.requestId = currentPerson + "_1";
@@ -181,6 +186,7 @@ namespace MvcApplication1.Controllers
                         reqModel.requestState = "request not resolved";
                         reqModel.createdBy = currentPerson;
                         reqModel.createdAt = DateTime.Now;
+                        reqModel.SelectedTeg = data.tagList;
                         //if (reqModel.requestName == null)
                         //    reqModel.requestName = reqModel.requestText.Substring(0, 10);
                         db.RequestsModel.Add(reqModel);

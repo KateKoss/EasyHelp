@@ -13,7 +13,7 @@
     </ul>
 </nav>
 
-<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Створити заявку</button>
+<button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal">Створити заявку</button>
 
 <!-- Modal -->
 <div id="myModal" class="modal fade" role="dialog">
@@ -84,40 +84,14 @@
 @section Scripts {
     @Scripts.Render("~/scripts/bootstrap.js")
     <script type="text/javascript">
-        //var isShowedCreateFields = false;
-
-        //$('#cancelButton').toggle();
-
-        //$('#cancelButton').click(function () {
-        //    $('#inputRequestName').val("");
-        //    $('#inputRequestText').val("");
-        //    $('#errReqText').text("");
-        //    $('#errReqName').text("");
-        //    showHide();
-        //    isShowedCreateFields = false;
-        //});
-
-        //function showHide() {
-        //    $('#errReqText').toggle();
-        //    $('#errReqName').toggle();
-        //    $('#cancelButton').toggle();
-        //    $('#nameLabel').toggle();
-        //    $('#inputRequestName').toggle();
-        //    $('#textLabel').toggle();
-        //    $('#inputRequestText').toggle();
-        //}
-
         var tagList = [];
         var k = 0;
-        var amountOfTags = 0;
         $('#createTagButton').click(function () {
             $('#inputTags').toggle();
             if (k % 2 != 0) {
                 if ($('#inputTags').val() != "") {
-                    amountOfTags++;
                     $('#conteinerForTags').append('<span id="tag' + k + '" class="badge badge-success">' + $('#inputTags').val() + '<span class="badge badge-pill badge-secondary removeTeg" onclick="removeTag(this)" style=" color:dimgray; background-color:lightgray;">x</span> </span>');
                     tagList.push($('#inputTags').val());
-                    console.log(tagList);
                     $('#inputTags').val("");
                 }
             }
@@ -130,68 +104,59 @@
 
         function removeTag(obj) {
             $($(obj).parent()).remove();
-            amountOfTags--;
-            //var valOfTegToDelete = $(obj).parent().text();
+            //var valOfTegToDelete = $(obj).parent().attr("id");
+            //console.log(valOfTegToDelete);
+            //console.log($("#" + valOfTegToDelete).text());
             //valOfTegToDelete = valOfTegToDelete.slice(0, -2);
             tagList = jQuery.grep(tagList, function (value) {
                 return value != $(obj).parent().text().slice(0, -2); // последний символ "x" - крестик, который закрывает этот элемент поэтому .slice(0,-1)
             });
         }
-
-        $('#closeButton').click(function () {
+        function closeInstruction() {
             $('#inputRequestName').val("");
             $('#inputRequestText').val("");
             $('#errReqText').text("");
             $('#errReqName').text("");
             $('#inputTags').hide();
             $('#conteinerForTags').text("");
-        });
+            tagList = [];
+        }
+        $('#closeButton').click(closeInstruction());
         $('#createButton').click(function () {
-            //if (i == 0) {
-            //if (!isShowedCreateFields) {
-            //    showHide();
-            //    isShowedCreateFields = true;
-            //}
-            //else
-            //{
-                if ($('#inputRequestName').val() != "" && $('#inputRequestText').val() != "")
-                {
-                    var reqName = $('#inputRequestName').val();
-                    var reqText = $('#inputRequestText').val();
-                    //var tags = $("#conteinerForTags").children("tag1").text();
-                    //console.log($("#conteinerForTags").children().text());
-                    for (i = 0; i < amountOfTags; i++){
-                        //tags.push($('#tag' + i).val());
-
-                        console.log(tags);
+            if ($('#inputRequestName').val() != "" && $('#inputRequestText').val() != "") {
+                var reqName = $('#inputRequestName').val();
+                var reqText = $('#inputRequestText').val();
+                //var tags = $("#conteinerForTags").children("tag1").text();
+                //console.log($("#conteinerForTags").children().text());
+                console.log(tagList);
+                var data = {
+                    inputRequestName: reqName,
+                    inputRequestText: reqText,
+                    tagList: tagList
+                };
+                $.ajax({ //returns  jQuery XMLHttpRequest (jqXHR) object
+                    type: 'POST',
+                    url: '@Url.Action("RequestsPartial", "Requests")',
+                    dataType: "text",
+                    data: data,
+                    success: function (d) {
+                        //showHide();
+                        closeInstruction();
+                        $('#requests').text("");
+                        $('#myModal').modal('hide');
+                        $('#requests').append(d);
+                        //isShowCreateFields == false;
                     }
-                    var data = {
-                        inputRequestName: reqName,
-                        inputRequestText: reqText
-                    };
-                    @*$.ajax({ //returns  jQuery XMLHttpRequest (jqXHR) object
-                        type: 'POST',
-                        url: '@Url.Action("RequestsPartial", "Requests")',
-                        dataType: "text",
-                        data: data,
-                        success: function (d) {
-                            showHide();
-                            $('#requests').text("");
-                            $('#requests').append(d);
-                            //isShowCreateFields == false;
-                        }
-                    });*@
-                }
-                if ($('#inputRequestName').val() == "") {
-                    $('#errReqName').text("Введіть назву заявки!");
-                }
-                else $('#errReqName').text("");
-                if ($('#inputRequestText').val() == "") {
-                    $('#errReqText').text("Введіть текст заявки!");
-                }
-                else $('#errReqText').text("");
-            //}
-            //i++;
+                });
+            }
+            if ($('#inputRequestName').val() == "") {
+                $('#errReqName').text("Введіть назву заявки!");
+            }
+            else $('#errReqName').text("");
+            if ($('#inputRequestText').val() == "") {
+                $('#errReqText').text("Введіть текст заявки!");
+            }
+            else $('#errReqText').text("");
         });
     </script>
 }
