@@ -122,7 +122,7 @@ namespace MvcApplication1.Controllers
                                             mentor.Name = ment.Name;
                                             mentor.UserName = ment.UserName;
                                             mentor.UserPhoto = ment.UserPhoto;
-                                            model.mentors.Add(mentor);
+                                            //model.mentors.Add(mentor);
                                         }
                                 }
                             }
@@ -164,7 +164,7 @@ namespace MvcApplication1.Controllers
                                 mentor.Name = m.Name;
                                 mentor.UserName = m.UserName;
                                 mentor.UserPhoto = m.UserPhoto;
-                                model.mentors.Add(mentor);
+                                //model.mentors.Add(mentor);
                             }
                         }
                     }
@@ -176,7 +176,9 @@ namespace MvcApplication1.Controllers
         public ActionResult GetMentorList()
         {
             ProfileModel model = new ProfileModel() { };
-            MentorsModel mentor = new MentorsModel() { };
+
+            List<ProfileModel> modelList = new List<ProfileModel>() { };
+            //MentorsModel mentor = new MentorsModel() { };
             string currentPerson;
             if (Request.Cookies["UserId"] != null)
             {
@@ -213,16 +215,84 @@ namespace MvcApplication1.Controllers
 
                         foreach (var m in mentorListWithTegs)
                         {
-                            mentor = new MentorsModel();
-                            mentor.Name = m.Name;
-                            mentor.UserName = m.UserName;
-                            mentor.UserPhoto = m.UserPhoto;
-                            model.mentors.Add(mentor);
+                            model = new ProfileModel(); 
+                            
+                            model.Name = m.Name;
+                            model.UserName = m.UserName;
+                            model.UserPhoto = m.UserPhoto;
+                            model.isMentor = true;
+
+                            modelList.Add(model);
                         }
                     }
                 }
             }
-            return PartialView(model.mentors);
+            return PartialView(modelList);
+        }
+
+        public ActionResult GetUserForChat()
+        {
+            List<ProfileModel> modelList = new List<ProfileModel>();
+            if (Request.Cookies["UserId"] != null)
+            {
+                var currentUser = Request.Cookies["UserId"].Value;
+                using (var db = new CustomDbContext())
+                {
+                    var list = db.ChatMessages.Where(x => x.FromUser == currentUser).ToList();
+                    foreach (var item in list)
+                    {
+                        
+                        var toUser = item.ToUser;
+                        using(var db2 = new CustomDbContext())
+                        {
+                            var users = db2.ProfileModel.Where(x => x.UserName == toUser).ToList();
+                            foreach (var u in users)
+                            {
+                                var contains = false;
+                                foreach (var i in modelList)
+	                            {
+		                            if(i.UserName == u.UserName)
+                                    {
+                                        contains = true;
+                                        break;
+                                    }
+
+	                            }
+                                if (!contains)
+                                    modelList.Add(u);
+                            }
+                        }
+                        
+                    }
+                    list = db.ChatMessages.Where(x => x.ToUser == currentUser).ToList();
+                    foreach (var item in list)
+                    {
+
+                        var fromUser = item.FromUser;
+                        using (var db2 = new CustomDbContext())
+                        {
+                            var users = db2.ProfileModel.Where(x => x.UserName == fromUser).ToList();
+                            foreach (var u in users)
+                            {
+                                var contains = false;
+                                foreach (var i in modelList)
+                                {
+                                    if (i.UserName == u.UserName)
+                                    {
+                                        contains = true;
+                                        break;
+                                    }
+
+                                }
+                                if (!contains)
+                                    modelList.Add(u);
+                            }
+                        }
+
+                    }
+                }
+            }
+            return PartialView("GetMentorList", modelList);
         }
 
         public ProfileModel getMentorInf(string user)

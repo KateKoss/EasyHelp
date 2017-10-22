@@ -8,18 +8,18 @@
     <aside id="sidebar_secondary" class="tabbed_sidebar ng-scope chat_sidebar">
         <div class="popup-head">
             <div class="popup-head-left pull-left">
-                <a design and developmenta title="Gurdeep Osahan (Web Designer)" target="_blank" href="https://web.facebook.com/iamgurdeeposahan">
-                    <img class="md-user-image" alt="Gurdeep Osahan (Web Designer)" title="Gurdeep Osahan (Web Designer)" src="http://bootsnipp.com/img/avatars/bcf1c0d13e5500875fdd5a7e8ad9752ee16e7462.jpg" >
-                    <h1>Gurdeep Osahan</h1><small><br> <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span> Web Designer</small>
+                <a design and developmenta title="" target="_blank" href="#">
+                    <img class="md-user-image">
+                    <h1>User...</h1>@*<small><br> <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span> Web Designer!!!...</small>*@
                 </a>
             </div>
             <div class="popup-head-right pull-right">
 
 
-                <button class="chat-header-button" data-toggle="dropdown" type="button" aria-expanded="false">
+                @*<button class="chat-header-button" data-toggle="dropdown" type="button" aria-expanded="false">
                     <i class="glyphicon glyphicon-paperclip"></i>
-                </button>
-                <ul role="menu" class="dropdown-menu pull-right">
+                </button>*@
+                <ul role="menu" class=" dropdown-menu pull-right">
                     <li><a href="#"><span class="glyphicon glyphicon-picture" aria-hidden="true"></span> Gallery</a></li>
                     <li><a href="#"><span class="glyphicon glyphicon-camera" aria-hidden="true"></span> Photo</a></li>
                     <li><a href="#"><span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span> Video</a></li>
@@ -30,40 +30,11 @@
 
 
                 <button data-widget="remove" id="removeClass" onclick="removeClass()" class="chat-header-button pull-right" type="button"><i class="glyphicon glyphicon-remove"></i></button>
-            </div>а
+            </div>
         </div>
         <div id="chat" class="chat_box_wrapper chat_box_small chat_box_active" style="opacity: 1; display: block; transform: translateX(0px);">
-            <div id="messages"class="chat_box touchscroll chat_box_colors_a">
-                <div class="chat_message_wrapper">
-                    <div class="chat_user_avatar">
-                        <a href="https://web.facebook.com/iamgurdeeposahan" target="_blank">
-                            <img alt="Gurdeep Osahan (Web Designer)" title="Gurdeep Osahan (Web Designer)" src="http://www.webncc.in/images/gurdeeposahan.jpg" class="md-user-image">
-                        </a>
-                    </div>
-                    <ul class="chat_message">
-                        <li>
-                            <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Distinctio, eum? </p>
-                        </li>
-                        <li>
-                            <p> Lorem ipsum dolor sit amet.<span class="chat_message_time">13:38</span> </p>
-                        </li>
-                    </ul>
-                </div>
-                <div class="chat_message_wrapper chat_message_right">
-                    <div class="chat_user_avatar">
-                        <a href="https://web.facebook.com/iamgurdeeposahan" target="_blank">
-                            <img alt="Gurdeep Osahan (Web Designer)" title="Gurdeep Osahan (Web Designer)" src="http://bootsnipp.com/img/avatars/bcf1c0d13e5500875fdd5a7e8ad9752ee16e7462.jpg" class="md-user-image">
-                        </a>
-                    </div>
-                    <ul class="chat_message">
-                        <li>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem delectus distinctio dolor earum est hic id impedit ipsum minima mollitia natus nulla perspiciatis quae quasi, quis recusandae, saepe, sunt totam.
-                                <span class="chat_message_time">13:34</span>
-                            </p>
-                        </li>
-                    </ul>
-                </div>
+            <div id="messages" class="chat_box touchscroll chat_box_colors_a">
+                 
 
 
             </div>
@@ -90,9 +61,9 @@
         </div>
 
     </aside>
+
+
     
-    
-    <div id='messagesv'></div>
 
     <script type="text/javascript">
         var socket,
@@ -107,7 +78,7 @@
             console.log('2 - socket def');
             socket = new MozWebSocket("ws://localhost:59521/ChatHandler.ashx");
         }
-        //socket.SetRequestHeader("Cookie", "FromUser" + "=" + $user);
+                        //socket.SetRequestHeader("Cookie", "FromUser" + "=" + $user);
         socket.onmessage = function (msg) {
             var $el = document.createElement('p');
             //$el.innerHTML = msg.data;
@@ -124,7 +95,8 @@
             //msg.data = msg.data.replace(/[\u0000-\u0019]+/g, "");
             var str = msg.data;
 
-            //console.log('str', str);
+            //console.log('str', str);img
+
             //console.log('typeof', typeof(str));
             //var obj = JSON.parse("'" + str + "'");
             //var s = '{"FromUser":"user","Message":"100","Time":"10","ToUser":"user6"}';
@@ -135,18 +107,19 @@
             //$messages.appendChild($el);
             //var cur_ques_details = msg.data;
             //document.write(cur_ques_details['ques_title']);
-            console.log(document.cookie.UserId);
-            if (document.cookie.UserId == obj.FromUser) {
+            console.log(getCookie("UserId"));
+            //console.log(userphotoImg);
+            if (fromUser == obj.FromUser) {
 
 
                 $('#messages').append('<div class="chat_message_wrapper chat_message_right">' +
                         '<div class="chat_user_avatar">' +
-                            '<a href="https://web.facebook.com/iamgurdeeposahan" target="_blank">' +
-                               ' <img alt="Gurdeep Osahan (Web Designer)" title="Gurdeep Osahan (Web Designer)" src="http://bootsnipp.com/img/avatars/bcf1c0d13e5500875fdd5a7e8ad9752ee16e7462.jpg" class="md-user-image">' +
+                            '<a href="#" target="_blank">' +
+                               ' <img alt="' + fromUser + '" title="' + fromUser + '" src="' + userphotoImg + '" class="md-user-image">' +
                             '</a>' +
                         '</div>' +
                        ' <ul class="chat_message">' +
-                           ' <li>' +
+                           ' <li>' + 
                                ' <p>' +
                                     obj.Message +
                                     '<span class="chat_message_time">'+obj.Time+'</span>' +
@@ -158,8 +131,8 @@
             else {
                 $('#messages').append('<div class="chat_message_wrapper">' +
                         '<div class="chat_user_avatar">' +
-                            '<a href="https://web.facebook.com/iamgurdeeposahan" target="_blank">' +
-                               ' <img alt="Gurdeep Osahan (Web Designer)" title="Gurdeep Osahan (Web Designer)" src="http://bootsnipp.com/img/avatars/bcf1c0d13e5500875fdd5a7e8ad9752ee16e7462.jpg" class="md-user-image">' +
+                            '<a href="#" target="_blank">' +
+                               '  <img alt="' + fromUser + '" title="' + fromUser + '" src="' + userphotoImg + '" class="md-user-image">' +
                             '</a>' +
                         '</div>' +
                        ' <ul class="chat_message">' +
@@ -178,26 +151,27 @@
             alert('Мы потеряли её. Пожалуйста, обновите страницу');
         };
 
+        $('.md-user-image').attr('src', toUserImg);
+        $('.md-user-image').attr('alt', toUser);
+        $('.md-user-image').attr('title', toUser);
+        $('.pull-left').find('h1').text(toUser);
+
         var d = new Date();
 
-        function getCookie(name) {
-            var matches = document.cookie.match(new RegExp(
-              "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-            ));
-            return matches ? decodeURIComponent(matches[1]) : undefined;
-        }
+        
 
         document.getElementById('send').onclick = function () {
             //console.log('1 - send');
-            console.log(getCookie("UserId"));
-            console.log($('#submit_message').val());
-            console.log(d.toString());
-            console.log('1 - send');
+            //console.log(toUser);
+            //console.log(getCookie("UserId"));
+            //console.log($('#submit_message').val());
+            //console.log(d.toString());
+            //console.log('1 - send');
             var data = {
-                "FromUser": getCookie("UserId"),
+                "FromUser": fromUser,
                 "Message": $('#submit_message').val(),
                 "Time": d.toString(),
-                "ToUser": "user6"
+                "ToUser": toUser
             };
             //var cache = [];
             console.log(JSON.stringify(data));
@@ -217,6 +191,6 @@
             //cache = null;
             $txt.value = '';
         };
-    </script>
+</script>
 </body>
 </html>

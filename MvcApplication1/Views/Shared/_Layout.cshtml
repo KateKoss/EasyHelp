@@ -37,7 +37,20 @@
         если да - вызывать LoadMentorRequests*@
 
 
-                            <li><a href="#" id="">Чат</a></li>
+                            <li>
+                                <div class="dropdown show" >
+                                    <a id="usersForChatLink" class="btn btn-secondary dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Чат
+                                    </a>
+                                    <div id="usersForChat">
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
                             <li>@Html.ActionLink("Знайти однодумців", "Index", "FindAssosiates")</li>
                         </ul>
                     </nav>

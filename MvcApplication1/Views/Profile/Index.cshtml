@@ -50,13 +50,15 @@
         </div>
 
         <div class="col-lg-6">
-            <div class="input-group">
-                <input type="text" class="form-control" aria-label="Text input with dropdown button">
-                <div class="input-group-btn">
-                    <button type="button" class="btn btn-secondary" id="find">Знайти ментора</button>
-                    <div class="dropdown-menu" id="dropdown-menu"></div>
+            
+                <div class="input-group">
+                    <input type="text" class="form-control" aria-label="Text input with dropdown button">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-secondary" id="find">Знайти ментора</button>
+                        <div class="dropdown-menu" id="dropdown-menu"></div>
+                    </div>
                 </div>
-            </div>
+            
         </div>
     </div>
 </div>
@@ -67,150 +69,233 @@
 
     <script src="~/Scripts/jquery-3.1.1.js"></script>
     <script type="text/javascript">
+    var toUser;
+    var userphotoImg;
+    var toUserImg;
+    var fromUser;
+    //$('#toUser').click(function () {
+    //    toUser = this.text();
+    //    console.log(toUser + this.text());
+    //});
 
-        function removeClass() {
-            $('#sidebar_secondary').removeClass('popup-box-on');
-        }
-        function addClass(){
-            $.ajax({
-                url: '@Url.Action("Index", "Chat")',
-                type: "GET",
-                success: function (response) {
-                    $("#divForChat").text("");
-                    $("#divForChat").append(response);
-                    $('#sidebar_secondary').addClass('popup-box-on');
-                }
-            });
-        }
 
-        $("#addClass").click(function () {
-            alert("edc");
-            $.ajax({
-                url: '@Url.Action("Index", "Chat")',
-                type: "GET",
-                success: function (response) {
-                    $("#divForChat").text("");
-                    $("#divForChat").append(response);                        
-                    $('#sidebar_secondary').addClass('popup-box-on');
-                }
-                    
-            });
-        });
-        $("#userphotoDiv").ready(function () {
-            $.ajax({
-                url: '@Url.Action("UploadPhoto", "Profile")',
-                type: "GET",
-                success: function (response) {
-                    document.getElementById("userphotoImg").src = "data:image/png;base64," + response;
-                }
-            });
-        });
+    function removeClass() {
+        $('#sidebar_secondary').removeClass('popup-box-on');
+        socket.close();
+    }
+    //чат маленьке віконце
+    function addClass() {
 
-        $("#uploadEditorImage").change(function () {
+        toUser = $('#dropdown-menu').find('#toUser').text();
+        userphotoImg = $('#userphotoImg').attr('src');
+        toUserImg = $('#dropdown-menu').find('.avatarList').attr('src');
+        fromUser = getCookie("UserId");
+        var data = {
+            FromUser: fromUser,
+            ToUser: toUser
+        };
+        //load history////////////////
+        var history = "";
+        $.ajax({
+            url: '@Url.Action("LoadChatHistory", "Chat")',
+            type: "POST",
+            data: data,
+            success: function (response) {
+                console.log(response);
+                var flagNewM = false;
+                for (var i = 0; i < response.length; i++) {
 
-            var data = new FormData();
-            var files = $("#uploadEditorImage").get(0).files;
-            if (files.length > 0) {
-                data.append("HelpSectionImages", files[0]);
-            }
-            $.ajax({
-                url: '@Url.Action("EditPhoto", "Edit")',
-                type: "POST",
-                processData: false,
-                contentType: false,
-                data: data,
-                success: function (response) {
-                    document.getElementById("userphotoImg").src = "data:image/png;base64," + response;
-                }
-            });
-        });
+                    console.log(response[i]);
+                    var obj = response[i];
 
-        function editName() {
-            if (document.getElementById('labelNameEdit').style.display == "none") {
-                document.getElementById('labelNameEdit').style.display = "";
-                document.getElementById('inputNameEdit').style.display = "none";
-                var uName = document.getElementById('inputNameEdit').value;
-                var data = {
-                    username: uName
-                };
-                $.ajax({
-                    type: 'POST',
-                    url: '@Url.Action("EditName", "Edit")',
-                    dataType: "text",
-                    data: data,
-                    success: function (d) {
-                        $('#userName').text(d);
+                    if (!obj.isMessageSent && !flagNewM) {
+                        history += '<div class="youHaveNewMessages">New messages</div>';
+                        flagNewM = true;
+                        console.log('+++++++++++++');
                     }
-                });
-            }
-            else {
-                document.getElementById('labelNameEdit').style.display = "none";
-                document.getElementById('inputNameEdit').style.display = "";
-            }            
-        }
+                    if (fromUser == obj.FromUser) {
 
-        function editAboutMe() {
-
-            if (document.getElementById('labelAboutMeEdit').style.display == "none") {
-                document.getElementById('labelAboutMeEdit').style.display = "";
-                document.getElementById('inputAboutMeEdit').style.display = "none";
-                var AboutMe = document.getElementById('inputAboutMeEdit').value;
-                console.log("AboutMe", AboutMe);
-                var data = {
-                    AboutMe: AboutMe
-                };
-                $.ajax({
-                    type: 'POST',
-                    url: '@Url.Action("EditAboutMe", "Edit")',
-                    dataType: "text",
-                    data: data,
-                    success: function (d) {
-                        $('#AboutMe').text(d);
+                        console.log('+////////////');
+                        history += '<div class="chat_message_wrapper chat_message_right">' +
+                                '<div class="chat_user_avatar">' +
+                                    '<a href="#" target="_blank">' +
+                                       ' <img alt="' + fromUser + '" title="' + fromUser + '" src="' + userphotoImg + '" class="md-user-image">' +
+                                    '</a>' +
+                                '</div>' +
+                               ' <ul class="chat_message">' +
+                                   ' <li>' +
+                                       ' <p>' +
+                                            obj.MessageText +
+                                            '<span class="chat_message_time">' + obj.DateTimeSent + '</span>' +
+                                        '</p>' +
+                                   ' </li>' +
+                               ' </ul>' +
+                            '</div>';
+                    }
+                    else {
+                        console.log('____________');
+                        history += '<div class="chat_message_wrapper">' +
+                                '<div class="chat_user_avatar">' +
+                                    '<a href="#" target="_blank">' +
+                                       '  <img alt="' + fromUser + '" title="' + fromUser + '" src="' + userphotoImg + '" class="md-user-image">' +
+                                    '</a>' +
+                                '</div>' +
+                               ' <ul class="chat_message">' +
+                                   ' <li>' +
+                                       ' <p>' +
+                                            obj.MessageText +
+                                            '<span class="chat_message_time">' + obj.DateTimeSent + '</span>' +
+                                        '</p>' +
+                                   ' </li>' +
+                               ' </ul>' +
+                            '</div>';
                     }
 
-                });
-            }
-            else {
-                document.getElementById('labelAboutMeEdit').style.display = "none";
-                document.getElementById('inputAboutMeEdit').style.display = "";
-            }
-        }
+                }
+                //console.log('history', history);
 
-        function AddTeg() {
-
-            if (document.getElementById('inputAddTeg').style.display != "none") {
-                document.getElementById('inputAddTeg').style.display = "none";
-
-                var addTeg = document.getElementById('inputAddTeg').value;
-                console.log("AboutMe", AboutMe);
-                var data = {
-                    addTeg: addTeg
-                };
                 $.ajax({
-                    type: 'POST',
-                    url: '@Url.Action("Tegs", "Edit")',
-                    dataType: "text",
-                    data: data,
-                    success: function (d) {
-                         $('#tegs').replaceWith(d);
+                    url: '@Url.Action("Index", "Chat")',
+                    type: "GET",
+                    success: function (response) {
+                        $("#divForChat").text("");
+                        $("#divForChat").append(response);
+                        $('#messages').append(history);
+                        $('#sidebar_secondary').addClass('popup-box-on');
                     }
                 });
+
+
+                $.ajax({
+                    url: '@Url.Action("IsMessageRead", "Chat")',
+                    type: "POST",
+                    data: data,
+                    success: function (response) {
+                    }
+                });
+
             }
-            else {
-                document.getElementById('inputAddTeg').style.display = "";
+        });
+
+        /////////////////////////
+
+        //console.log(userphotoImg);
+
+    }
+    //чат на всю сторынку
+    $("#addClass").click(function () {
+        alert("edc");
+        $.ajax({
+            url: '@Url.Action("вово", "Chat")',
+            type: "GET",
+            success: function (response) {
+                $("#divForChat").text("");
+                $("#divForChat").append(response);
+                $('#sidebar_secondary').addClass('popup-box-on');
             }
+
+        });
+    });
+    $("#userphotoDiv").ready(function () {
+        $.ajax({
+            url: '@Url.Action("UploadPhoto", "Profile")',
+            type: "GET",
+            success: function (response) {
+                document.getElementById("userphotoImg").src = "data:image/png;base64," + response;
+            }
+        });
+    });
+
+    $("#uploadEditorImage").change(function () {
+
+        var data = new FormData();
+        var files = $("#uploadEditorImage").get(0).files;
+        if (files.length > 0) {
+            data.append("HelpSectionImages", files[0]);
         }
+        $.ajax({
+            url: '@Url.Action("EditPhoto", "Edit")',
+            type: "POST",
+            processData: false,
+            contentType: false,
+            data: data,
+            success: function (response) {
+                document.getElementById("userphotoImg").src = "data:image/png;base64," + response;
+            }
+        });
+    });
 
-        function removeTeg(obj) {
-            var teg = $(obj).parent().attr('id');
-            console.log("1 delete teg", $(obj).parent().attr('id'));
+    function getCookie(name) {
+        var matches = document.cookie.match(new RegExp(
+          "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
 
+    function editName() {
+        if (document.getElementById('labelNameEdit').style.display == "none") {
+            document.getElementById('labelNameEdit').style.display = "";
+            document.getElementById('inputNameEdit').style.display = "none";
+            uName = $('#inputNameEdit').val();
             var data = {
-                removeTeg: teg
+                username: uName
             };
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action("RemoveTegs", "Edit")',
+                url: '@Url.Action("EditName", "Edit")',
+                dataType: "text",
+                data: data,
+                success: function (d) {
+                    $('#userName').text(d);
+                }
+            });
+        }
+        else {
+            document.getElementById('labelNameEdit').style.display = "none";
+            document.getElementById('inputNameEdit').style.display = "";
+        }
+    }
+
+    function editAboutMe() {
+
+        if (document.getElementById('labelAboutMeEdit').style.display == "none") {
+            document.getElementById('labelAboutMeEdit').style.display = "";
+            document.getElementById('inputAboutMeEdit').style.display = "none";
+            var AboutMe = document.getElementById('inputAboutMeEdit').value;
+            console.log("AboutMe", AboutMe);
+            var data = {
+                AboutMe: AboutMe
+            };
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("EditAboutMe", "Edit")',
+                dataType: "text",
+                data: data,
+                success: function (d) {
+                    $('#AboutMe').text(d);
+                }
+
+            });
+        }
+        else {
+            document.getElementById('labelAboutMeEdit').style.display = "none";
+            document.getElementById('inputAboutMeEdit').style.display = "";
+        }
+    }
+
+    function AddTeg() {
+
+        if (document.getElementById('inputAddTeg').style.display != "none") {
+            document.getElementById('inputAddTeg').style.display = "none";
+
+            var addTeg = document.getElementById('inputAddTeg').value;
+            console.log("AboutMe", AboutMe);
+            var data = {
+                addTeg: addTeg
+            };
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Tegs", "Edit")',
                 dataType: "text",
                 data: data,
                 success: function (d) {
@@ -218,42 +303,87 @@
                 }
             });
         }
+        else {
+            document.getElementById('inputAddTeg').style.display = "";
+        }
+    }
 
-        $("#tegs").ready(function () {
+    function removeTeg(obj) {
+        var teg = $(obj).parent().attr('id');
+        console.log("1 delete teg", $(obj).parent().attr('id'));
+
+        var data = {
+            removeTeg: teg
+        };
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("RemoveTegs", "Edit")',
+            dataType: "text",
+            data: data,
+            success: function (d) {
+                $('#tegs').replaceWith(d);
+            }
+        });
+    }
+
+    $("#tegs").ready(function () {
+
+        $.ajax({
+            url: '@Url.Action("Tegs", "Edit")',
+            type: "GET",
+            success: function (d) {
+                $('#tegs').replaceWith(d);
+            }
+        });
+    });
+
+    var i = 3;
+    $("#find").click(function () {
+
+        if (i % 2 > 0) {
+            console.log("i");
 
             $.ajax({
-                url: '@Url.Action("Tegs", "Edit")',
-                type: "GET",
-                success: function (d) {
-                    $('#tegs').replaceWith(d);
-                }
-            });
-        });
-
-        var i = 3;
-        $("#find").click(function () {
-
-            if (i % 2 > 0) {
-                console.log("i");
-
-                $.ajax({
-                    type: 'GET',
-                    url: '@Url.Action("GetMentorList", "Profile")',
+                type: 'GET',
+                url: '@Url.Action("GetMentorList", "Profile")',
                     success: function (d) {
-                        $('#dropdown-menu').replaceWith(d);
-                        $(".dropdown-menu").show();
+                        $('#dropdown-menu').text("");
+                        $('#dropdown-menu').append(d);
+                        $("#dropdown-menu").show();
                     }
 
                 });
             }
             else {
-                $(".dropdown-menu").hide();
+                $("#dropdown-menu").hide();
             }
             i++;
         });
 
         $("#removeClass").click(function () {
             $('#sidebar_secondary').removeClass('popup-box-on');
+        });
+
+        $('#usersForChatLink').click(function () {
+
+            if (i % 2 > 0) {
+                //console.log("i");
+
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetUserForChat", "Profile")',
+                    success: function (d) {
+                        $('#usersForChat').text("");
+                        $('#usersForChat').append(d);
+                        $("#usersForChat").show();
+                    }
+
+                });
+            }
+            else {
+                $("#usersForChat").hide();
+            }
+            i++;
         });
 
     </script>

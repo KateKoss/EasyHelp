@@ -12,8 +12,9 @@ namespace MvcApplication1.Models
     [Table("Profile")]
     public class ProfileModel
     {
+        //список менторів
         [NotMapped]
-        public List<MvcApplication1.Models.MentorsModel> mentors = new List<MvcApplication1.Models.MentorsModel>();
+        public List<MvcApplication1.Models.ProfileModel> mentors = new List<MvcApplication1.Models.ProfileModel>();
         [NotMapped]
         public List<String> tegs = new List<String>();
         [NotMapped]

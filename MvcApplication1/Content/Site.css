@@ -1210,6 +1210,14 @@ aside {
     height: 466px;
     position: fixed;
     right: 70px;
-    z-index: 3;
+    z-index: 4;
     font-family: 'Open Sans', sans-serif;
+}
+
+.youHaveNewMessages{
+    border: 1px solid;
+    margin: 10px 20%;
+    text-align: center;
+    border-radius: 10px;
+    color: lightgray;
 }

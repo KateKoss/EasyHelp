@@ -163,5 +163,32 @@ namespace MvcApplication1.Controllers
                 When = DateTime.Now
             });
         }
+
+        public ActionResult LoadChatHistory(ChatMessageModel data)
+        {
+            List<ChatMessageModel> modelList = new List<ChatMessageModel>();
+            using(var db = new CustomDbContext())
+            {
+                var list = db.ChatMessages.Where(x => (x.FromUser == data.FromUser || x.ToUser == data.FromUser) && (x.FromUser == data.ToUser || x.ToUser == data.ToUser)).ToList();
+                foreach (var item in list)
+		            modelList.Add(item);      
+            }            
+            return Json(modelList);
+        }
+
+        public ActionResult IsMessageRead(ChatMessageModel data)
+        {
+            using (var db = new CustomDbContext())
+            {
+                var list = db.ChatMessages.Where(x => (x.FromUser == data.FromUser || x.ToUser == data.FromUser) && (x.FromUser == data.ToUser || x.ToUser == data.ToUser)).ToList();
+                foreach (var item in list)
+                    item.isMessageSent = true;
+                
+                db.SaveChanges();
+            }       
+
+            return Content("");
+        }
+        
     }
 }

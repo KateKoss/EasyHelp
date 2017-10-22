@@ -80,7 +80,18 @@ namespace MvcApplication1
                     //MessageWebSocket cl = new MessageWebSocket();
                     //cl.SetRequestHeader("Cookie", "CookieName" + "=" + "CookieValue");
                     //from user token
-                    Clients.Add(chc);
+                    var clientIsExist = false;
+                    foreach (var item in Clients)
+                    {
+                        if (item.UserName == chc.UserName)
+                        {
+                            clientIsExist = true;
+                            break;
+                        }
+
+                    }
+                    if (!clientIsExist)
+                        Clients.Add(chc);
                     //Clients.Add(socket);
 
                 }
@@ -125,8 +136,8 @@ namespace MvcApplication1
 
                             //var cookie = HttpContext.Current.Request.Cookies["UT"];
                             //if (cookie != null)
-                            {
-                                if (Clients[i].UserName == json.ToUser)
+                            //{
+                                if (Clients[i].UserName == json.ToUser || Clients[i].UserName == json.FromUser)
                                 {
 
                                     //only for windows 8
@@ -139,18 +150,23 @@ namespace MvcApplication1
                                     await client.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
                                     isMassegeSent = true;
                                 }
-                            }
+                           // }
                         }
 
+                        var toUser = json.ToUser;
+                        var mess = json.Message;
                         using (CustomDbContext db = new CustomDbContext())
                         {
-                            db.ChatMasseges.Add(new ChatMassegeModel { 
-                                
+                            db.ChatMessages.Add(new ChatMessageModel
+                            {
+
                                 FromUser = cookie,
-                                ToUser = json.ToUser,
-                                Massege = json.Message,
-                                DateTimeSent = DateTime.Now
-                            });                    
+                                ToUser = toUser,
+                                MessageText = mess,
+                                DateTimeSent = DateTime.Now,
+                                isMessageSent = isMassegeSent
+
+                            });
                             db.SaveChanges();
                         }
 

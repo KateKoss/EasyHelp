@@ -7,14 +7,15 @@ using System.Web;
 
 namespace MvcApplication1.Models
 {
-    [Table("ChatMasseges")]
-    public class ChatMassegeModel
+    [Table("ChatMessages")]
+    public class ChatMessageModel
     {
         [Key]        
         public int Id { get; set; }
         public string FromUser { get; set; }
         public string ToUser { get; set; }
-        public string Massege { get; set; }
+        public string MessageText { get; set; }
         public DateTime DateTimeSent { get; set; }
+        public bool isMessageSent { get; set; }
     }
 }

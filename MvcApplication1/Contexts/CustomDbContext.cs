@@ -18,6 +18,6 @@ namespace MvcApplication1.Contexts
         public DbSet<ArticleModel> ArticleModel { get; set; }        
         public DbSet<RequestModel> RequestsModel { get; set; }
         public DbSet<FindAssosiatesModel> FindAssosiatesModel { get; set; }
-        public DbSet<ChatMassegeModel> ChatMasseges{ get; set; }
+        public DbSet<ChatMessageModel> ChatMessages{ get; set; }
     }
 }
