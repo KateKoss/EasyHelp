@@ -286,7 +286,7 @@ namespace MvcApplication1.Controllers
 
                     foreach (var m in mentorListWithTegs)
                     {
-                        //mentor = new MentorsModel();
+                        
                         using (CustomDbContext db3 = new CustomDbContext())
                         {
                             var r = db3.RequestsModel.Where(x => x.createdBy == m.UserName && x.requestState == rState);

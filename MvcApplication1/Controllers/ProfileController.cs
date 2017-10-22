@@ -100,7 +100,7 @@ namespace MvcApplication1.Controllers
                     else model = new ProfileModel() { };
                 }
 
-                MentorsModel mentor;
+                ProfileModel mentor;
                 //пошук ментора
                 if (model.searchMentor != null && model.searchMentor != "")
                 {
@@ -118,7 +118,7 @@ namespace MvcApplication1.Controllers
                                     if (ment != null && ment.Name != null)
                                         if (ment.Name.Contains(model.searchMentor))
                                         {
-                                            mentor = new MentorsModel();
+                                            mentor = new ProfileModel();
                                             mentor.Name = ment.Name;
                                             mentor.UserName = ment.UserName;
                                             mentor.UserPhoto = ment.UserPhoto;
@@ -160,7 +160,7 @@ namespace MvcApplication1.Controllers
 
                             foreach (var m in mentorListWithTegs)
                             {
-                                mentor = new MentorsModel();
+                                mentor = new ProfileModel();
                                 mentor.Name = m.Name;
                                 mentor.UserName = m.UserName;
                                 mentor.UserPhoto = m.UserPhoto;
@@ -178,7 +178,7 @@ namespace MvcApplication1.Controllers
             ProfileModel model = new ProfileModel() { };
 
             List<ProfileModel> modelList = new List<ProfileModel>() { };
-            //MentorsModel mentor = new MentorsModel() { };
+            
             string currentPerson;
             if (Request.Cookies["UserId"] != null)
             {
