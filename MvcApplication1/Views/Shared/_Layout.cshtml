@@ -14,6 +14,8 @@
         @Styles.Render("~/Content/font-awesome.css")
         @Scripts.Render("~/bundles/modernizr")
         @Styles.Render("~/Content/css")
+        
+
     </head>
     <body>
         <header>
@@ -38,8 +40,11 @@
 
 
                             <li>
-                                <div class="dropdown show" >
-                                    <a id="usersForChatLink" class="btn btn-secondary dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a id="usersForChatLink" class="btn btn-secondary dropdown-toggle" href="/Chat/ChatFullScreen" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Чат
+                                </a>
+                                @*<div class="dropdown show" >
+                                    <a id="usersForChatLink" class="btn btn-secondary dropdown-toggle" href="/Chat/ChatFullScreen" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Чат
                                     </a>
                                     <div id="usersForChat">
@@ -49,7 +54,7 @@
                                             <a class="dropdown-item" href="#">Something else here</a>
                                         </div>
                                     </div>
-                                </div>
+                                </div>*@
                             </li>
                             <li>@Html.ActionLink("Знайти однодумців", "Index", "FindAssosiates")</li>
                         </ul>

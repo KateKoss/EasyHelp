@@ -469,7 +469,7 @@ a {
     }
 
     a:hover {
-        background-color: #c7d1d6;
+        /*background-color: #c7d1d6;*/
     }
 
 header, footer, hgroup,
@@ -882,7 +882,10 @@ textarea {
 }
 
     input:focus, textarea:focus {
-        border: 1px solid #7ac0da;
+        /*border: 1px solid #7ac0da;*/
+        outline: none;
+      border: none;
+      box-shadow: none;
     }
 
     input[type="checkbox"] {
@@ -1221,3 +1224,4 @@ aside {
     border-radius: 10px;
     color: lightgray;
 }
+

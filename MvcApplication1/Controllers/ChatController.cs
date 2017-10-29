@@ -189,6 +189,10 @@ namespace MvcApplication1.Controllers
 
             return Content("");
         }
-        
+
+        public ActionResult ChatFullScreen()
+        {
+            return View("ChatFullScreen");
+        }
     }
 }
