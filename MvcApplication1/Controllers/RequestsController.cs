@@ -35,12 +35,6 @@ namespace MvcApplication1.Controllers
                         requestsModel.reqests.Add(item);
                     }
             }
-                //в модель передать все активные заявки из бд 
-                
-                //RequestModel req = new RequestModel("user1_1", "Help with Java", "bla-bla1", null, "request not resolved");
-                //if (req.requestState != "request resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
-                //req = new RequestModel("user1_2", "Help with C#", "bla-bla2", null, "request not resolved");
-                //if (req.requestState != "request resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
             
             return View("StudentRequests", requestsModel.reqests);
         }        
@@ -61,11 +55,7 @@ namespace MvcApplication1.Controllers
                     {
                         requestsModel.reqests.Add(item);
                     }
-            }
-            
-            //RequestModel req = new RequestModel("user1_3", "Help with 1...", "bla-bla1", null, "request resolved");
-            //if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
-            
+            }            
             
             return View("StudentRequests", requestsModel.reqests);
         }
@@ -101,12 +91,7 @@ namespace MvcApplication1.Controllers
                     r.requestState = "request resolved";
                 db.SaveChanges();
             }
-            //RequestModel req = new RequestModel("user1_5", "Help with 1...", "bla-bla1", null, "request canceled");
-            //if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);  //если заявка не решена и не отменена отображаем как активные
-            //req = new RequestModel("user1_6", "Help with 2...", "bla-bla2", null, "request canceled");
-            //if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);
-
-            //return View("StudentRequests", requestsModel.reqests);
+            
             return RedirectToAction("ResolvedRequests");
         }
 
@@ -121,13 +106,9 @@ namespace MvcApplication1.Controllers
                     r.requestState = "request canceled";
                 db.SaveChanges();
             }
-            //RequestsList requestsModel = new RequestsList();
-            //RequestModel req = new RequestModel("user1_5", "Help with 1...", "bla-bla1", null, "request canceled");
-            //if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);  //если заявка не решена и не отменена отображаем как активные
-            //req = new RequestModel("user1_6", "Help with 2...", "bla-bla2", null, "request canceled");
-            //if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);
+            
             return RedirectToAction("CanceledRequests");
-            //return View("StudentRequests", requestsModel.reqests);
+            
         }
 
         //--------------------------Создание/сохранение заявки-----------------------------------------------
@@ -146,14 +127,11 @@ namespace MvcApplication1.Controllers
             string currentPerson;
             currentPerson = s.user;
 
-            Observer observer;
-            Requests r = new Requests(req);
-
             using (CustomDbContext db = new CustomDbContext())
             {
                 if (db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs != null)
                 {
-                    string[] currentPersonTegs = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs.Split(' ');
+                    string[] currentPersonTegs = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs.Split('|');
 
                     List<ProfileModel> mentorListWithTegs = new List<ProfileModel>();
                     var mentorList = db.UserProfiles.Where(x => x.Role == "mentor");
@@ -178,21 +156,11 @@ namespace MvcApplication1.Controllers
                                 }
                             }
 
-
-                    foreach (var m in mentorListWithTegs)
-                    {
-                        observer = new Observer(m.UserName);                       
-                        r.Attach(observer);
-                    }
                 }
             }
 
             using (CustomDbContext db = new CustomDbContext())
             {
-                //string currentPerson;
-                //if (Request.Cookies["UserId"] != null)
-                //    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-                //else currentPerson = "user1";
                 int count = db.RequestsModel.Count(x => x.createdBy == currentPerson);
                 if (count == 0)
                 {
@@ -258,7 +226,7 @@ namespace MvcApplication1.Controllers
             {
                 if (db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs != null)
                 {
-                    string[] currentPersonTegs = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs.Split(' ');
+                    string[] currentPersonTegs = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs.Split('|');
 
                     List<ProfileModel> mentorListWithTegs = new List<ProfileModel>();
                     var mentorList = db.UserProfiles.Where(x => x.Role == "student" || x.Role == "user");

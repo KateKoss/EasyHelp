@@ -145,16 +145,17 @@ namespace MvcApplication1.Controllers
                             {
                                 data.addTeg.Replace(' ', '_');
                             }
+                            //добавить проверку !!!!!!!!!потому что может быть такое что данный тег будет являтся подстрокой ууже сущестующего, и в таком случае его все ранво нужно добавить
                             if (!model.MyTegs.Contains(data.addTeg))
                             {
                                 string tegs = model.MyTegs;
-                                model.MyTegs = tegs + ' ' + data.addTeg;
+                                model.MyTegs = tegs + '|' + data.addTeg;
                                 db.SaveChanges();
                                 
                             }
                         }
 
-                        var splitTegs = model.MyTegs.Split(' ');
+                        var splitTegs = model.MyTegs.Split('|');
                         foreach (var el in splitTegs)
                         {
                             model.tegs.Add(el);
@@ -187,7 +188,7 @@ namespace MvcApplication1.Controllers
                     model = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
                     if (model != null)
                     {
-                        var splitTegs = model.MyTegs.Split(' ');
+                        var splitTegs = model.MyTegs.Split('|');
                         foreach (var el in splitTegs)
                         {
                             model.tegs.Add(el);
@@ -217,31 +218,27 @@ namespace MvcApplication1.Controllers
                     {
                         if (data.removeTeg != null)
                         {
-                            if (data.removeTeg.Contains(' '))
-                            {
-                                data.removeTeg.Replace(' ', '_');
-                            }
-                            if (model.MyTegs.Contains(' ' + data.removeTeg + ' '))
+                            if (model.MyTegs.Contains('|' + data.removeTeg + '|'))
                             {
                                 string tegs = model.MyTegs;
-                                model.MyTegs = tegs.Replace(' ' + data.removeTeg + ' ', " ");
+                                model.MyTegs = tegs.Replace('|' + data.removeTeg + '|', " ");
                                 db.SaveChanges();
                             }
-                            else if (model.MyTegs.Contains(' ' + data.removeTeg))
+                            else if (model.MyTegs.Contains('|' + data.removeTeg))
                             {
                                 string tegs = model.MyTegs;
-                                model.MyTegs = tegs.Replace(' ' + data.removeTeg, " ");
+                                model.MyTegs = tegs.Replace('|' + data.removeTeg, " ");
                                 db.SaveChanges();
                             }
-                            else if (model.MyTegs.Contains(data.removeTeg + ' '))
+                            else if (model.MyTegs.Contains(data.removeTeg + '|'))
                             {
                                 string tegs = model.MyTegs;
-                                model.MyTegs = tegs.Replace(data.removeTeg + ' ', " ");
+                                model.MyTegs = tegs.Replace(data.removeTeg + '|', " ");
                                 db.SaveChanges();
                             }
                         }
 
-                        var splitTegs = model.MyTegs.Split(' ');
+                        var splitTegs = model.MyTegs.Split('|');
                         foreach (var el in splitTegs)
                         {
                             model.tegs.Add(el);

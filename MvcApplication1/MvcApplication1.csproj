@@ -253,14 +253,9 @@
     <Compile Include="Contexts\CustomDbContext.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ChatController.cs" />
-    <Compile Include="Controllers\Command.cs" />
-    <Compile Include="Controllers\Decorator.cs" />
     <Compile Include="Controllers\EditController.cs" />
-    <Compile Include="Controllers\Facade.cs" />
     <Compile Include="Controllers\FindAssosiatesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\Memento.cs" />
-    <Compile Include="Controllers\Observer.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\ProxyPattern.cs" />
     <Compile Include="Controllers\RequestsController.cs" />
@@ -269,7 +264,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Controllers\AbstractFactory.cs" />
     <Compile Include="Migrations\201705221016060_1.cs" />
     <Compile Include="Migrations\201705221016060_1.Designer.cs">
       <DependentUpon>201705221016060_1.cs</DependentUpon>
@@ -295,7 +289,6 @@
     <Compile Include="Models\DataPoint.cs" />
     <Compile Include="Models\FindAssosiatesModel.cs" />
     <Compile Include="Models\ProfileModel.cs" />
-    <Compile Include="Controllers\Prototype.cs" />
     <Compile Include="Models\RequestsModel.cs" />
     <Compile Include="Controllers\Singleton.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -452,7 +445,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Profile\Index.cshtml" />
-    <Content Include="Views\Profile\ForProfileEditing.cshtml" />
     <Content Include="Views\Profile\CreateArticle.cshtml" />
     <Content Include="Views\Requests\StudentRequests.cshtml" />
     <Content Include="Views\Chat\Index.cshtml" />
@@ -460,7 +452,6 @@
     <Content Include="Views\Chat\ChatHistory.cshtml" />
     <Content Include="Views\Profile\MyArticle.cshtml" />
     <Content Include="Views\Profile\GetMentorList.cshtml" />
-    <Content Include="Views\Profile\MentorPage.cshtml" />
     <Content Include="Views\Profile\RateMentorPartial.cshtml" />
     <Content Include="packages.config" />
     <Content Include="Views\Requests\CreateRequest.cshtml" />
@@ -474,6 +465,7 @@
     <Content Include="Views\Chat\ChatWebSocket.cshtml" />
     <Content Include="Views\Chat\ChatFullScreen1.cshtml" />
     <Content Include="Views\Chat\ChatFullScreen.cshtml" />
+    <Content Include="Views\Profile\UserPreview.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
