@@ -90,7 +90,7 @@
             $('#inputTags').toggle();
             if (k % 2 != 0) {
                 if ($('#inputTags').val() != "") {
-                    $('#conteinerForTags').append('<span id="tag' + k + '" class="badge badge-success">' + $('#inputTags').val() + '<span class="badge badge-pill badge-secondary removeTeg" onclick="removeTag(this)" style=" color:dimgray; background-color:lightgray;">x</span> </span>');
+                    $('#conteinerForTags').append('<span id="tag' + k + '" class="badge badge-success">' + $('#inputTags').val() + '<span class="badge badge-pill badge-secondary removeTeg" onclick="removeTag(this)" style=" color:dimgray; background-color:lightgray;">x</span></span>');
                     tagList.push($('#inputTags').val());
                     $('#inputTags').val("");
                 }
@@ -109,7 +109,7 @@
             //console.log($("#" + valOfTegToDelete).text());
             //valOfTegToDelete = valOfTegToDelete.slice(0, -2);
             tagList = jQuery.grep(tagList, function (value) {
-                return value != $(obj).parent().text().slice(0, -2); // последний символ "x" - крестик, который закрывает этот элемент поэтому .slice(0,-1)
+                return value != $(obj).parent().text().slice(0, -1); // последний символ "x" - крестик, который закрывает этот элемент поэтому .slice(0,-1)
             });
         }
         function closeInstruction() {
@@ -121,7 +121,7 @@
             $('#conteinerForTags').text("");
             tagList = [];
         }
-        $('#closeButton').click(closeInstruction());
+        $('#closeButton').click(function () { closeInstruction() });
         $('#createButton').click(function () {
             if ($('#inputRequestName').val() != "" && $('#inputRequestText').val() != "") {
                 var reqName = $('#inputRequestName').val();
@@ -136,16 +136,14 @@
                 };
                 $.ajax({ //returns  jQuery XMLHttpRequest (jqXHR) object
                     type: 'POST',
-                    url: '@Url.Action("RequestsPartial", "Requests")',
+                    url: '@Url.Action("CreateRequest", "Requests")',
                     dataType: "text",
                     data: data,
                     success: function (d) {
-                        //showHide();
                         closeInstruction();
                         $('#requests').text("");
                         $('#myModal').modal('hide');
                         $('#requests').append(d);
-                        //isShowCreateFields == false;
                     }
                 });
             }

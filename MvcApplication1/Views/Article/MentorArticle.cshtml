@@ -1,0 +1,175 @@
+﻿@model MvcApplication1.Models.ArticleModel
+@{
+    ViewBag.Title = "Статті";
+}
+<h2>Мої статті</h2>
+<nav>
+    <ul id="menu">
+        @*<li>@Html.ActionLink("Профіль", "Index","Profile", FormMethod.Get)</li>
+        не работают
+        <li>@Html.ActionLink("Знайти однодумців", "Index", "FindAssosiates", FormMethod.Get)</li>*@
+    </ul>
+</nav>
+
+<button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#createArticleModal">Створити статтю</button>
+<!-- Modal -->
+<div id="createArticleModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Створення статті</h4>
+            </div>
+
+            <div class="modal-body">
+                <h4 id="nameLabel">Навза статті</h4>
+                <p>
+                    <input class="form-control" required id="inputArticleTitle" value="" placeholder="Навза статті" />
+                    <div id="errArticleTitle" class="alert alert-danger" role="alert" style="display:none;">Введіть назву статті.</div>
+                </p>
+
+                <h4>Додати теги</h4>
+                <div id="tags">
+                    <div id="conteinerForTags"></div>
+                    <input class="form-control" required id="inputTags" value="" placeholder="Теги" />
+                    <button type="button" id="createTagButton" class="btn btn-primary btn-sm">Додати тег</button>
+                </div>
+                
+
+                <h4 id="textLabel">Текст статті</h4>
+                <p>
+                    @Html.TextArea("inputArticleText", null, new { @style = "resize: vertical" })
+                    @*<textarea required id="inputArticleText" rows="10" cols="45"></textarea>*@
+                    <div id="errArticleText" class="alert alert-danger" role="alert" style="display:none">Введіть текст статті.</div>
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="addToDraftButton" class="btn btn-primary btn-md">Зберегти у чернетки</button>
+                <button type="button" id="publishButton" class="btn btn-primary btn-md">Опублікувати статтю</button>
+                <button type="button" id="closeButton" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item active">
+        @Ajax.ActionLink("Мої чернетки", "LoadStudentRequests", "Article", new AjaxOptions { UpdateTargetId = "articles" }, new { @class = "nav-link active" })
+    </li>
+    <li class="nav-item">
+        @Ajax.ActionLink("Опубліковані", "ResolvedRequests", "Article", new AjaxOptions { UpdateTargetId = "articles" }, new { @class = "nav-link" })
+    </li>
+</ul>
+@*<div id="articles">
+    @Html.Partial("_ArticlesPartial")
+</div>*@
+
+@*@using (Html.BeginForm("CreateArticle", "Article", FormMethod.Get))
+{
+    <p>
+        <button>Створити статтю</button>
+    </p>
+}*@
+@*@using (Html.BeginForm("EditArticle", "Article", FormMethod.Post))
+{ 
+    <br />    
+    @Html.ListBoxFor(m => m.articleName, Model.articleNames, new { size = 3, style = "width:300px; height:100px;" })
+    <p>
+        <button>Редагувати статтю</button>
+    </p>
+}*@
+
+<div>
+    @Html.ActionLink("Назад", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/scripts/bootstrap.js")
+    <script type="text/javascript">
+        var tagList = [];
+        var k = 0;
+        $('#createTagButton').click(function () {
+            $('#inputTags').toggle();
+            if (k % 2 != 0) {
+                if ($('#inputTags').val() != "") {
+                    $('#conteinerForTags').append('<span id="tag' + k + '" class="badge badge-success">' + $('#inputTags').val() + '<span class="badge badge-pill badge-secondary removeTeg" onclick="removeTag(this)" style=" color:dimgray; background-color:lightgray;">x</span></span>');
+                    tagList.push($('#inputTags').val());
+                    $('#inputTags').val("");
+                }
+            }
+            k++;
+        });
+
+        $("#tags").ready(function () {
+            $('#inputTags').hide();
+        });
+
+        function removeTag(obj) {
+            $($(obj).parent()).remove();
+            tagList = jQuery.grep(tagList, function (value) {
+                return value != $(obj).parent().text().slice(0, -1); // последний символ "x" - крестик, который закрывает этот элемент поэтому .slice(0,-1)
+            });
+        }
+        function closeInstruction() {
+            $('#inputArticleTitle').val("");
+            $('#inputArticleText').val("");
+            $('#inputTags').hide();
+            $('#conteinerForTags').text("");
+            if (document.getElementById('errArticleTitle').style.display == 'block')
+                document.getElementById('errArticleTitle').style.display = 'none';
+            if (document.getElementById('errArticleText').style.display == 'block')
+                document.getElementById('errArticleText').style.display = 'none';
+            tagList = [];
+        }
+        document.getElementById("inputArticleTitle").onkeydown = function () {
+            if (document.getElementById('errArticleTitle').style.display == 'block')
+                document.getElementById('errArticleTitle').style.display = 'none';
+        };
+        document.getElementById("inputArticleText").onkeydown = function () {
+            if (document.getElementById('errArticleText').style.display == 'block')
+                document.getElementById('errArticleText').style.display = 'none';
+        };
+        $('#closeButton').click(function () { closeInstruction() });
+        $('#addToDraftButton').click(function () {
+            if ($('#inputArticleTitle').val() != "" && $('#inputArticleText').val() != "") {
+                var articTitle = $('#inputArticleTitle').val();
+                var articText = $('#inputArticleText').val();
+                console.log(tagList);
+                var articleData = {
+                    inputArticleTitle: articTitle,
+                    inputArticleText: articText,
+                    tagList: tagList
+                };
+                $.ajax({ //returns  jQuery XMLHttpRequest (jqXHR) object
+                    type: 'POST',
+                    url: '@Url.Action("SaveArticleToDraft", "Article")',
+                    dataType: "text",
+                    data: articleData,
+                    success: function (d) {
+                        closeInstruction();
+                        $('#articles').text("");
+                        $('#createArticleModal').modal('hide');
+                        $('#articles').append(d);
+                    }
+                });
+            }
+            if ($('#inputArticleTitle').val() == "") {
+                console.log("show");
+                var elem = document.getElementById('errArticleTitle');
+                if (elem.style.display == 'none')
+                    elem.style.display = 'block';
+            }
+            if ($('#inputArticleText').val() == "") {
+                var elem = document.getElementById('errArticleText');
+                if (elem.style.display == 'none')
+                    elem.style.display = 'block';
+            }
+        });
+    </script>
+}
+
+

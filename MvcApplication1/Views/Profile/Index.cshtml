@@ -8,7 +8,7 @@
 
 <nav>
     <ul id="menu">
-        <li class="my1">@Html.ActionLink("Мої статті", "MyArticle", FormMethod.Get)</li>
+        <li class="my1">@Html.ActionLink("Мої статті", "Index", "Article", FormMethod.Get)</li>
 
         <li>@Html.ActionLink("Заявки", "LoadStudentRequests", "Requests")</li> @*возможно тут нужно сделать проверку является ли пользователь ментрорм,
             если да - вызывать LoadMentorRequests*@

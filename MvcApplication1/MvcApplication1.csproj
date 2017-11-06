@@ -207,6 +207,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Contexts\CustomDbContext.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ArticleController.cs" />
     <Compile Include="Controllers\ChatController.cs" />
     <Compile Include="Controllers\Command.cs" />
     <Compile Include="Controllers\Decorator.cs" />
@@ -380,17 +381,16 @@
     </Content>
     <Content Include="Views\Profile\Index.cshtml" />
     <Content Include="Views\Profile\ForProfileEditing.cshtml" />
-    <Content Include="Views\Profile\CreateArticle.cshtml" />
+    <Content Include="Views\Article\CreateArticle.cshtml" />
     <Content Include="Views\Requests\StudentRequests.cshtml" />
     <Content Include="Views\Chat\Index.cshtml" />
     <Content Include="Views\Chat\Lobby.cshtml" />
     <Content Include="Views\Chat\ChatHistory.cshtml" />
-    <Content Include="Views\Profile\MyArticle.cshtml" />
+    <Content Include="Views\Article\MentorArticle.cshtml" />
     <Content Include="Views\Profile\Mentors.cshtml" />
     <Content Include="Views\Profile\MentorPage.cshtml" />
     <Content Include="Views\Profile\RateMentorPartial.cshtml" />
     <Content Include="packages.config" />
-    <Content Include="Views\Requests\CreateRequest.cshtml" />
     <Content Include="Views\Requests\MentorRequests.cshtml" />
     <Content Include="Views\Requests\EditRequest.cshtml" />
     <Content Include="Views\Requests\RequestDetails.cshtml" />
@@ -399,6 +399,7 @@
     <Content Include="Views\FindAssosiates\FindAssosiates.cshtml" />
     <Content Include="Views\Edit\Tegs.cshtml" />
     <Content Include="Views\Requests\_RequestsPartial.cshtml" />
+    <Content Include="Views\Article\_ArticlesPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

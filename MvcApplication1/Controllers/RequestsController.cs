@@ -149,7 +149,7 @@ namespace MvcApplication1.Controllers
         //--------------------------Создание/сохранение заявки-----------------------------------------------
 
         [HttpPost]
-        public ActionResult RequestsPartial(Data data)
+        public ActionResult CreateRequest(Data data)
         {
             RequestModel reqModel = new RequestModel();
             if (string.IsNullOrEmpty(data.inputRequestName))

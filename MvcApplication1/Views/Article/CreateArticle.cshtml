@@ -1,0 +1,36 @@
+﻿@model MvcApplication1.Models.ArticleModel
+@{
+    ViewBag.Title = "Створити статтю";
+}
+
+<div>
+
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+
+        @using (Html.BeginForm("SaveActicleToDraft", "Article", FormMethod.Post))
+        {
+            <p><h3>Назва статті</h3>
+                @Html.TextBoxFor(model => model.articleTitle, new { @placeholder = "Навза статті" })   
+                @Html.ValidationMessageFor(model => model.articleTitle)                             
+            </p>
+            <h3>Текст статті</h3>
+            @Html.TextAreaFor(model => model.articleText, new { @placeholder = "Текст статті"})
+                
+            <p>
+                <button type="submit" name="action" value="saveToDraft">Зберегти як чернетку</button>
+                <button type="submit" name="action" value="publish">Публікувати</button>
+            </p>
+            @Html.TextBoxFor(model => model.articleID, new { @style ="visibility:hidden;" })
+        }
+            
+    </fieldset>
+
+</div>
+<div>
+    @Html.ActionLink("Назад", "Index") @*, "Article"*@
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

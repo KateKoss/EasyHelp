@@ -88,8 +88,6 @@ namespace MvcApplication1.Controllers
                                 db.SaveChanges();
                                 Decorator.id = articleid;
                             }
-
-
                     }
             }
         }

@@ -1,0 +1,57 @@
+﻿@model IEnumerable<MvcApplication1.Models.ArticleModel>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.createdBy)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.articleTitle)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.articleText)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.isPublished)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.whoLikes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.whoDislikes)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.createdBy)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.articleTitle)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.articleText)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.isPublished)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.whoLikes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.whoDislikes)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.articleID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.articleID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.articleID })
+        </td>
+    </tr>
+}
+
+</table>
