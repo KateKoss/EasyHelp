@@ -1,9 +1,27 @@
 ﻿@model IEnumerable<MvcApplication1.Models.ArticleModel>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
+@foreach (var item in Model)
+{
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">@item.articleTitle</h4>
+            @*<h6 class="card-subtitle mb-2 text-muted">
+            @if (item.SelectedTeg != null)
+            {
+                foreach (var tag in item.SelectedTeg.ToList())
+                {
+                    @tag;
+                }
+            }</h6>*@
+            <p class="card-text">@item.articleText</p>
+            @*@if(item.isPublished )*@
+            <button type="button" class="btn btn-info btn-md">Редагувати</button>
+        </div>
+        <div class="card-footer text-muted">
+            2 days ago
+        </div>
+    </div>
+}
+@*<table class="table">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.createdBy)
@@ -54,4 +72,4 @@
     </tr>
 }
 
-</table>
+</table>*@

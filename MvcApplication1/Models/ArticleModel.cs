@@ -16,6 +16,7 @@ namespace MvcApplication1.Models
         public string createdBy { get; set; }
         public IEnumerable<string> articleName { get; set; }
         public IEnumerable<SelectListItem> articleNames { get; set; }
+
         [Required(AllowEmptyStrings=false,ErrorMessage = "Введіть назву статті.")]
         public string articleTitle { get; set; }
         public string articleText { get; set; }
@@ -24,7 +25,7 @@ namespace MvcApplication1.Models
         public string whoDislikes { get; set; }
         public IEnumerable<string> SelectedTeg { get; set; }
         public IEnumerable<SelectListItem> TegList { get; set; }
-
+        //нужна дата создания
         [NotMapped]
         public bool youAreLikeThisArticle { get; set; }
         [NotMapped]

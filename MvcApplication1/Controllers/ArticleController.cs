@@ -9,18 +9,6 @@ using System.Reflection;
 
 namespace MvcApplication1.Controllers
 {
-    //[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-    //public class MultiButtonAttribute : ActionNameSelectorAttribute
-    //{
-    //    public string MatchFormKey { get; set; }
-    //    public string MatchFormValue { get; set; }
-    //    public override bool IsValidName(ControllerContext controllerContext, string actionName, MethodInfo methodInfo)
-    //    {
-    //        return controllerContext.HttpContext.Request[MatchFormKey] != null &&
-    //            controllerContext.HttpContext.Request[MatchFormKey] == MatchFormValue;
-    //    }
-    //}
-
     public class ArticleData
     {
         public string inputArticleTitle { get; set; }
@@ -30,6 +18,16 @@ namespace MvcApplication1.Controllers
 
     public class ArticleController : Controller
     {
+        public IEnumerable<ArticleModel> getArticles(string currentPerson, bool isPublsihed)
+        {
+            List<ArticleModel> listOfArticles = new List<ArticleModel>();
+            using (CustomDbContext db = new CustomDbContext())
+            {
+                listOfArticles.AddRange(db.ArticleModel.Where(x => x.createdBy == currentPerson && x.isPublished == isPublsihed));
+            }
+            return listOfArticles;
+        }
+
         // GET: Article
         [HttpGet]
         public ActionResult Index()
@@ -40,48 +38,11 @@ namespace MvcApplication1.Controllers
             else currentPerson = null;
             //ProxyPattern.Proxy p = new ProxyPattern.Proxy(); //!!!!!!!!!!!!!!!!!!!!!!!
             //ArticleModel myModel = p.getArticle(currentPerson, false);
-            ArticleModel myModel = getArticle(currentPerson, false);
+            
+            IEnumerable<ArticleModel> myModel = getArticles(currentPerson, false);
+            if (Request.IsAjaxRequest())
+                return PartialView("_ArticlesPartial", myModel);
             return View("MentorArticle", myModel);
-        }
-
-        public ArticleModel getArticle(string currentPerson, bool onlyPublsihed)
-        {
-            List<SelectListItem> listSelectListItems = new List<SelectListItem>();
-            using (CustomDbContext db = new CustomDbContext())
-            {
-                if (!onlyPublsihed)
-                    foreach (var article in db.ArticleModel.Where(x => x.createdBy == currentPerson))
-                    {
-                        SelectListItem selectList = new SelectListItem()
-                        {
-                            Text = article.articleTitle,
-                            Value = article.articleID
-                        };
-                        listSelectListItems.Add(selectList);
-                    }
-                else
-                    foreach (var article in db.ArticleModel.Where(x => x.createdBy == currentPerson && x.isPublished == true))
-                    {
-                        SelectListItem selectList = new SelectListItem()
-                        {
-                            Text = article.articleTitle,
-                            Value = article.articleID
-                        };
-                        listSelectListItems.Add(selectList);
-                    }
-            }
-            ArticleModel myModel = new ArticleModel()
-            {
-                articleNames = listSelectListItems
-            };
-
-            return myModel;
-        }
-
-        [HttpGet]
-        public ActionResult CreateArticle(ArticleModel model)
-        {
-            return View("CreateArticle", model);
         }
 
         [HttpGet]
@@ -120,32 +81,25 @@ namespace MvcApplication1.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditArticle(ArticleModel model, ProfileModel p)
-        {
-            string currentPerson;
-            if (Request.Cookies["UserId"] != null)
-                currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-            else currentPerson = "user1";
-            LoadArtcileIntoForm(model, currentPerson, false);
-
-            return View("CreateArticle", model);
-        }
-
-        [HttpPost]
-        //[MultiButton(MatchFormKey = "action", MatchFormValue = "saveToDraft")]
         public ActionResult SaveArticleToDraft(ArticleData articleData)//ArticleModel model
         {
             //Decorator.SavaArticle d = new Decorator.SaveToDraft(new Decorator.ImplementSave());
             //d.saveToDb(model);
-
             //Singleton s = Singleton.Instance;
             string currentPerson;// = s.user;
+            IEnumerable<string> selectedTegs = articleData.tagList;
+            foreach (var item in selectedTegs)
+            {
+                Console.WriteLine(item);
+            }
+
             if (Request.Cookies["UserId"] != null) //если данные о пользователе записаны в куки
             {
                 if (articleData.inputArticleTitle != "" && articleData.inputArticleText != "" && articleData.tagList != null)
                 {
                     using (CustomDbContext db = new CustomDbContext())
                     {
+
                         string articleid;
                         currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
                         var myModel = db.ArticleModel.FirstOrDefault(x => x.createdBy == currentPerson);//чи створював користувач вже статті
@@ -168,37 +122,10 @@ namespace MvcApplication1.Controllers
                             isPublished = false
                         });
                         db.SaveChanges();
-                        //else if (model.articleID != null)//якщо користувач обрав існуючу статтю для редагування
-                        //{
-                        //    //articleid = currentPerson + "_" + model.articleID;
-                        //    //перевіряємо чи власне є ця стаття у бд
-                        //    myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == model.articleID);
-                        //    if (myModel != null)//якщо є
-                        //    {
-                        //        myModel.articleTitle = model.articleTitle;
-                        //        myModel.articleText = model.articleText;
-                        //        //myModel.isPublished = false;
-                        //        db.SaveChanges();
-                        //    }
-                        //    else
-                        //    {
-
-                        //        db.ArticleModel.Add(new ArticleModel { articleID = model.articleID, createdBy = currentPerson, articleTitle = model.articleTitle });
-                        //        myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == model.articleID);
-                        //        if (myModel != null)
-                        //        {
-                        //            myModel.articleTitle = model.articleTitle;
-                        //            myModel.articleText = model.articleText;
-                        //            //myModel.isPublished = false;
-                        //        }
-                        //        db.SaveChanges();
-                        //    }
-                        //}
-
                     }
                 }
             }
-            return RedirectToAction("MentorArticle");
+            return RedirectToAction("Index");
             //if (model.articleTitle != null)
             //    using (CustomDbContext db = new CustomDbContext())
             //    {
@@ -270,7 +197,6 @@ namespace MvcApplication1.Controllers
         }
 
         [HttpPost]
-        //[MultiButton(MatchFormKey = "action", MatchFormValue = "publish")]
         public ActionResult PublishArticle(ArticleModel model)
         {
             Decorator.SavaArticle d = new Decorator.Publish(new Decorator.ImplementSave());
@@ -343,83 +269,102 @@ namespace MvcApplication1.Controllers
 
             //        db.SaveChanges();
             //    }
-
-            //опубликовать статью
             return RedirectToAction("MentorArticle");
         }
 
-        public ActionResult ShowArticles()
+        [HttpGet]
+        public ActionResult ShowArticles(bool isPublsihed)
         {
-            ArticleModel model;
-            string currentMent;
-            if (Request.Cookies["MentorId"] != null)
-                currentMent = Convert.ToString(Request.Cookies["MentorId"].Value);
-            else currentMent = "";
-            if (currentMent != "")
+            //string currentMent;
+            //if (Request.Cookies["MentorId"] != null)
+            //    currentMent = Convert.ToString(Request.Cookies["MentorId"].Value);
+            //else currentMent = "";
+            string currentPerson;// = s.user;
+            IEnumerable<ArticleModel> myModel = null;
+            if (Request.Cookies["UserId"] != null) //если данные о пользователе записаны в куки
             {
-                model = getArticle(currentMent, true);
-
-                List<SelectListItem> listSelectListItems = new List<SelectListItem>();
-                SelectListItem selectList = new SelectListItem()
-                {
-                    Text = "Подобається",
-                    Value = "1",
-                    Selected = true
-
-                };
-                listSelectListItems.Add(selectList);
-                selectList = new SelectListItem()
-                {
-                    Text = "Не подобається",
-                    Value = "2"
-
-                };
-                listSelectListItems.Add(selectList);
-
-                model.TegList = listSelectListItems;
+                currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                myModel = getArticles(currentPerson, false);
+                if (Request.IsAjaxRequest())
+                    return PartialView("_ArticlesPartial", myModel);
+                return View("MentorArticle", myModel);
             }
-            else
-                model = new ArticleModel() { };
-            return View("ShowArticles", model);
+            return View("MentorArticle", myModel);
+            //if (currentMent != "")
+            //{
+            //    LoadArtcileIntoForm(model, currentMent, true);
+            //    model.createdBy = currentMent;
+
+            //    List<SelectListItem> listSelectListItems = new List<SelectListItem>();
+            //    SelectListItem selectList = new SelectListItem()
+            //    {
+            //        Text = "Подобається",
+            //        Value = "1",
+            //        Selected = true
+
+            //    };
+            //    listSelectListItems.Add(selectList);
+            //    selectList = new SelectListItem()
+            //    {
+            //        Text = "Не подобається",
+            //        Value = "2"
+
+            //    };
+            //    listSelectListItems.Add(selectList);
+
+            //    model.TegList = listSelectListItems;
+            //    LikeDislike(model);
+            //}
+
+
+            //return View("ShowArticles", model);
         }
+        //public ActionResult ShowArticles()
+        //{
+        //    ArticleModel model;
+        //    string currentMent;
+        //    if (Request.Cookies["MentorId"] != null)
+        //        currentMent = Convert.ToString(Request.Cookies["MentorId"].Value);
+        //    else currentMent = "";
+        //    if (currentMent != "")
+        //    {
+        //        model = getArticles(currentMent, true);
+
+        //        List<SelectListItem> listSelectListItems = new List<SelectListItem>();
+        //        SelectListItem selectList = new SelectListItem()
+        //        {
+        //            Text = "Подобається",
+        //            Value = "1",
+        //            Selected = true
+
+        //        };
+        //        listSelectListItems.Add(selectList);
+        //        selectList = new SelectListItem()
+        //        {
+        //            Text = "Не подобається",
+        //            Value = "2"
+
+        //        };
+        //        listSelectListItems.Add(selectList);
+
+        //        model.TegList = listSelectListItems;
+        //    }
+        //    else
+        //        model = new ArticleModel() { };
+        //    return View("ShowArticles", model);
+        //}
 
         [HttpPost]
-        public ActionResult ShowArticles(ArticleModel model)
+        public ActionResult EditArticle(ArticleModel model, ProfileModel p)
         {
-            string currentMent;
-            if (Request.Cookies["MentorId"] != null)
-                currentMent = Convert.ToString(Request.Cookies["MentorId"].Value);
-            else currentMent = "";
-            if (currentMent != "")
-            {
-                LoadArtcileIntoForm(model, currentMent, true);
-                model.createdBy = currentMent;
+            string currentPerson;
+            if (Request.Cookies["UserId"] != null)
+                currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+            else currentPerson = "user1";
+            LoadArtcileIntoForm(model, currentPerson, false);
 
-                List<SelectListItem> listSelectListItems = new List<SelectListItem>();
-                SelectListItem selectList = new SelectListItem()
-                {
-                    Text = "Подобається",
-                    Value = "1",
-                    Selected = true
-
-                };
-                listSelectListItems.Add(selectList);
-                selectList = new SelectListItem()
-                {
-                    Text = "Не подобається",
-                    Value = "2"
-
-                };
-                listSelectListItems.Add(selectList);
-
-                model.TegList = listSelectListItems;
-                LikeDislike(model);
-            }
-
-
-            return View("ShowArticles", model);
+            return View("CreateArticle", model);
         }
-
 
         public void LikeDislike(ArticleModel model)
         {

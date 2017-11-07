@@ -1,4 +1,4 @@
-﻿@model MvcApplication1.Models.ArticleModel
+﻿@model IEnumerable<MvcApplication1.Models.ArticleModel>
 @{
     ViewBag.Title = "Статті";
 }
@@ -58,30 +58,31 @@
 
 <ul class="nav nav-tabs">
     <li class="nav-item active">
-        @Ajax.ActionLink("Мої чернетки", "LoadStudentRequests", "Article", new AjaxOptions { UpdateTargetId = "articles" }, new { @class = "nav-link active" })
+        @Ajax.ActionLink("Мої чернетки", "ShowArticles", "Article", new { isPublished = false }, new AjaxOptions { UpdateTargetId = "articles" }, new { @class = "nav-link active" })
     </li>
     <li class="nav-item">
-        @Ajax.ActionLink("Опубліковані", "ResolvedRequests", "Article", new AjaxOptions { UpdateTargetId = "articles" }, new { @class = "nav-link" })
+        @Ajax.ActionLink("Опубліковані", "ShowArticles", "Article", new { isPublished = true }, new AjaxOptions { UpdateTargetId = "articles" }, new { @class = "nav-link" })
     </li>
 </ul>
-@*<div id="articles">
-    @Html.Partial("_ArticlesPartial")
-</div>*@
 
-@*@using (Html.BeginForm("CreateArticle", "Article", FormMethod.Get))
-{
-    <p>
-        <button>Створити статтю</button>
-    </p>
-}*@
-@*@using (Html.BeginForm("EditArticle", "Article", FormMethod.Post))
-{ 
-    <br />    
-    @Html.ListBoxFor(m => m.articleName, Model.articleNames, new { size = 3, style = "width:300px; height:100px;" })
-    <p>
-        <button>Редагувати статтю</button>
-    </p>
-}*@
+<div class="card text-center">
+    <div class="card-header">
+        Featured
+    </div>
+    <div class="card-body">
+        <h4 class="card-title">Special title treatment</h4>
+        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+        <a href="#" class="btn btn-primary">Go somewhere</a>
+    </div>
+    <div class="card-footer text-muted">
+        2 days ago
+    </div>
+</div>
+
+
+<div id="articles">
+    @Html.Partial("_ArticlesPartial", Model)
+</div>
 
 <div>
     @Html.ActionLink("Назад", "Index")

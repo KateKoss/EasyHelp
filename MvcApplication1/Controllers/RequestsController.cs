@@ -65,7 +65,7 @@ namespace MvcApplication1.Controllers
             string currentPerson;
             if (Request.Cookies["UserId"] != null)
                 currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-            else currentPerson = "user1";
+            else currentPerson = null;
             using (CustomDbContext db = new CustomDbContext())
             {
                 var r = db.RequestsModel.Where(x => x.createdBy == currentPerson && x.requestState == "request resolved");
