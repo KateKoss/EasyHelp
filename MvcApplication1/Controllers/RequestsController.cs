@@ -129,9 +129,9 @@ namespace MvcApplication1.Controllers
 
             using (CustomDbContext db = new CustomDbContext())
             {
-                if (db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs != null)
+                if (db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).Tegs != null)
                 {
-                    string[] currentPersonTegs = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs.Split('|');
+                    string[] currentPersonTegs = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).Tegs.Split('|');
 
                     List<ProfileModel> mentorListWithTegs = new List<ProfileModel>();
                     var mentorList = db.UserProfiles.Where(x => x.Role == "mentor");
@@ -148,8 +148,8 @@ namespace MvcApplication1.Controllers
                                         var ment = db2.ProfileModel.SingleOrDefault(x => x.UserName == currentMentor);
                                         if (ment != null)
                                             if (ment.UserName != currentPerson)
-                                                if (ment.MyTegs != null)
-                                                    if (ment.MyTegs.Contains(currentTeg))
+                                                if (ment.Tegs != null)
+                                                    if (ment.Tegs.Contains(currentTeg))
                                                         if (!mentorListWithTegs.Any(x => x.UserName == ment.UserName))
                                                             mentorListWithTegs.Add(ment);
                                     }
@@ -224,9 +224,9 @@ namespace MvcApplication1.Controllers
             
             using (CustomDbContext db = new CustomDbContext())
             {
-                if (db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs != null)
+                if (db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).Tegs != null)
                 {
-                    string[] currentPersonTegs = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs.Split('|');
+                    string[] currentPersonTegs = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).Tegs.Split('|');
 
                     List<ProfileModel> mentorListWithTegs = new List<ProfileModel>();
                     var mentorList = db.UserProfiles.Where(x => x.Role == "student" || x.Role == "user");
@@ -243,8 +243,8 @@ namespace MvcApplication1.Controllers
                                         var ment = db2.ProfileModel.SingleOrDefault(x => x.UserName == currentMentor);
                                         if (ment != null)
                                             if (ment.UserName != currentPerson)
-                                                if (ment.MyTegs != null)
-                                                    if (ment.MyTegs.Contains(currentTeg))
+                                                if (ment.Tegs != null)
+                                                    if (ment.Tegs.Contains(currentTeg))
                                                         if (!mentorListWithTegs.Any(x => x.UserName == ment.UserName))
                                                             mentorListWithTegs.Add(ment);
                                     }

@@ -264,21 +264,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201705221016060_1.cs" />
-    <Compile Include="Migrations\201705221016060_1.Designer.cs">
-      <DependentUpon>201705221016060_1.cs</DependentUpon>
+    <Compile Include="Migrations\201711182217483_11.cs" />
+    <Compile Include="Migrations\201711182217483_11.Designer.cs">
+      <DependentUpon>201711182217483_11.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201710051915055_first.cs" />
-    <Compile Include="Migrations\201710051915055_first.Designer.cs">
-      <DependentUpon>201710051915055_first.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201710051948450_12.cs" />
-    <Compile Include="Migrations\201710051948450_12.Designer.cs">
-      <DependentUpon>201710051948450_12.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201710221301228_2.cs" />
-    <Compile Include="Migrations\201710221301228_2.Designer.cs">
-      <DependentUpon>201710221301228_2.cs</DependentUpon>
+    <Compile Include="Migrations\201711182221405_13.cs" />
+    <Compile Include="Migrations\201711182221405_13.Designer.cs">
+      <DependentUpon>201711182221405_13.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountModels.cs" />
@@ -471,14 +463,11 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201710051915055_first.resx">
-      <DependentUpon>201710051915055_first.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201711182217483_11.resx">
+      <DependentUpon>201711182217483_11.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201710051948450_12.resx">
-      <DependentUpon>201710051948450_12.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201710221301228_2.resx">
-      <DependentUpon>201710221301228_2.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201711182221405_13.resx">
+      <DependentUpon>201711182221405_13.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

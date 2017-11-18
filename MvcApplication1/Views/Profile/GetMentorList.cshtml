@@ -5,7 +5,7 @@
     {
         <div class="dropdown-item" href="#">
             <img class="avatarList" src='../Images/userphoto2.jpg' alt="фото" />
-            <span id="toUser">@Html.ActionLink(m.Name != null ? m.Name : m.UserName, "Index", new { thisUserLoggedOn = "" }, new { href = "?user=" + m.UserName })</span>
+            <span id="toUser">@Html.ActionLink(m.Name != null ? m.Name : m.UserName, "Profile/GetUserPreview", new { thisUserLoggedOn = "" }, new { href = "/Profile/UserPreview?user=" + m.UserName })</span>
 
             <a id="addClass" onclick="addClass()"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></a>
         </div>

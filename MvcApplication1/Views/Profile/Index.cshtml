@@ -49,8 +49,9 @@
             <input id="btnEditAboutMe" onclick="editAboutMe()" type="submit" value="" class="btn  btnEdit" />
         </div>
 
+
         <div class="col-lg-6">
-            
+            @if (!Model.isMentor) { 
                 <div class="input-group">
                     <input type="text" class="form-control" aria-label="Text input with dropdown button">
                     <div class="input-group-btn">
@@ -58,7 +59,7 @@
                         <div class="dropdown-menu" id="dropdown-menu"></div>
                     </div>
                 </div>
-            
+            }
         </div>
     </div>
 </div>

@@ -21,13 +21,21 @@ namespace MvcApplication1.Controllers
         Singleton s = Singleton.Instance;
         public ProfileController()
         {
-            if (Request.Cookies["UserId"] != null)
-                s.user = Convert.ToString(Request.Cookies["UserId"].Value);
+            
+        }
+
+        public class Data
+        {
+            public string rate { get; set; }
+            public string name { get; set; }
         }
         
         [HttpGet]
         public ActionResult Index(ProfileModel model)
-        { 
+        {
+            if (Request != null)
+                if (Request.Cookies["UserId"] != null)
+                    s.user = Convert.ToString(Request.Cookies["UserId"].Value);
             if (s.user != null && s.user != "")
             {
                 using (CustomDbContext db = new CustomDbContext())
@@ -36,19 +44,20 @@ namespace MvcApplication1.Controllers
                     var user = db.UserProfiles.SingleOrDefault(x => x.UserName == s.user);
                     if (user != null)
                     {
-                        if (user.Role == "mentor")
-                        {
-                            return RedirectToAction("MentorProfile");
-                        }
-                        var myModel = db.ProfileModel.SingleOrDefault(x => x.UserName == s.user);
-                        if (myModel.UserPhoto == null)
-                        {
+                        //if (user.Role == "mentor")
+                        //{
+                        //    return RedirectToAction("MentorProfile");
+                        //}
+                        var infoAboutUser = db.ProfileModel.SingleOrDefault(x => x.UserName == s.user);
+                        /////????????????????????
+                        //if (myModel.UserPhoto == null)
+                        //{
 
-                        }
+                        //}
                         var list = new List<String>();
-                        if (myModel.MyTegs != null)
+                        if (infoAboutUser.Tegs != null)
                         {
-                            var splitTegs = myModel.MyTegs.Split('|');
+                            var splitTegs = infoAboutUser.Tegs.Split('|');
 
                             foreach (var el in splitTegs)
                             {
@@ -58,12 +67,14 @@ namespace MvcApplication1.Controllers
                         }
                         model = new ProfileModel()
                         {
-                            Name = myModel.Name,
-                            MyTegs = myModel.MyTegs,
-                            About_me = myModel.About_me,
-                            UserPhoto = myModel.UserPhoto,
+                            Name = infoAboutUser.Name,
+                            Tegs = infoAboutUser.Tegs,
+                            About_me = infoAboutUser.About_me,
+                            UserPhoto = infoAboutUser.UserPhoto,
                             searchMentor = model.searchMentor,
-                            tegs = list
+                            Rate = infoAboutUser.Rate,
+                            tegs = list,
+                            isMentor = user.Role=="mentor"?true:false
                         };
                     }
                     else model = new ProfileModel() { };
@@ -71,6 +82,49 @@ namespace MvcApplication1.Controllers
             }
             return View("Index", model);
             
+        }
+
+        [HttpGet]
+        public ActionResult UserPreview(string user)
+        {
+            ProfileModel model = new ProfileModel() { };
+            if (user != null && user != "")
+            {
+                using (CustomDbContext db = new CustomDbContext())
+                {
+
+                    var userFromDb = db.UserProfiles.SingleOrDefault(x => x.UserName == user);
+                    if (userFromDb != null)
+                    {
+                        var infoAboutUser = db.ProfileModel.SingleOrDefault(x => x.UserName == user);
+                        
+                        var list = new List<String>();
+                        if (infoAboutUser.Tegs != null)
+                        {
+                            var splitTegs = infoAboutUser.Tegs.Split('|');
+
+                            foreach (var el in splitTegs)
+                            {
+                                list.Add(el);
+
+                            }
+                        }
+                        model = new ProfileModel()
+                        {
+                            Name = infoAboutUser.Name,
+                            Tegs = infoAboutUser.Tegs,
+                            About_me = infoAboutUser.About_me,
+                            UserPhoto = infoAboutUser.UserPhoto,
+                            Rate = infoAboutUser.Rate,
+                            searchMentor = model.searchMentor,
+                            tegs = list,
+                            isMentor = infoAboutUser.isMentor
+                        };
+                    }
+                    else model = new ProfileModel() { };
+                }
+            }
+            return View("UserPreview", model);
         }
 
         [HttpGet]
@@ -84,9 +138,9 @@ namespace MvcApplication1.Controllers
                 
                 using (CustomDbContext db = new CustomDbContext())
                 {
-                    if (db.ProfileModel.SingleOrDefault(x => x.UserName == s.user).MyTegs != null)
+                    if (db.ProfileModel.SingleOrDefault(x => x.UserName == s.user).Tegs != null)
                     {
-                        string[] currentPersonTegs = db.ProfileModel.SingleOrDefault(x => x.UserName == s.user).MyTegs.Split('|');
+                        string[] currentPersonTegs = db.ProfileModel.SingleOrDefault(x => x.UserName == s.user).Tegs.Split('|');
 
                         List<ProfileModel> mentorListWithTegs = new List<ProfileModel>();
                         var mentorList = db.UserProfiles.Where(x => x.Role == "mentor");
@@ -103,8 +157,8 @@ namespace MvcApplication1.Controllers
                                             var ment = db2.ProfileModel.SingleOrDefault(x => x.UserName == currentMentor);
                                             if (ment != null)
                                                 if (ment.UserName != s.user)
-                                                    if (ment.MyTegs != null)
-                                                        if (ment.MyTegs.Contains(currentTeg))
+                                                    if (ment.Tegs != null)
+                                                        if (ment.Tegs.Contains(currentTeg))
                                                             if (!mentorListWithTegs.Any(x => x.UserName == ment.UserName))
                                                                 mentorListWithTegs.Add(ment);
                                         }
@@ -193,37 +247,6 @@ namespace MvcApplication1.Controllers
             return PartialView("GetMentorList", modelList);
         }
 
-        public ProfileModel getMentorInf(string user)
-        {
-            ProfileModel model = new ProfileModel();
-            
-            using (CustomDbContext db = new CustomDbContext())
-            {
-                var ment = db.ProfileModel.SingleOrDefault(x => x.UserName == user);
-                if (ment != null && ment.UserName != null)
-                {
-                    model.Name = ment.Name;
-                    model.UserName = ment.UserName;
-                    model.UserPhoto = ment.UserPhoto;
-                    model.About_me = ment.About_me;
-                    model.MyTegs = ment.MyTegs;
-                    model.Rate = ment.Rate;
-
-                }
-            }
-            return model;
-        }      
-
-
-        public ActionResult MentorProfile(ProfileModel model)
-        {            
-            if (s.user != null && s.user != "")
-            {
-                model = getMentorInf(s.user);
-            }
-            return View("MentorProfile", model);
-        }
-
         [HttpGet]
         public ActionResult UploadPhoto()
         {
@@ -243,52 +266,47 @@ namespace MvcApplication1.Controllers
                     else ModelState.AddModelError("Error", "Error");
                 }
             }
-            return Content(Convert.ToBase64String(model.UserPhoto));
+            if (model != null)
+            {
+                if (model.UserPhoto != null)
+                    return Content(Convert.ToBase64String(model.UserPhoto));
+                else return Content("error");
+            }
+            else return Content("error");
             
         }        
-
-        public ActionResult SetMentorRate(ProfileModel model)
+        
+        public ActionResult SetMentorRate(Data data)
         {
+
             string currentMent = s.user;
-            if (currentMent != null && currentMent != "")                
+            ProfileModel ment = new ProfileModel() { };
+
+            if (currentMent != null && currentMent != "")
             {
                 using (CustomDbContext db = new CustomDbContext())
                 {
-                    var ment = db.ProfileModel.SingleOrDefault(x => x.UserName == currentMent);
+                    ment = db.ProfileModel.SingleOrDefault(x => x.UserName == data.name);
                     if (ment != null)
-                        ment.Rate = Convert.ToInt32(model.SelectedTeg.Last());
-                    db.SaveChanges();
-                }
-                List<SelectListItem> listSelectListItems = new List<SelectListItem>();
-
-                for (int i = 0; i < 5; i++)
-                {
-                    SelectListItem selectList = new SelectListItem()
                     {
-                        Text = (i + 1).ToString(),
-                        Value = (i + 1).ToString()
-                    };
-                    listSelectListItems.Add(selectList);
-                }
-                model.TegList = listSelectListItems;
-
-
-                using (CustomDbContext db = new CustomDbContext())
-                {
-                    var ment = db.ProfileModel.SingleOrDefault(x => x.UserName == currentMent);
-                    if (ment != null && ment.UserName != null)
-                    {
-                        model.Name = ment.Name;
-                        model.UserName = ment.UserName;
-                        model.UserPhoto = ment.UserPhoto;
-                        model.About_me = ment.About_me;
-                        model.MyTegs = ment.MyTegs;
-                        model.Rate = ment.Rate;
+                        if (ment.Rates != null)
+                        {
+                            var rates = ment.Rates.Split('|');
+                            int MentorRate = 0;
+                            foreach (var rate in rates)
+                            {
+                                MentorRate += Convert.ToInt32(rate);
+                            }
+                            MentorRate += Convert.ToInt32(data.rate);
+                            ment.Rate = MentorRate / (rates.Length + 1);
+                            ment.Rates += data.rate + "|";
+                            ment.WhoRates += currentMent + "|";
+                        }
                     }
-                }
-
+                    db.SaveChanges();                    
+                }           
             }
-            return View("UserPreview", model);
+            return Content(ment.Rate.ToString());
         }           
 
     }
