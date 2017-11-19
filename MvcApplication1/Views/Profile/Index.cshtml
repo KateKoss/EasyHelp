@@ -22,7 +22,7 @@
 <br/>
 <div class="container">
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-lg-3">
 
             <div id="userphotoDiv">
                 <img id="userphotoImg" src="" /><br />
@@ -46,7 +46,7 @@
         </div>
 
 
-        <div class="col-lg-8">
+        <div class="col-lg-9">
             <h2>Ім'я</h2>
             <span id="labelNameEdit" style="display:;" class="profileUserData">
                 <span value="" id="userName">@(Model.Name != null ? Model.Name : "")</span>
@@ -55,11 +55,11 @@
             <input id="btnEditName" onclick="editName()" type="submit" value="" class="btn btnEdit" />
 
             <h3>Мої теги</h3>
-            <div id="tegs"></div>
+            <div id="tags"></div>
 
 
             <h3>Про мене</h3>
-            <span id="labelAboutMeEdit" style="display:;" class="profileUserData">
+            <span id="labelAboutMeEdit" style="display:;" class="">
                 <span value="" id="AboutMe">@(Model.About_me != null ? Model.About_me : "")</span>
             </span>
             <input id="inputAboutMeEdit" value="@(Model.About_me != null ? Model.About_me : "")" style="display:none; " />
@@ -306,7 +306,7 @@
                 dataType: "text",
                 data: data,
                 success: function (d) {
-                    $('#tegs').replaceWith(d);
+                    $('#tags').replaceWith(d);
                 }
             });
         }
@@ -328,18 +328,18 @@
             dataType: "text",
             data: data,
             success: function (d) {
-                $('#tegs').replaceWith(d);
+                $('#tags').replaceWith(d);
             }
         });
     }
 
-    $("#tegs").ready(function () {
+    $("#tags").ready(function () {
 
         $.ajax({
             url: '@Url.Action("Tegs", "Edit")',
             type: "GET",
             success: function (d) {
-                $('#tegs').replaceWith(d);
+                $('#tags').replaceWith(d);
             }
         });
     });

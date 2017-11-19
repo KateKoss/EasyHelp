@@ -1,43 +1,48 @@
 ﻿@model MvcApplication1.Models.ProfileModel
 @{
-    ViewBag.Title = "Сторінка ментора ";
-    
+    ViewBag.Title = "Перегляд";
 }
-<h2>Ментор</h2>
-
-@using (Html.BeginForm())
+   
+@if (Model.isMentor)
 {
-    <div>
-
-
-        @if (Model.UserPhoto != null)
-        {
-            @Html.Raw("<img style='width:200px; height:180px;' src=\"data:image/jpeg;base64," + Convert.ToBase64String(Model.UserPhoto) + "\" />")
-        }
-        @if (Model.UserPhoto == null)
-        {
-            <img style='width:200px; height:180px;' src='../Images/userphoto2.jpg' alt="фото" />
-        }
-        <h2>Ім'я</h2>
-        @Html.LabelFor(model => model.Name, Model.Name != null ? Model.Name : "")
-        <div>
-            <p>
-                <h3>Tеги</h3>
-                @Html.LabelFor(model => model.Tegs, Model.Tegs != null ? Model.Tegs : "")
-            </p>
+    <div class="container notifyMentor">
+        <div class="row notifyMentorRow">
+                
+                <h3>Привіт, я Ментор!<img src="../Images/catgray24.png" /></h3>
+        
         </div>
-        <h3>Про мене</h3>
-        @Html.LabelFor(model => model.About_me, Model.About_me != null ? Model.About_me : "")<br />
-
     </div>
 }
-
-
-
-<div>
-    @Html.Partial("RateMentorPartial", Model)
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4">
+            
+            <div id="userphotoDiv">
+                <img id="userphotoImg" src="data:image/jpeg;base64, @Convert.ToBase64String(Model.UserPhoto)"/><br />                
+            </div>
+            
+        </div>
+        <div class="col-lg-8">
+            
+            <h3>@(Model.Name != null ? Model.Name : "")</h3>
+            
+            @if (Model.isMentor)
+            {
+                <div class="rating">
+                    @Html.Partial("RateMentorPartial", Model)
+                </div>
+            }
+            @Html.Partial("../Edit/Tegs", Model)
+            
+            
+            
+        </div>
+    </div>
 </div>
-<br />
+<div class="AboutMeBlock">
+    <span id="AboutMe">@(Model.About_me != null ? Model.About_me : "")</span>
+</div>    
+@*<br />
 @using (Html.BeginForm("ShowArticles", "Profile", FormMethod.Get))
 {
     <fieldset>
@@ -45,88 +50,17 @@
             <button>Показати публікації</button>
         </p>
     </fieldset>
-}
+}*@
 <div>
+    <br/>
     @Html.ActionLink("Назад", "Index")
     @Html.ActionLink("Чат", "Index", "Chat")
 </div>
 
-@*@Html.DropDownListFor(model => model.SelectedTeg, Model.TegList, new { size = 1, style = "width:50px;" })*@
-<button>-></button>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    <style>
-        #reviewStars-input input:checked ~ label, #reviewStars-input label, #reviewStars-input label:hover, #reviewStars-input label:hover ~ label {
-            background: url('http://positivecrash.com/wp-content/uploads/ico-s71a7fdede6.png') no-repeat;
-        }
-
-        #reviewStars-input {
-  
-            /*fix floating problems*/
-            overflow: hidden;
-            *zoom: 1;
-            /*end of fix floating problems*/
-  
-            position: relative;
-            float: left;
-        }
-
-        #reviewStars-input input {
-            filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
-            opacity: 0;
-  
-            width: 43px;
-            height: 40px;
-  
-            position: absolute;
-            top: 0;
-            z-index: 0;
-        }
-
-        #reviewStars-input input:checked ~ label {
-            background-position: 0 -40px;
-            height: 40px;
-            width: 43px;
-        }
-
-        #reviewStars-input label {
-            background-position: 0 0;
-            height: 40px;
-            width: 43px;
-            float: right;
-            cursor: pointer;
-            margin-right: 10px;
-  
-            position: relative;
-            z-index: 1;
-        }
-
-        #reviewStars-input label:hover, #reviewStars-input label:hover ~ label {
-            background-position: 0 -40px;
-            height: 40px;
-            width: 43px;
-        }
-
-        #reviewStars-input #star-0 {
-            left: 0px;
-        }
-        #reviewStars-input #star-1 {
-            left: 53px;
-        }
-        #reviewStars-input #star-2 {
-            left: 106px;
-        }
-        #reviewStars-input #star-3 {
-            left: 159px;
-        }
-        #reviewStars-input #star-4 {
-            left: 212px;
-        }
-        #reviewStars-input #star-5 {
-            left: 265px;
-        }
-    </style>
-
+    
     <script type="text/javascript">
         $("input[type=radio]").on("click", function () {
 
@@ -163,8 +97,15 @@
             return vars;
         }
 
-</script>
+        $("#tags").ready(function () {
+            
+            $('.removeTag').hide();
+            $('#btnEditTeg').hide();
+            
+        });
 
-
+    </script>
+    @Styles.Render("~/Content/Profile.css")
+    @Styles.Render("~/Content/UserPreview.css")
 
 }

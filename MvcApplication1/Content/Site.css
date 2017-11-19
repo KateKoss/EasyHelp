@@ -4,7 +4,7 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans);
 body
 {
-font-family: 'Open Sans', sans-serif;
+    font-family: 'Khula', sans-serif;
 }
 .chat_box .chat_message_wrapper ul.chat_message > li + li {
     margin-top: 4px;
@@ -19,7 +19,7 @@ a:focus {
 .popup-head-left.pull-left h1 {
     color: #fff;
     float: left;
-    font-family: oswald;
+    font-family: 'Khula', sans-serif;
     font-size: 18px;
     margin: 2px 0 0 5px;
    
@@ -70,7 +70,7 @@ a:focus {
 }
 .gurdeepoushan .dropdown-menu li a {
     border-radius: 7px;
-    font-family: oswald;
+    font-family: 'Khula', sans-serif;
     padding: 3px;
    transition: all 0.3s ease-in-out 0s;
 }
@@ -291,12 +291,7 @@ img {
 }
 
 
-#userphotoImg{
-    width: 275px;
-    height: 275px;
-    margin-bottom: 20px;
-    border: 1px solid lightgray;
-}
+
 
 
 .file-label {
@@ -442,7 +437,7 @@ body {
     border-top: solid 10px #dc3545;
     color: #333;
     font-size: .85em;
-    font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
+    font-family: 'Khula', sans-serif;
     margin: 0;
     padding: 0;
 }
@@ -563,7 +558,7 @@ footer {
 ----------------------------------------------------------*/
 .site-title {
     color: #c8c8c8;
-    font-family: Rockwell, Consolas, "Courier New", Courier, monospace;
+    font-family: 'Khula', sans-serif;
     font-size: 2.3em;
     margin: 0;
 }
@@ -1206,7 +1201,7 @@ aside {
     position: fixed;
     right: 70px;
     z-index: 4;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Khula', sans-serif;
 }
 
 .youHaveNewMessages{

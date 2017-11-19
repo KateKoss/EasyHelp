@@ -63,7 +63,9 @@
     background-color: #d9534f;
     padding: 0.45em 0.7em;
 }
-
+#reviewStars-input{
+    margin-top: 20px;
+}
  .removeTag{
     cursor: pointer;
     background-color: #a94442;
@@ -73,4 +75,17 @@
  .findMentorBlock{
      margin: 14px; 
      width: 85%; 
+ }
+ #userphotoImg{
+    width: 255px;
+    height: 255px;
+    margin-bottom: 20px;
+    border-radius: 100%;
+    border: 1px solid lightgray;
+
+}
+
+ .AboutMeBlock{
+     font-family: 'Khula', sans-serif;
+     font-size: 17px;
  }

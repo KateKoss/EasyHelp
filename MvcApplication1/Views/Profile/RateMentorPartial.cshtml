@@ -1,28 +1,21 @@
 ﻿@model MvcApplication1.Models.ProfileModel
 
 
-@*@using (Html.BeginForm("SetMentorRate", "Profile", FormMethod.Post))*@
+<div id="reviewStars-input">
+    <input id="star-4" type="radio" name="reviewStars" />
+    <label title="gorgeous" for="star-4"></label>
 
-    <div>
+    <input id="star-3" type="radio" name="reviewStars" />
+    <label title="good" for="star-3"></label>
 
-        <h3>Оцінка користувача</h3> 
+    <input id="star-2" type="radio" name="reviewStars" />
+    <label title="regular" for="star-2"></label>
 
+    <input id="star-1" type="radio" name="reviewStars" />
+    <label title="poor" for="star-1"></label>
 
-        <div id="reviewStars-input">
-            <input id="star-4" type="radio" name="reviewStars" />
-            <label title="gorgeous" for="star-4"></label>
+    <input id="star-0" type="radio" name="reviewStars" />
+    <label title="bad" for="star-0"></label>
+</div>
 
-            <input id="star-3" type="radio" name="reviewStars" />
-            <label title="good" for="star-3"></label>
-
-            <input id="star-2" type="radio" name="reviewStars" />
-            <label title="regular" for="star-2"></label>
-
-            <input id="star-1" type="radio" name="reviewStars" />
-            <label title="poor" for="star-1"></label>
-
-            <input id="star-0" type="radio" name="reviewStars" />
-            <label title="bad" for="star-0"></label>
-        </div>
-    </div>
 

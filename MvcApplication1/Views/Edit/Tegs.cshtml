@@ -1,5 +1,5 @@
 ﻿@model MvcApplication1.Models.ProfileModel
-<div id="tegs">
+<div id="tags">
     
     @foreach (var item in Model.tegs)
     {
@@ -7,7 +7,7 @@
         <span id="@item" class="tag badge badge-pill">
 
             <span id="userTegs" class="profileUserData">@item</span>
-            <span class="badge badge-pill removeTag" onclick="removeTeg(this)">x</span>
+            <span class="badge badge-pill removeTag" onclick="removeTeg(this)">&times;</span>
         </span>
 
     }

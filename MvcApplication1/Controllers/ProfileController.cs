@@ -44,16 +44,8 @@ namespace MvcApplication1.Controllers
                     var user = db.UserProfiles.SingleOrDefault(x => x.UserName == s.user);
                     if (user != null)
                     {
-                        //if (user.Role == "mentor")
-                        //{
-                        //    return RedirectToAction("MentorProfile");
-                        //}
                         var infoAboutUser = db.ProfileModel.SingleOrDefault(x => x.UserName == s.user);
-                        /////????????????????????
-                        //if (myModel.UserPhoto == null)
-                        //{
 
-                        //}
                         var list = new List<String>();
                         if (infoAboutUser.Tegs != null)
                         {
@@ -120,13 +112,15 @@ namespace MvcApplication1.Controllers
                             Rate = infoAboutUser.Rate,
                             searchMentor = model.searchMentor,
                             tegs = list,
-                            isMentor = infoAboutUser.isMentor
+                            isMentor = userFromDb.Role == "mentor" ? true : false
                         };
                     }
                     else model = new ProfileModel() { };
                 }
             }
-            return View("UserPreview", model);
+            if (model != null)
+                return View("UserPreview", model);
+            else return Content("error");
         }
 
         [HttpGet]
@@ -160,9 +154,16 @@ namespace MvcApplication1.Controllers
                                             if (ment != null)
                                                 if (ment.UserName != s.user)
                                                     if (ment.Tegs != null)
-                                                        if (ment.Tegs.Contains(currentTeg))
-                                                            if (!mentorListWithTegs.Any(x => x.UserName == ment.UserName))
-                                                                mentorListWithTegs.Add(ment);
+                                                    {
+                                                        var tags = ment.Tegs.Split('|');
+
+                                                        foreach (var tag in tags)
+                                                        {
+                                                            if(tag != "" && tag==currentTeg)
+                                                                if (!mentorListWithTegs.Any(x => x.UserName == ment.UserName))
+                                                                    mentorListWithTegs.Add(ment);
+                                                        }       
+                                                    }
                                         }
                                     }
                                 }
