@@ -300,6 +300,7 @@ namespace MvcApplication1.Controllers
                             {
                                 MentorRate += Convert.ToInt32(rate);
                             }
+                            data.rate = (Convert.ToInt32(data.rate) + 1).ToString();
                             MentorRate += Convert.ToInt32(data.rate);
                             ment.Rate = MentorRate / (rates.Length + 1);
                             ment.Rates += data.rate + "|";
