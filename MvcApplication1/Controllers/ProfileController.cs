@@ -61,7 +61,8 @@ namespace MvcApplication1.Controllers
 
                             foreach (var el in splitTegs)
                             {
-                                list.Add(el);
+                                if (el !="")
+                                    list.Add(el);
 
                             }
                         }
@@ -105,7 +106,8 @@ namespace MvcApplication1.Controllers
 
                             foreach (var el in splitTegs)
                             {
-                                list.Add(el);
+                                if(el != "")
+                                    list.Add(el);
 
                             }
                         }

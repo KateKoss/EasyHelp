@@ -11,8 +11,8 @@ namespace MvcApplication1.Controllers
 {
     public class EditController : Controller
     {
-        //
-        // GET: /Edit/
+        Singleton s = Singleton.Instance;
+
         public class Data
         {
             public string username { get; set; }
@@ -34,20 +34,25 @@ namespace MvcApplication1.Controllers
             using (CustomDbContext db = new CustomDbContext())
             {
 
-                string currentPerson;
-                if (Request.Cookies["UserId"] != null)
+                string currentPerson = s.user;
+                if (currentPerson != null && data.username != null)
                 {
-                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-
                     model = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
                     if (model!= null)
-                    {                        
+                    {
                         if (data.username != null)
+                        {
                             if (data.username != model.Name)
                             {
                                 model.Name = data.username;
                                 db.SaveChanges();
                             }
+                        }
+                        else
+                        {
+                            model.Name = "";
+                            db.SaveChanges();
+                        }
                     }
 
                 }
@@ -70,12 +75,9 @@ namespace MvcApplication1.Controllers
 
                 using (CustomDbContext db = new CustomDbContext())
                 {
-                    string currentPerson;
-                    if (Request.Cookies["UserId"] != null)
+                    string currentPerson = s.user;
+                    if (currentPerson != null)
                     {
-                        currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-                        //else currentPerson = "user1";
-
                         var user = db.UserProfiles.SingleOrDefault(x => x.UserName == currentPerson);
                         if (user != null)
                         {
@@ -102,23 +104,27 @@ namespace MvcApplication1.Controllers
 
             using (CustomDbContext db = new CustomDbContext())
             {
-
-                string currentPerson;
-                if (Request.Cookies["UserId"] != null)
-                {
-                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-
+                string currentPerson = s.user;
+                if (currentPerson != null)
+                {                    
                     model = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
                     if (model != null)
-                    {                        
+                    {
                         if (data.AboutMe != null)
+                        {
                             if (data.AboutMe != model.About_me)
                             {
                                 model.About_me = data.AboutMe;
                                 db.SaveChanges();
                             }
+                        }
+                        else
+                        {
+                            model.About_me = "";
+                            db.SaveChanges();
+                        }
                     }
-
+                    
                 }
             }
             return Content(model.About_me);
@@ -131,46 +137,50 @@ namespace MvcApplication1.Controllers
 
             using (CustomDbContext db = new CustomDbContext())
             {
-                string currentPerson;
-                if (Request.Cookies["UserId"] != null)
+                string currentPerson = s.user;
+                if (currentPerson != null)
                 {
-                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-
                     model = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
                     if (model != null)
                     {
-                        if (data.addTeg != null)
+                        if (model.Tegs != null && data.addTeg != null)
                         {
-                            if (data.addTeg.Contains(' '))
-                            {
-                                data.addTeg.Replace(' ', '_');
-                            }
-                            //добавить проверку !!!!!!!!!потому что может быть такое что данный тег будет являтся подстрокой ууже сущестующего, и в таком случае его все ранво нужно добавить
-                            if (model.Tegs != null)
-                            {
-                                if (!model.Tegs.Contains(data.addTeg))
+                            bool tagExists = false;
+                            var tags = model.Tegs.Split('|');
+                            foreach (var tag in tags)
+	                        {
+		                        if (tag == data.addTeg && tag !="")
                                 {
-                                    string tegs = model.Tegs;
-                                    model.Tegs = tegs + '|' + data.addTeg;
-                                    db.SaveChanges();
+                                    tagExists = true;
+                                    break;
+                                }                                       
+                                    
+	                        }
 
-                                }
+                            if (!tagExists)
+                            {
+                                model.Tegs += data.addTeg + '|';
+                                db.SaveChanges();
+                            }     
+                        }
+                        if ((model.Tegs == null || model.Tegs == "") && data.addTeg != null)
+                        {
+                            model.Tegs += data.addTeg + '|';
+                            db.SaveChanges();
+                            model.tegs.Add(data.addTeg);
+                        } 
+                        else
+                        {
+                            var splitTegs = model.Tegs.Split('|');
+                            foreach (var el in splitTegs)
+                            {
+                                if (el != "")
+                                    model.tegs.Add(el);
                             }
                         }
-
-                        var splitTegs = model.Tegs.Split('|');
-                        foreach (var el in splitTegs)
-                        {
-                            model.tegs.Add(el);
-                        }
-                           
                     }
-
                 }
-            }
-            
-
-           
+            }        
 
             return PartialView(model);
         }
@@ -183,11 +193,9 @@ namespace MvcApplication1.Controllers
 
             using (CustomDbContext db = new CustomDbContext())
             {
-                string currentPerson;
-                if (Request.Cookies["UserId"] != null)
+                string currentPerson = s.user;
+                if (currentPerson != null)
                 {
-                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-
                     model = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
                     if (model != null)
                     {
@@ -196,7 +204,8 @@ namespace MvcApplication1.Controllers
                             var splitTegs = model.Tegs.Split('|');
                             foreach (var el in splitTegs)
                             {
-                                model.tegs.Add(el);
+                                if (el != "")
+                                    model.tegs.Add(el);
                             }
                         }
 
@@ -214,45 +223,40 @@ namespace MvcApplication1.Controllers
 
             using (CustomDbContext db = new CustomDbContext())
             {
-                string currentPerson;
-                if (Request.Cookies["UserId"] != null)
+                string currentPerson = s.user;
+                if (currentPerson != null && data.removeTeg != null)
                 {
-                    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-
                     model = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson);
                     if (model != null)
                     {
-                        if (data.removeTeg != null)
+                        if (model.Tegs != null)
                         {
-                            if (model.Tegs.Contains('|' + data.removeTeg + '|'))
+                            var tags = model.Tegs.Split('|');
+
+                            for(int i=0; i<tags.Length-1; i++)
                             {
-                                string tegs = model.Tegs;
-                                model.Tegs = tegs.Replace('|' + data.removeTeg + '|', " ");
-                                db.SaveChanges();
+                                if (tags[i]==data.removeTeg && tags[i] != "" && data.removeTeg !="")
+                                {
+                                    Array.Clear(tags, i, 1);
+                                }
                             }
-                            else if (model.Tegs.Contains('|' + data.removeTeg))
+                            model.Tegs = "";
+                            for (int i = 0; i < tags.Length - 1; i++)
                             {
-                                string tegs = model.Tegs;
-                                model.Tegs = tegs.Replace('|' + data.removeTeg, " ");
-                                db.SaveChanges();
+                                if (tags[i]!= null)
+                                    model.Tegs += tags[i]+'|';
                             }
-                            else if (model.Tegs.Contains(data.removeTeg + '|'))
+                            
+                            db.SaveChanges();      
+
+                            var splitTegs = model.Tegs.Split('|');
+                            foreach (var el in splitTegs)
                             {
-                                string tegs = model.Tegs;
-                                model.Tegs = tegs.Replace(data.removeTeg + '|', " ");
-                                db.SaveChanges();
+                                if (el != "")
+                                    model.tegs.Add(el);
                             }
                         }
-
-                        var splitTegs = model.Tegs.Split('|');
-                        foreach (var el in splitTegs)
-                        {
-                            model.tegs.Add(el);
-                        }
-                        
-
                     }
-
                 }
             }
 
