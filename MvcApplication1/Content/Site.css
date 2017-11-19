@@ -773,3 +773,8 @@ tr.pager td {
             margin: 0;
         }
 }
+
+textarea#inputArticleText {
+    resize: vertical;
+    width: 100%;
+}

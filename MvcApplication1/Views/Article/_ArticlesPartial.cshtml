@@ -2,24 +2,32 @@
 @foreach (var item in Model)
 {
     <div class="card">
+        
         <div class="card-body">
-            <h4 class="card-title">@item.articleTitle</h4>
-            @*<h6 class="card-subtitle mb-2 text-muted">
-            @if (item.SelectedTeg != null)
-            {
-                foreach (var tag in item.SelectedTeg.ToList())
-                {
-                    @tag;
-                }
-            }</h6>*@
+            <h4 class="card-title">@item.articleTitle
+                <button type="button" class="close" articleId="@item.articleID" onclick="location.href='@Url.Action("DeleteArticle", "Article")'">&times;</button></h4>
+            <h6 class="card-subtitle mb-2 text-muted">@item.tagList</h6>
             <p class="card-text">@item.articleText</p>
-            @*@if(item.isPublished )*@
-            <button type="button" class="btn btn-info btn-md">Редагувати</button>
-        </div>
+            
+            <button type="button" class="btn btn-info btn-md">Переглянути</button>
+            @if (!item.isPublished)
+            {
+                @*@Html.BeginForm("PublishArticle", "Article",)*@
+                @*@Html.ActionLink("Опубліковані", "PublishArticle", "Article", new { articleId = item.articleID }, new { @class = "btn btn-info btn-md", @type = "button" })*@
+                @Ajax.ActionLink("Опубліковані", "PublishArticle", "Article", new { articleId = item.articleID }, new AjaxOptions { UpdateTargetId = "articles" }, new { @class = "btn btn-info btn-md", @type = "button" })
+                using (Ajax.BeginForm("PublishArticle", "Article", new AjaxOptions { UpdateTargetId = "articles" }))
+                {
+                    <button class="btn btn-info btn-md" type="button" articleId="@item.articleID">Опублікувати</button>
+                }
+                @*<button class="btn btn-info btn-md" type="button" articleId="@item.articleID" onclick="location.href='@Url.Action("PublishArticle","Article")'">Опублікувати</button>*@
+
+            }
+</div>
         <div class="card-footer text-muted">
-            2 days ago
+            <p>Дата створення: @item.dateOfCreation</p>
         </div>
     </div>
+    <br>
 }
 @*<table class="table">
     <tr>

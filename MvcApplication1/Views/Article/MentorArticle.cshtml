@@ -11,16 +11,25 @@
     </ul>
 </nav>
 
-<button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#createArticleModal">Створити статтю</button>
+<div class="card text-center">
+    <img class="card-img-top" src="../Images/articlePhoto.jpg" alt="Card image cap">
+    <div class="card-body">
+        <h4 class="card-title">Створіть власну статтю</h4>
+        <p class="card-text">За допомогою статті ви можете продемонструвати свою досвідченість.</p>
+        <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#createArticleModal">Створити статтю</button>
+    </div>
+</div>
+
 <!-- Modal -->
-<div id="createArticleModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+<div id="createArticleModal" class="modal fade" role="dialog" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
 
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">Створення статті</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Створення статті</h4>
+                
             </div>
 
             <div class="modal-body">
@@ -40,7 +49,7 @@
 
                 <h4 id="textLabel">Текст статті</h4>
                 <p>
-                    @Html.TextArea("inputArticleText", null, new { @style = "resize: vertical" })
+                    @Html.TextArea("inputArticleText", null, null@*new { @style = "resize: vertical" }*@)
                     @*<textarea required id="inputArticleText" rows="10" cols="45"></textarea>*@
                     <div id="errArticleText" class="alert alert-danger" role="alert" style="display:none">Введіть текст статті.</div>
                 </p>
@@ -65,21 +74,6 @@
     </li>
 </ul>
 
-<div class="card text-center">
-    <div class="card-header">
-        Featured
-    </div>
-    <div class="card-body">
-        <h4 class="card-title">Special title treatment</h4>
-        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-    </div>
-    <div class="card-footer text-muted">
-        2 days ago
-    </div>
-</div>
-
-
 <div id="articles">
     @Html.Partial("_ArticlesPartial", Model)
 </div>
@@ -89,7 +83,6 @@
 </div>
 
 @section Scripts {
-    @Scripts.Render("~/scripts/bootstrap.js")
     <script type="text/javascript">
         var tagList = [];
         var k = 0;
@@ -97,14 +90,13 @@
             $('#inputTags').toggle();
             if (k % 2 != 0) {
                 if ($('#inputTags').val() != "") {
-                    $('#conteinerForTags').append('<span id="tag' + k + '" class="badge badge-success">' + $('#inputTags').val() + '<span class="badge badge-pill badge-secondary removeTeg" onclick="removeTag(this)" style=" color:dimgray; background-color:lightgray;">x</span></span>');
+                    $('#conteinerForTags').append('<span id="tag' + k + '" class="badge badge-success">' + $('#inputTags').val() + '<span class="badge badge-pill badge-secondary removeTeg" onclick="removeTag(this)" style=" color:dimgray; background-color:lightgray;">&times;</span></span>');
                     tagList.push($('#inputTags').val());
                     $('#inputTags').val("");
                 }
             }
             k++;
         });
-
         $("#tags").ready(function () {
             $('#inputTags').hide();
         });
@@ -135,7 +127,9 @@
                 document.getElementById('errArticleText').style.display = 'none';
         };
         $('#closeButton').click(function () { closeInstruction() });
-        $('#addToDraftButton').click(function () {
+        $('#addToDraftButton').click(function () { checkAndSendToController(false) });//сохранить статью в черновики
+        $('#publishButton').click(function () { checkAndSendToController(true) });//сохранить статью как опубликованую
+        function checkAndSendToController(isPublish) {
             if ($('#inputArticleTitle').val() != "" && $('#inputArticleText').val() != "") {
                 var articTitle = $('#inputArticleTitle').val();
                 var articText = $('#inputArticleText').val();
@@ -143,11 +137,12 @@
                 var articleData = {
                     inputArticleTitle: articTitle,
                     inputArticleText: articText,
+                    isPublished: isPublish,
                     tagList: tagList
                 };
                 $.ajax({ //returns  jQuery XMLHttpRequest (jqXHR) object
                     type: 'POST',
-                    url: '@Url.Action("SaveArticleToDraft", "Article")',
+                    url: '@Url.Action("SaveArticle", "Article")',
                     dataType: "text",
                     data: articleData,
                     success: function (d) {
@@ -169,7 +164,7 @@
                 if (elem.style.display == 'none')
                     elem.style.display = 'block';
             }
-        });
+        }
     </script>
 }
 

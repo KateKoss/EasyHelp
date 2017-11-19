@@ -78,7 +78,7 @@
 </ul>
 
 <div id="requests">
-    @Html.Partial("_RequestsPartial", Model)
+    @*@Html.Partial("_RequestsPartial", Model)*@
 </div>
 
 @section Scripts {
@@ -90,7 +90,7 @@
             $('#inputTags').toggle();
             if (k % 2 != 0) {
                 if ($('#inputTags').val() != "") {
-                    $('#conteinerForTags').append('<span id="tag' + k + '" class="badge badge-success">' + $('#inputTags').val() + '<span class="badge badge-pill badge-secondary removeTeg" onclick="removeTag(this)" style=" color:dimgray; background-color:lightgray;">x</span></span>');
+                    $('#conteinerForTags').append('<span id="tag' + k + '" class="badge badge-success">' + $('#inputTags').val() + '<span class="badge badge-pill badge-secondary removeTeg" onclick="removeTag(this)" style=" color:dimgray; background-color:lightgray;">&times;</span></span>');
                     tagList.push($('#inputTags').val());
                     $('#inputTags').val("");
                 }

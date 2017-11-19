@@ -8,10 +8,20 @@
         <title>@ViewBag.Title - EasyHelp</title>
         <link href="~/Iconsmind-Outline-Handshake.ico" rel="shortcut icon" type="image/x-icon" />
         <meta name="viewport" content="width=device-width" />
-        <script src="~/Scripts/jquery-3.1.1.js"></script>
-        <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+        @Scripts.Render("~/Scripts/jquery-3.2.1.min.js")
+        @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.js")
+        
+        @*<script src="~/Scripts/jquery-3.1.1.js"></script>
+        <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@    
+        @*@Styles.Render("~/Scripts/popper.js")*@
+
         @Styles.Render("~/Content/css")
+
         @Scripts.Render("~/bundles/modernizr")
+        @Scripts.Render("~/Scripts/bootstrap.bundle.min.js")
+        @*<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>*@
+        @*@Scripts.Render("~/Scripts/bootstrap.min.js")*@
+        
     </head>
     <body>
         <header>
@@ -48,7 +58,7 @@
             </div>
         </footer>
 
-        @Scripts.Render("~/bundles/jquery")
+        @*@Scripts.Render("~/bundles/jquery")*@
         @RenderSection("scripts", required: false)
     </body>
 </html>

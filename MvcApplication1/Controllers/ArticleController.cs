@@ -13,6 +13,7 @@ namespace MvcApplication1.Controllers
     {
         public string inputArticleTitle { get; set; }
         public string inputArticleText { get; set; }
+        public bool isPublished { get; set; }
         public string[] tagList { get; set; }
     }
 
@@ -54,9 +55,11 @@ namespace MvcApplication1.Controllers
 
         public void LoadArtcileIntoForm(ArticleModel model, string currentPerson, bool onlyPublished)
         {
-            FacadePattern.Facade f = new FacadePattern.Facade(model, currentPerson, onlyPublished);
-            f.workWithSelectedTeg();
-            f.workWithDb();
+            //FacadePattern.Facade f = new FacadePattern.Facade(model, currentPerson, onlyPublished);
+            //f.workWithSelectedTeg();
+            //f.workWithDb();
+
+
             //model.articleNames = getArticle(currentPerson, onlyPublished).articleNames;
             //var str = "";
             //if (model.articleName != null)
@@ -81,18 +84,19 @@ namespace MvcApplication1.Controllers
         }
 
         [HttpPost]
-        public ActionResult SaveArticleToDraft(ArticleData articleData)//ArticleModel model
+        public ActionResult SaveArticle(ArticleData articleData)//ArticleModel model
         {
             //Decorator.SavaArticle d = new Decorator.SaveToDraft(new Decorator.ImplementSave());
             //d.saveToDb(model);
             //Singleton s = Singleton.Instance;
             string currentPerson;// = s.user;
+            string tegString = "";
             IEnumerable<string> selectedTegs = articleData.tagList;
             foreach (var item in selectedTegs)
             {
+                tegString += item + "|";
                 Console.WriteLine(item);
             }
-
             if (Request.Cookies["UserId"] != null) //если данные о пользователе записаны в куки
             {
                 if (articleData.inputArticleTitle != "" && articleData.inputArticleText != "" && articleData.tagList != null)
@@ -118,158 +122,42 @@ namespace MvcApplication1.Controllers
                             createdBy = currentPerson,
                             articleTitle = articleData.inputArticleTitle,
                             articleText = articleData.inputArticleText,
-                            SelectedTeg = articleData.tagList,
-                            isPublished = false
+                            tagList = tegString,
+                            dateOfCreation = DateTime.Now,
+                            dateOfLastEditing = DateTime.Now,
+                            isPublished = articleData.isPublished,
                         });
                         db.SaveChanges();
                     }
                 }
             }
             return RedirectToAction("Index");
-            //if (model.articleTitle != null)
-            //    using (CustomDbContext db = new CustomDbContext())
-            //    {
-            //        string articleid;
-            //        string currentPerson;
-            //        if (Request.Cookies["UserId"] != null)
-            //            currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-            //        else currentPerson = "user1";
-
-            //        //чи створював користувач вже статті
-            //        var myModel = db.ArticleModel.FirstOrDefault(x => x.createdBy == currentPerson);
-            //        if (myModel == null)
-            //        {
-            //            articleid = currentPerson + '_' + 1;
-            //            //якщо ні, то id статті 1, бо ця стаття в нього перша
-            //            db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson, articleTitle = model.articleTitle });
-            //            if (myModel != null)//якщо є
-            //            {
-            //                myModel.articleTitle = model.articleTitle;
-            //                myModel.articleText = model.articleText;
-            //                myModel.isPublished = false;
-            //            }
-            //            db.SaveChanges();
-
-            //        }
-            //        else
-            //            //якщо користувач обрав існуючу статтю для редагування
-            //            if (model.articleID != null)
-            //            {
-            //                //articleid = currentPerson + "_" + model.articleID;
-            //                //перевіряємо чи власне є ця стаття у бд
-            //                myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == model.articleID);
-            //                if (myModel != null)//якщо є
-            //                {
-            //                    myModel.articleTitle = model.articleTitle;
-            //                    myModel.articleText = model.articleText;
-            //                    myModel.isPublished = false;
-            //                    db.SaveChanges();
-            //                }
-            //                else
-            //                {
-
-            //                    db.ArticleModel.Add(new ArticleModel { articleID = model.articleID, createdBy = currentPerson, articleTitle = model.articleTitle });
-            //                    myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == model.articleID);
-            //                    if (myModel != null)
-            //                    {
-            //                        myModel.articleTitle = model.articleTitle;
-            //                        myModel.articleText = model.articleText;
-            //                        myModel.isPublished = false;
-            //                    }
-            //                    db.SaveChanges();
-            //                }
-            //            }
-            //            else //якщо користувач створює нову статтю, проте в нього були вже створені статті
-            //            {
-            //                var articleCount = db.ArticleModel.Count(x => x.createdBy == currentPerson);
-            //                articleid = currentPerson + '_' + (articleCount + 1);
-            //                db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson, articleTitle = model.articleTitle });
-            //                myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleid);
-            //                if (myModel != null)
-            //                {
-            //                    myModel.articleTitle = model.articleTitle;
-            //                    myModel.articleText = model.articleText;
-            //                    myModel.isPublished = false;
-            //                }
-            //                db.SaveChanges();
-            //            }
-            //    }
         }
 
-        [HttpPost]
-        public ActionResult PublishArticle(ArticleModel model)
+        
+        public ActionResult PublishArticle(string articleId)//ArticleModel model
         {
-            Decorator.SavaArticle d = new Decorator.Publish(new Decorator.ImplementSave());
-            d.saveToDb(model);
-            //if (model.articleTitle != null)
-            //    using (CustomDbContext db = new CustomDbContext())
-            //    {
-            //        string articleid;
-            //        string currentPerson;
-            //        if (Request.Cookies["UserId"] != null)
-            //            currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-            //        else currentPerson = "user1";
+            //Decorator.SavaArticle d = new Decorator.Publish(new Decorator.ImplementSave());
+            //d.saveToDb(model);
+            using (CustomDbContext db = new CustomDbContext())
+            {
+                var myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleId);
+                myModel.isPublished = true;
+                db.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
 
-            //        //чи створював користувач вже статті
-            //        var myModel = db.ArticleModel.FirstOrDefault(x => x.createdBy == currentPerson);
-            //        if (myModel == null)
-            //        {
-            //            articleid = currentPerson + '_' + 1;
-            //            //якщо ні, то id статті 1, бо ця стаття в нього перша
-            //            db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson, articleTitle = model.articleTitle });
-            //            myModel = db.ArticleModel.SingleOrDefault(x => x.articleID == articleid);
-            //            if (myModel != null)
-            //            {
-            //                myModel.articleTitle = model.articleTitle;
-            //                myModel.articleText = model.articleText;
-            //                myModel.isPublished = true;
-            //            }
-
-            //        }
-            //        else
-            //            //якщо користувач обрав існуючу статтю для редагування
-            //            if (model.articleID != null)
-            //            {
-            //                //articleid = currentPerson + "_" + model.articleID;
-            //                //перевіряємо чи власне є ця стаття у бд
-            //                myModel = db.ArticleModel.SingleOrDefault(x => x.articleID == model.articleID);
-            //                if (myModel != null)//якщо є
-            //                {
-            //                    myModel.articleTitle = model.articleTitle;
-            //                    myModel.articleText = model.articleText;
-            //                    myModel.isPublished = true;
-            //                }
-            //                else
-            //                {
-            //                    db.ArticleModel.Add(new ArticleModel { articleID = model.articleID, createdBy = currentPerson, articleTitle = model.articleTitle });
-            //                    myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == model.articleID);
-            //                    if (myModel != null)
-            //                    {
-            //                        myModel.articleTitle = model.articleTitle;
-            //                        myModel.articleText = model.articleText;
-            //                        myModel.isPublished = true;
-            //                    }
-
-            //                }
-            //            }
-            //            else //якщо користувач створює нову статтю, проте в нього були вже створені статті
-            //            {
-            //                var articleCount = db.ArticleModel.Count(x => x.createdBy == currentPerson);
-            //                articleid = currentPerson + '_' + (articleCount + 1);
-            //                db.ArticleModel.Add(new ArticleModel { articleID = articleid, createdBy = currentPerson, articleTitle = model.articleTitle });
-            //                myModel = db.ArticleModel.FirstOrDefault(x => x.articleID == articleid);
-            //                if (myModel != null)
-            //                {
-            //                    myModel.articleTitle = model.articleTitle;
-            //                    myModel.articleText = model.articleText;
-            //                    myModel.isPublished = true;
-            //                }
-
-            //            }
-
-            //        db.SaveChanges();
-            //    }
-            return RedirectToAction("MentorArticle");
+        
+        public ActionResult DeleteArticle(string articleId)
+        {
+            using (CustomDbContext db = new CustomDbContext())
+            {
+                var modelToDelete = db.ArticleModel.FirstOrDefault(x => x.articleID == articleId);
+                db.ArticleModel.Remove(modelToDelete);
+                db.SaveChanges();
+            }
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
