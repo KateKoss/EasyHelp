@@ -298,10 +298,7 @@ img {
     border: 1px solid lightgray;
 }
 
-.teg {
-    background-color: #adb;
-    padding: 0.45em 0.7em;
-}
+
 .file-label {
     -webkit-box-align: stretch;
     -ms-flex-align: stretch;
@@ -425,12 +422,7 @@ html {
     margin: 0;
     padding: 0;
 }
-.removeTeg{
-    cursor: pointer;
-    background-color: #88998c;
-    /*color:dimgray; 
-    background-color:lightgray;*/
-}
+
 input.btnEdit {
   background: url("edit.png") no-repeat;
   /*background-size: cover;*/

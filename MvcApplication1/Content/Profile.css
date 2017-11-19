@@ -29,7 +29,7 @@
     /* display: table; */
     display: block;
     border-collapse: separate;
-        width: 60%;
+    
 
 }
 
@@ -59,3 +59,18 @@
 .input-group-addon, .input-group-btn, .input-group .form-control {
     display: block;
 }
+.tag {
+    background-color: #d9534f;
+    padding: 0.45em 0.7em;
+}
+
+ .removeTag{
+    cursor: pointer;
+    background-color: #a94442;
+    
+}
+
+ .findMentorBlock{
+     margin: 14px; 
+     width: 85%; 
+ }
