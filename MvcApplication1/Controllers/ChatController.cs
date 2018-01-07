@@ -147,7 +147,7 @@ namespace MvcApplication1.Controllers
             //    Response.StatusCode = 500;
             //    return Content(ex.Message);
             //}
-            return PartialView("ChatWebSocket");
+            return PartialView("ChatSmallBox");
         }
 
         /// <summary>

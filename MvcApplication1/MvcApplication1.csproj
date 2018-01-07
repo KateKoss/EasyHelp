@@ -379,6 +379,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <None Include="Scripts\jquery-1.9.1-vsdoc.js" />
+    <Content Include="Scripts\chatWebSockets.js" />
     <Content Include="Scripts\jquery-1.9.1.js" />
     <Content Include="Scripts\jquery-1.9.1.min.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
@@ -451,12 +452,10 @@
     <Content Include="Views\Requests\MentorRequests.cshtml" />
     <Content Include="Views\Requests\EditRequest.cshtml" />
     <Content Include="Views\Requests\RequestDetails.cshtml" />
-    <Content Include="Views\Profile\MentorProfile.cshtml" />
     <Content Include="Views\FindAssosiates\Assosiates.cshtml" />
     <Content Include="Views\FindAssosiates\FindAssosiates.cshtml" />
     <Content Include="Views\Edit\Tegs.cshtml" />
-    <Content Include="Views\Chat\ChatWebSocket.cshtml" />
-    <Content Include="Views\Chat\ChatFullScreen1.cshtml" />
+    <Content Include="Views\Chat\ChatSmallBox.cshtml" />
     <Content Include="Views\Chat\ChatFullScreen.cshtml" />
     <Content Include="Views\Profile\UserPreview.cshtml" />
   </ItemGroup>

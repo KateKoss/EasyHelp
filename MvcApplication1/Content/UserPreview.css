@@ -83,3 +83,8 @@
 .notifyMentorRow{
     margin-left: 25px; 
 }
+
+.closeMentorNotif{
+    margin: 15px;
+    font-size: 25px;
+}

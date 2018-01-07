@@ -302,7 +302,7 @@ namespace MvcApplication1.Controllers
                             }
                             data.rate = (Convert.ToInt32(data.rate) + 1).ToString();
                             MentorRate += Convert.ToInt32(data.rate);
-                            ment.Rate = MentorRate / (rates.Length + 1);
+                            ment.Rate = MentorRate / (rates.Length - 1);
                             ment.Rates += data.rate + "|";
                             ment.WhoRates += currentMent + "|";
                         }
@@ -310,7 +310,7 @@ namespace MvcApplication1.Controllers
                     db.SaveChanges();                    
                 }           
             }
-            return Content(ment.Rate.ToString());
+            return Content((ment.Rate-1).ToString());
         }           
 
     }
