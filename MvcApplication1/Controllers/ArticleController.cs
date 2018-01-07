@@ -26,6 +26,16 @@ namespace MvcApplication1.Controllers
             {
                 listOfArticles.AddRange(db.ArticleModel.Where(x => x.createdBy == currentPerson && x.isPublished == isPublsihed));
             }
+            
+            foreach(ArticleModel article in listOfArticles)
+            {
+                if (article.tagList != "" && article.tagList != null)
+                {
+                    article.chosenTags = new List<String>();
+                    article.chosenTags.AddRange(article.tagList.Split('|'));
+                }
+            }
+            
             return listOfArticles;
         }
 
@@ -103,9 +113,9 @@ namespace MvcApplication1.Controllers
                 {
                     using (CustomDbContext db = new CustomDbContext())
                     {
-
                         string articleid;
                         currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                        
                         var myModel = db.ArticleModel.FirstOrDefault(x => x.createdBy == currentPerson);//чи створював користувач вже статті
                         if (myModel == null) //если статтей у пользователя не было
                         {
@@ -151,12 +161,12 @@ namespace MvcApplication1.Controllers
         
         public ActionResult DeleteArticle(string articleId)
         {
-            using (CustomDbContext db = new CustomDbContext())
-            {
-                var modelToDelete = db.ArticleModel.FirstOrDefault(x => x.articleID == articleId);
-                db.ArticleModel.Remove(modelToDelete);
-                db.SaveChanges();
-            }
+            //using (CustomDbContext db = new CustomDbContext())
+            //{
+            //    var modelToDelete = db.ArticleModel.FirstOrDefault(x => x.articleID == articleId);
+            //    db.ArticleModel.Remove(modelToDelete);
+            //    db.SaveChanges();
+            //}
             return RedirectToAction("Index");
         }
 

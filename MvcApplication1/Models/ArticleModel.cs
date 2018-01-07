@@ -26,6 +26,7 @@ namespace MvcApplication1.Models
         public string tagList { get; set; }
         public string whoLikes { get; set; }
         public string whoDislikes { get; set; }
+        public List<String> chosenTags { get; set; }
         public IEnumerable<string> SelectedTeg { get; set; }
         public IEnumerable<SelectListItem> TegList { get; set; }
         //нужна дата создания
