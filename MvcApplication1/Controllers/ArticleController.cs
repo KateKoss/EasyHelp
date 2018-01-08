@@ -31,12 +31,26 @@ namespace MvcApplication1.Controllers
             {
                 if (article.tagList != "" && article.tagList != null)
                 {
-                    article.chosenTags = new List<String>();
+                    article.chosenTags = new List<String>();            //для отображения тегов на страничке
                     article.chosenTags.AddRange(article.tagList.Split('|'));
                 }
-            }
-            
+            }            
             return listOfArticles;
+        }
+
+        public ArticleModel getArticle(string currentPerson, string articleId)
+        {
+            ArticleModel article = new ArticleModel();
+            using (CustomDbContext db = new CustomDbContext())
+            {
+                article = db.ArticleModel.FirstOrDefault(x => x.createdBy == currentPerson && x.articleID == articleId);
+                if (article.tagList != null)
+                {
+                    article.chosenTags = new List<String>();            //для отображения тегов на страничке
+                    article.chosenTags.AddRange(article.tagList.Split('|'));
+                }                
+                return article;
+            }
         }
 
         // GET: Article
@@ -101,11 +115,14 @@ namespace MvcApplication1.Controllers
             //Singleton s = Singleton.Instance;
             string currentPerson;// = s.user;
             string tegString = "";
-            IEnumerable<string> selectedTegs = articleData.tagList;
-            foreach (var item in selectedTegs)
-            {
-                tegString += item + "|";
-                Console.WriteLine(item);
+            List<string> selectedTegs = articleData.tagList.ToList();
+            for (int i = 0; i < selectedTegs.Count; i++)
+            {                
+                if (i != selectedTegs.Count - 1)
+                {
+                    tegString += selectedTegs[i] + "|";
+                }
+                else tegString += selectedTegs[i];
             }
             if (Request.Cookies["UserId"] != null) //если данные о пользователе записаны в куки
             {
@@ -115,29 +132,35 @@ namespace MvcApplication1.Controllers
                     {
                         string articleid;
                         currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-                        
-                        var myModel = db.ArticleModel.FirstOrDefault(x => x.createdBy == currentPerson);//чи створював користувач вже статті
-                        if (myModel == null) //если статтей у пользователя не было
+                        Random rnd = new Random();
+                        articleid = currentPerson + rnd.Next(0, 10).ToString();
+                        for (int i = 0; i < 3; i++)
                         {
-                            articleid = currentPerson + '_' + 1; //якщо ні, то id статті 1, бо ця стаття в нього перша
+                            articleid += rnd.Next(0, 10).ToString();
                         }
-                        else //якщо користувач створює нову статтю, проте в нього були вже створені статті
+                        var myModel = db.ArticleModel.FirstOrDefault(x => x.createdBy == currentPerson && x.articleID == articleid);//чи створював користувач вже статті
+                        if (myModel == null) //если у пользователя не было статтей c таким id
                         {
-                            var articleCount = db.ArticleModel.Count(x => x.createdBy == currentPerson);
-                            articleid = currentPerson + '_' + (articleCount + 1);
-                        }
-                        db.ArticleModel.Add(new ArticleModel
-                        {
-                            articleID = articleid,
-                            createdBy = currentPerson,
-                            articleTitle = articleData.inputArticleTitle,
-                            articleText = articleData.inputArticleText,
-                            tagList = tegString,
-                            dateOfCreation = DateTime.Now,
-                            dateOfLastEditing = DateTime.Now,
-                            isPublished = articleData.isPublished,
-                        });
-                        db.SaveChanges();
+                            db.ArticleModel.Add(new ArticleModel
+                            {
+                                articleID = articleid,
+                                createdBy = currentPerson,
+                                articleTitle = articleData.inputArticleTitle,
+                                articleText = articleData.inputArticleText,
+                                tagList = tegString,
+                                dateOfCreation = DateTime.Now,
+                                dateOfLastEditing = DateTime.Now,
+                                isPublished = articleData.isPublished,
+                                chosenTags = selectedTegs
+                            });
+                            try {
+                                db.SaveChanges();
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine("{0} Exception caught.", e);
+                            }
+                        }                        
                     }
                 }
             }
@@ -161,12 +184,12 @@ namespace MvcApplication1.Controllers
         
         public ActionResult DeleteArticle(string articleId)
         {
-            //using (CustomDbContext db = new CustomDbContext())
-            //{
-            //    var modelToDelete = db.ArticleModel.FirstOrDefault(x => x.articleID == articleId);
-            //    db.ArticleModel.Remove(modelToDelete);
-            //    db.SaveChanges();
-            //}
+            using (CustomDbContext db = new CustomDbContext())
+            {
+                var modelToDelete = db.ArticleModel.FirstOrDefault(x => x.articleID == articleId);
+                db.ArticleModel.Remove(modelToDelete);
+                db.SaveChanges();
+            }
             return RedirectToAction("Index");
         }
 
@@ -182,7 +205,7 @@ namespace MvcApplication1.Controllers
             if (Request.Cookies["UserId"] != null) //если данные о пользователе записаны в куки
             {
                 currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-                myModel = getArticles(currentPerson, false);
+                myModel = getArticles(currentPerson, isPublsihed);
                 if (Request.IsAjaxRequest())
                     return PartialView("_ArticlesPartial", myModel);
                 return View("MentorArticle", myModel);
@@ -213,44 +236,22 @@ namespace MvcApplication1.Controllers
             //    model.TegList = listSelectListItems;
             //    LikeDislike(model);
             //}
-
-
             //return View("ShowArticles", model);
         }
-        //public ActionResult ShowArticles()
-        //{
-        //    ArticleModel model;
-        //    string currentMent;
-        //    if (Request.Cookies["MentorId"] != null)
-        //        currentMent = Convert.ToString(Request.Cookies["MentorId"].Value);
-        //    else currentMent = "";
-        //    if (currentMent != "")
-        //    {
-        //        model = getArticles(currentMent, true);
 
-        //        List<SelectListItem> listSelectListItems = new List<SelectListItem>();
-        //        SelectListItem selectList = new SelectListItem()
-        //        {
-        //            Text = "Подобається",
-        //            Value = "1",
-        //            Selected = true
-
-        //        };
-        //        listSelectListItems.Add(selectList);
-        //        selectList = new SelectListItem()
-        //        {
-        //            Text = "Не подобається",
-        //            Value = "2"
-
-        //        };
-        //        listSelectListItems.Add(selectList);
-
-        //        model.TegList = listSelectListItems;
-        //    }
-        //    else
-        //        model = new ArticleModel() { };
-        //    return View("ShowArticles", model);
-        //}
+        [HttpGet]
+        public ActionResult ShowArticleDetails(string articleId)
+        {
+            string currentPerson;// = s.user;
+            ArticleModel myModel = null;
+            if (Request.Cookies["UserId"] != null) //если данные о пользователе записаны в куки
+            {
+                currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                myModel = getArticle(currentPerson, articleId);
+                return View("ArticlePreview", myModel);
+            }
+            return View("ArticlePreview", myModel);
+        }
 
         [HttpPost]
         public ActionResult EditArticle(ArticleModel model, ProfileModel p)

@@ -1,0 +1,55 @@
+﻿@model MvcApplication1.Models.ArticleModel
+
+@{
+    ViewBag.Title = "Стаття";
+}
+<div>
+    <h4>Стаття</h4>
+    <hr />
+    <dl class="dl-horizontal"></dl>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">
+                    @Model.articleTitle
+               </h4>
+            <div id="articleTags">
+                <h6 class="card-subtitle mb-2 text-muted">
+                    @if (Model.chosenTags != null)
+                    {
+                        foreach (var tag in Model.chosenTags)
+                        {
+                            <span class="badge badge-success"> @tag </span>
+                        }
+                    }
+                </h6>
+            </div>
+            <p class="card-text">@Model.articleText</p>
+        </div>
+        <div class="card-footer text-muted">
+            <p>Дата створення: @Model.dateOfCreation</p>
+        </div>
+    </div>
+    <br>
+    
+        @*<dt>
+            @Html.DisplayNameFor(model => model.whoLikes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.whoLikes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.whoDislikes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.whoDislikes)
+        </dd>*@
+
+    
+</div>
+@*<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.articleID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>*@
