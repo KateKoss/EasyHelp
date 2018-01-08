@@ -59,6 +59,7 @@ $('.md-user-image').attr('src', toUserImg);
 $('.md-user-image').attr('alt', toUser);
 $('.md-user-image').attr('title', toUser);
 $('.pull-left').find('#Name').text(toUser);
+$('#linkUser').attr('href', 'http://localhost:59521/Profile/UserPreview?user=' + toUser);
 
 var d = new Date();
 

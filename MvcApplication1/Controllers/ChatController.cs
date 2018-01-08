@@ -150,19 +150,19 @@ namespace MvcApplication1.Controllers
             return PartialView("ChatSmallBox");
         }
 
-        /// <summary>
-        /// Remove this user from the lobby and inform others that he logged off
-        /// </summary>
-        /// <param name="user"></param>
-        public void LogOffUser(ChatModel.ChatUser user)
-        {
-            chatModel.Users.Remove(user);
-            chatModel.ChatHistory.Add(new ChatModel.ChatMessage()
-            {
-                Message = "Користувач '" + user.NickName + "' вийшов.",
-                When = DateTime.Now
-            });
-        }
+        ///// <summary>
+        ///// Remove this user from the lobby and inform others that he logged off
+        ///// </summary>
+        ///// <param name="user"></param>
+        //public void LogOffUser(ChatModel.ChatUser user)
+        //{
+        //    chatModel.Users.Remove(user);
+        //    chatModel.ChatHistory.Add(new ChatModel.ChatMessage()
+        //    {
+        //        Message = "Користувач '" + user.NickName + "' вийшов.",
+        //        When = DateTime.Now
+        //    });
+        //}
 
         public ActionResult LoadChatHistory(ChatMessageModel data)
         {
@@ -193,6 +193,12 @@ namespace MvcApplication1.Controllers
         public ActionResult ChatFullScreen()
         {
             return View("ChatFullScreen");
+        }
+
+        //get list of people with who user has been cominicated
+        public ActionResult GetInterlocutorsList()
+        {
+            return PartialView("InterlocutorsList", new List<string>());
         }
     }
 }
