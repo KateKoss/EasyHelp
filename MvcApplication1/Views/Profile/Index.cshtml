@@ -11,7 +11,11 @@
 {
     <div class="row findMentorBlock">
         <div class="input-group">
-            <input type="text" class="form-control" aria-label="Text input with dropdown button">
+            <input type="text" class="form-control" aria-label="Text input with dropdown button" style="
+    border-radius: 10px;
+    border-color: #d9534f;
+    /* box-sizing: initial; */
+">
             <div class="input-group-btn">
                 <button type="button" class="btn btn-secondary" id="find">Знайти ментора</button>
                 <div class="dropdown-menu" id="dropdown-menu"></div>
@@ -81,8 +85,21 @@
     //$('#toUser').click(function () {
     //    toUser = this.text();
     //    console.log(toUser + this.text());
-    //});
-
+        //});
+    $(document).ready(function () {
+        $('li').removeClass('active');
+        $('.li-profile').addClass('active');
+        var position = $(".nav-tabs .active").position();
+        //console.log($(".nav-tabs .active"));
+        var width =  $(".nav-tabs .active").width();
+        $(".slider").css({ "left": +position.left, "width": width });
+        console.log('ready');
+    });
+    
+    
+    function setToUserImg(src) {
+        toUserImg = src;
+    }
 
     function removeClass() {
         $('#sidebar_secondary').removeClass('popup-box-on');
@@ -93,7 +110,7 @@
 
         toUser = $('#dropdown-menu').find('#toUser').text();
         userphotoImg = $('#userphotoImg').attr('src');
-        toUserImg = $('#dropdown-menu').find('.avatarList').attr('src');
+        setToUserImg($('#dropdown-menu').find('.avatarList').attr('src'));
         fromUser = getCookie("UserId");
         var data = {
             FromUser: fromUser,
@@ -187,6 +204,8 @@
         //console.log(userphotoImg);
 
     }
+
+
     //чат на всю сторынку
     $("#addClass").click(function () {
         alert("edc");
@@ -371,7 +390,7 @@
             $('#sidebar_secondary').removeClass('popup-box-on');
         });
 
-        $('#usersForChatLink').click(function () {
+        $('#interlocutorsList').click(function () {
 
             if (i % 2 > 0) {
                 //console.log("i");

@@ -7,7 +7,7 @@
             <img class="avatarList" src='../Images/userphoto2.jpg' alt="фото" />
             <span id="toUser">@Html.ActionLink(m.Name != null ? m.Name : m.UserName, "Profile/GetUserPreview", new { thisUserLoggedOn = "" }, new { href = "/Profile/UserPreview?user=" + m.UserName })</span>
 
-            <a id="addClass" onclick="addClass()"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></a>
+            <a id="addClass" onclick="addClass()"><i class="fa fa-commenting-o fa-2x" aria-hidden="true" style="color: #777;"></i></a>
         </div>
     }
 </div>

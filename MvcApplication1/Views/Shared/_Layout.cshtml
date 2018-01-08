@@ -13,6 +13,7 @@
         
         @Styles.Render("~/Content/font-awesome.css")
         @Scripts.Render("~/bundles/modernizr")
+        
         @Styles.Render("~/Content/css")
         
 
@@ -20,45 +21,33 @@
     <body>
         <header>
             <div class="content-wrapper">
-                <div class="float-left">
+                <div class="">
                     <p class="site-title">@Html.ActionLink("EasyHelp", "Index", "Home")</p>
                 </div>
-                <div class="float-right">
+                <div class="">
                     <section id="login">
                         @Html.Partial("_LoginPartial")
                     </section>
+                    
                     <nav>
-                        <ul id="menu">
-                            <li>@Html.ActionLink("Головна", "Index", "Home")</li>
-                            <li>@Html.ActionLink("Профіль", "Index", "Profile")</li>
-                            <li>@Html.ActionLink("Про нас", "About", "Home")</li>
-                            
-                            <li class="my1">@Html.ActionLink("Мої статті", "MyArticle", FormMethod.Get)</li>
+                        <ul class="nav nav-tabs" role="tablist">
+                            <div class="slider"></div>
+                            <li class="li-home active">@Html.ActionLink("Головна", "Index", "Home")</li>
+                            <li class="li-profile">@Html.ActionLink("Профіль", "Index", "Profile")</li>
+                            <li class="li-article">@Html.ActionLink("Мої статті", "MyArticle", FormMethod.Get)</li>
+                            <li class="li-request">@Html.ActionLink("Заявки", "LoadStudentRequests", "Requests")</li>
 
-                            <li>@Html.ActionLink("Заявки", "LoadStudentRequests", "Requests")</li> @*возможно тут нужно сделать проверку является ли пользователь ментрорм,
-        если да - вызывать LoadMentorRequests*@
-
-
-                            <li>
-                                <a id="usersForChatLink" class="btn btn-secondary dropdown-toggle" href="/Chat/ChatFullScreen" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Чат
-                                </a>
-                                @*<div class="dropdown show" >
-                                    <a id="usersForChatLink" class="btn btn-secondary dropdown-toggle" href="/Chat/ChatFullScreen" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Чат
-                                    </a>
-                                    <div id="usersForChat">
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                        </div>
-                                    </div>
-                                </div>*@
-                            </li>
-                            <li>@Html.ActionLink("Знайти однодумців", "Index", "FindAssosiates")</li>
-                        </ul>
+                            <div id="chat-menu-item">
+                                <div>
+                                    @Html.ActionLink("Чат", "ChatFullScreen", "Chat")
+                                    <select id="interlocutorsList"></select>
+                                    <div id="usersForChat" class="dropdown dropleft" style="display:none;"></div>
+                                </div>
+                            </div>
+                    </ul>
                     </nav>
+
+                    <script src="@Url.Content("~/Scripts/main-menu.js")" type="text/javascript"></script>
                 </div>
             </div>
         </header>
