@@ -1,17 +1,10 @@
-﻿@*@model List<MvcApplication1.Models.RequestModel>*@
+﻿
 @{
     ViewBag.Title = "Requests";
 }
 
 <h2>Заявки</h2>
-<nav>
-    <ul id="menu">
-        <li>@Html.ActionLink("Профіль", "Index", "Profile")</li>
-        <li>@Html.ActionLink("Чат", "Index", "Chat")</li>
-        <li>@Html.ActionLink("Мої статті", "MyArticle", "Profile")</li>
-        <li>@Html.ActionLink("Знайти однодумців", "Index", "FindAssosiates")</li>
-    </ul>
-</nav>
+
 
 <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal">Створити заявку</button>
 

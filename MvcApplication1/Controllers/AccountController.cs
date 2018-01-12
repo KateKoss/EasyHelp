@@ -13,6 +13,8 @@ using MvcApplication1.Models;
 using MvcApplication1.Contexts;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Drawing;
+using System.Web.Hosting;
 
 namespace MvcApplication1.Controllers
 {

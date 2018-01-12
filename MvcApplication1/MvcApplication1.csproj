@@ -252,12 +252,12 @@
     </Compile>
     <Compile Include="Contexts\CustomDbContext.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ArticleController.cs" />
     <Compile Include="Controllers\ChatController.cs" />
     <Compile Include="Controllers\EditController.cs" />
     <Compile Include="Controllers\FindAssosiatesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
-    <Compile Include="Controllers\ProxyPattern.cs" />
     <Compile Include="Controllers\RequestsController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="GenerateToken.cs" />
@@ -271,6 +271,10 @@
     <Compile Include="Migrations\201711182221405_13.cs" />
     <Compile Include="Migrations\201711182221405_13.Designer.cs">
       <DependentUpon>201711182221405_13.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801122035158_12.cs" />
+    <Compile Include="Migrations\201801122035158_12.Designer.cs">
+      <DependentUpon>201801122035158_12.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountModels.cs" />
@@ -440,13 +444,10 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Profile\Index.cshtml" />
-    <Content Include="Views\Profile\CreateArticle.cshtml" />
     <Content Include="Views\Requests\StudentRequests.cshtml" />
-    <Content Include="Views\Profile\MyArticle.cshtml" />
     <Content Include="Views\Profile\GetMentorList.cshtml" />
     <Content Include="Views\Profile\RateMentorPartial.cshtml" />
     <Content Include="packages.config" />
-    <Content Include="Views\Requests\CreateRequest.cshtml" />
     <Content Include="Views\Requests\MentorRequests.cshtml" />
     <Content Include="Views\Requests\EditRequest.cshtml" />
     <Content Include="Views\Requests\RequestDetails.cshtml" />
@@ -456,6 +457,10 @@
     <Content Include="Views\Chat\ChatSmallBox.cshtml" />
     <Content Include="Views\Chat\ChatFullScreen.cshtml" />
     <Content Include="Views\Profile\UserPreview.cshtml" />
+    <Content Include="Views\Article\ArticlePreview.cshtml" />
+    <Content Include="Views\Article\MentorArticle.cshtml" />
+    <Content Include="Views\Article\_ArticlesPartial.cshtml" />
+    <Content Include="Views\Requests\_RequestsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -467,7 +472,11 @@
     <EmbeddedResource Include="Migrations\201711182221405_13.resx">
       <DependentUpon>201711182221405_13.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801122035158_12.resx">
+      <DependentUpon>201801122035158_12.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

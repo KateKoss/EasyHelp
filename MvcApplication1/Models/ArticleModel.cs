@@ -10,25 +10,30 @@ namespace MvcApplication1.Models
 {
     [Table("Article")]
     public class ArticleModel
-    {        
+    {
+
         [Key]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string articleID { get; set; }
         public string createdBy { get; set; }
-        public IEnumerable<string> articleName { get; set; }
-        public IEnumerable<SelectListItem> articleNames { get; set; }
-        [Required(AllowEmptyStrings=false,ErrorMessage = "Введіть назву статті.")]
+
+        //[Required(AllowEmptyStrings=false, ErrorMessage = "Введіть назву статті.")]
         public string articleTitle { get; set; }
         public string articleText { get; set; }
         public bool isPublished { get; set; }
+        public DateTime dateOfLastEditing { get; set; }
+        public DateTime dateOfCreation { get; set; }
+        public string tagList { get; set; }
         public string whoLikes { get; set; }
         public string whoDislikes { get; set; }
+        public List<string> chosenTags { get; set; }
         public IEnumerable<string> SelectedTeg { get; set; }
         public IEnumerable<SelectListItem> TegList { get; set; }
-
+        //нужна дата создания
         [NotMapped]
         public bool youAreLikeThisArticle { get; set; }
         [NotMapped]
         public bool youAreDislikeThisArticle { get; set; }
-        
+
     }
 }

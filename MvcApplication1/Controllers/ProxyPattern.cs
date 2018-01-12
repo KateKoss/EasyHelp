@@ -49,7 +49,7 @@ namespace MvcApplication1.Controllers
                 }
                 ArticleModel myModel = new ArticleModel()
                 {
-                    articleNames = listSelectListItems
+                    //articleTitle = listSelectListItems
                 };
 
                 return myModel;
