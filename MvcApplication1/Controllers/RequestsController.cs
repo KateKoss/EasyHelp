@@ -18,24 +18,43 @@ namespace MvcApplication1.Controllers
 {
     public class RequestsController : Controller
     {
+        public class Data
+        {
+            public string inputRequestName { get; set; }
+            public string inputRequestText { get; set; }
+            public string[] tagList { get; set; }
+        }
+
         [HttpGet]
         public ActionResult LoadStudentRequests()
         {
-            RequestsList requestsModel = new RequestsList();
+            RequestsList requestsModel = new RequestsList() { };
             string currentPerson;
             if (Request.Cookies["UserId"] != null)
-                currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-            else currentPerson = "user1";
-            using (CustomDbContext db = new CustomDbContext())
             {
-                var r = db.RequestsModel.Where(x => x.createdBy == currentPerson && x.requestState == "request not resolved");
-                if (r!=null)
-                    foreach (var item in r)
-                    {
-                        requestsModel.reqests.Add(item);
-                    }
+                currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                using (CustomDbContext db = new CustomDbContext())
+                {
+                    var r = db.RequestsModel.Where(x => x.createdBy == currentPerson && x.requestState == "request not resolved");
+                    if (r != null)
+                        foreach (var item in r)
+                        {
+                            requestsModel.reqests.Add(item);
+                        }
+                }
             }
-            
+            //в модель передать все активные заявки из бд 
+            //RequestsList requestsModel = new RequestsList();
+            //requestsModel.reqests.Add(new RequestModel("user1_1", "Help with Java", "bla-bla1", null, "request not resolved"));
+            //requestsModel.reqests.Add(new RequestModel("user1_2", "Help with C#", "bla-bla2", null, "request not resolved"));
+            //requestsModel.reqests.Add(new RequestModel("user1_2", "Help with C++", "bla-bla3", null, "request not resolved"));
+            if (Request.IsAjaxRequest())
+                return PartialView("_RequestsPartial", requestsModel.reqests);
+            //RequestModel req = new RequestModel("user1_1", "Help with Java", "bla-bla1", null, "request not resolved");
+            //    if (req.requestState != "request resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
+            //    req = new RequestModel("user1_2", "Help with C#", "bla-bla2", null, "request not resolved");
+            //    if (req.requestState != "request resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
+
             return View("StudentRequests", requestsModel.reqests);
         }        
 
@@ -55,8 +74,13 @@ namespace MvcApplication1.Controllers
                     {
                         requestsModel.reqests.Add(item);
                     }
-            }            
-            
+            }
+
+            //RequestModel req = new RequestModel("user1_3", "Help with 1...", "bla-bla1", null, "request resolved");
+            //if (req.requestState != "request not resolved" && req.requestState != "request canceled") requestsModel.reqests.Add(req);
+
+            if (Request.IsAjaxRequest())
+                return PartialView("_RequestsPartial", requestsModel.reqests);
             return View("StudentRequests", requestsModel.reqests);
         }
         [HttpGet]
@@ -76,6 +100,8 @@ namespace MvcApplication1.Controllers
                         requestsModel.reqests.Add(item);
                     }
             }
+            if (Request.IsAjaxRequest())
+                return PartialView("_RequestsPartial", requestsModel.reqests);
             return View("StudentRequests", requestsModel.reqests);
         }
         [HttpGet]
@@ -91,7 +117,12 @@ namespace MvcApplication1.Controllers
                     r.requestState = "request resolved";
                 db.SaveChanges();
             }
-            
+            //RequestModel req = new RequestModel("user1_5", "Help with 1...", "bla-bla1", null, "request canceled");
+            //if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);  //если заявка не решена и не отменена отображаем как активные
+            //req = new RequestModel("user1_6", "Help with 2...", "bla-bla2", null, "request canceled");
+            //if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);
+
+            //return View("StudentRequests", requestsModel.reqests);
             return RedirectToAction("ResolvedRequests");
         }
 
@@ -106,18 +137,66 @@ namespace MvcApplication1.Controllers
                     r.requestState = "request canceled";
                 db.SaveChanges();
             }
-            
+            //RequestsList requestsModel = new RequestsList();
+            //RequestModel req = new RequestModel("user1_5", "Help with 1...", "bla-bla1", null, "request canceled");
+            //if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);  //если заявка не решена и не отменена отображаем как активные
+            //req = new RequestModel("user1_6", "Help with 2...", "bla-bla2", null, "request canceled");
+            //if (req.requestState != "request not resolved" && req.requestState != "request resolved") requestsModel.reqests.Add(req);
             return RedirectToAction("CanceledRequests");
-            
+            //return View("StudentRequests", requestsModel.reqests);
         }
 
         //--------------------------Создание/сохранение заявки-----------------------------------------------
 
-        [HttpGet]
-        public ActionResult CreateRequest()
+        [HttpPost]
+        public ActionResult RequestsPartial(Data data)
         {
-
-            return View("CreateRequest");
+            RequestModel reqModel = new RequestModel();
+            if (string.IsNullOrEmpty(data.inputRequestName))
+            {
+                ModelState.AddModelError("inputRequestName", "Введіть назву заявки.");
+            }
+            if (string.IsNullOrEmpty(data.inputRequestText))
+            {
+                ModelState.AddModelError("inputRequestText", "Введіть текст заявки.");
+            }
+            if (data.tagList == null)
+            {
+                ModelState.AddModelError("tagList", "Оберіть теги.");
+            }
+            if (ModelState.IsValid)
+            {
+                using (CustomDbContext db = new CustomDbContext())
+                {
+                    string currentPerson;
+                    if (Request.Cookies["UserId"] != null)
+                    {
+                        currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                        int count = db.RequestsModel.Count(x => x.createdBy == currentPerson);//?
+                        if (count == 0)     //если это первая заявка у пользователя
+                        {
+                            reqModel.requestId = currentPerson + "_1";
+                        }
+                        else
+                        {
+                            reqModel.requestId = currentPerson + "_" + (count + 1);
+                        }
+                        reqModel.requestName = data.inputRequestName;
+                        reqModel.requestText = data.inputRequestText;
+                        reqModel.requestState = "request not resolved";
+                        reqModel.createdBy = currentPerson;
+                        reqModel.createdAt = DateTime.Now;
+                        reqModel.SelectedTeg = data.tagList;
+                        //if (reqModel.requestName == null)
+                        //    reqModel.requestName = reqModel.requestText.Substring(0, 10);
+                        db.RequestsModel.Add(reqModel);
+                        db.SaveChanges();
+                    }
+                }
+            }
+            //return PartialView("_RequestsPartial");
+            return RedirectToAction("LoadStudentRequests");
+            //return View("CreateRequest");//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
 
 
@@ -127,11 +206,14 @@ namespace MvcApplication1.Controllers
             string currentPerson;
             currentPerson = s.user;
 
+            Observer observer;
+            Requests r = new Requests(req);
+
             using (CustomDbContext db = new CustomDbContext())
             {
-                if (db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).Tegs != null)
+                if (db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs != null)
                 {
-                    string[] currentPersonTegs = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).Tegs.Split('|');
+                    string[] currentPersonTegs = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs.Split(' ');
 
                     List<ProfileModel> mentorListWithTegs = new List<ProfileModel>();
                     var mentorList = db.UserProfiles.Where(x => x.Role == "mentor");
@@ -148,19 +230,29 @@ namespace MvcApplication1.Controllers
                                         var ment = db2.ProfileModel.SingleOrDefault(x => x.UserName == currentMentor);
                                         if (ment != null)
                                             if (ment.UserName != currentPerson)
-                                                if (ment.Tegs != null)
-                                                    if (ment.Tegs.Contains(currentTeg))
+                                                if (ment.MyTegs != null)
+                                                    if (ment.MyTegs.Contains(currentTeg))
                                                         if (!mentorListWithTegs.Any(x => x.UserName == ment.UserName))
                                                             mentorListWithTegs.Add(ment);
                                     }
                                 }
                             }
 
+
+                    foreach (var m in mentorListWithTegs)
+                    {
+                        observer = new Observer(m.UserName);                       
+                        r.Attach(observer);
+                    }
                 }
             }
 
             using (CustomDbContext db = new CustomDbContext())
             {
+                //string currentPerson;
+                //if (Request.Cookies["UserId"] != null)
+                //    currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
+                //else currentPerson = "user1";
                 int count = db.RequestsModel.Count(x => x.createdBy == currentPerson);
                 if (count == 0)
                 {
@@ -224,9 +316,9 @@ namespace MvcApplication1.Controllers
             
             using (CustomDbContext db = new CustomDbContext())
             {
-                if (db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).Tegs != null)
+                if (db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs != null)
                 {
-                    string[] currentPersonTegs = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).Tegs.Split('|');
+                    string[] currentPersonTegs = db.ProfileModel.SingleOrDefault(x => x.UserName == currentPerson).MyTegs.Split(' ');
 
                     List<ProfileModel> mentorListWithTegs = new List<ProfileModel>();
                     var mentorList = db.UserProfiles.Where(x => x.Role == "student" || x.Role == "user");
@@ -243,8 +335,8 @@ namespace MvcApplication1.Controllers
                                         var ment = db2.ProfileModel.SingleOrDefault(x => x.UserName == currentMentor);
                                         if (ment != null)
                                             if (ment.UserName != currentPerson)
-                                                if (ment.Tegs != null)
-                                                    if (ment.Tegs.Contains(currentTeg))
+                                                if (ment.MyTegs != null)
+                                                    if (ment.MyTegs.Contains(currentTeg))
                                                         if (!mentorListWithTegs.Any(x => x.UserName == ment.UserName))
                                                             mentorListWithTegs.Add(ment);
                                     }
@@ -254,7 +346,7 @@ namespace MvcApplication1.Controllers
 
                     foreach (var m in mentorListWithTegs)
                     {
-                        
+                        //mentor = new MentorsModel();
                         using (CustomDbContext db3 = new CustomDbContext())
                         {
                             var r = db3.RequestsModel.Where(x => x.createdBy == m.UserName && x.requestState == rState);

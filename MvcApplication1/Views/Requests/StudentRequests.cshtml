@@ -1,4 +1,4 @@
-﻿@model List<MvcApplication1.Models.RequestModel>
+﻿@*@model List<MvcApplication1.Models.RequestModel>*@
 @{
     ViewBag.Title = "Requests";
 }
@@ -13,38 +13,151 @@
     </ul>
 </nav>
 
+<button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal">Створити заявку</button>
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Створення заявки</h4>
+            </div>
+
+            <div class="modal-body">
+                <h4>Додати теги</h4>
+                <div id="tags">
+                    <div id="conteinerForTags"></div>
+                    <input required id="inputTags" value="" placeholder="Теги" />
+                    <button type="button" id="createTagButton" class="btn btn-primary btn-sm">Додати тег</button>
+                </div>
+                <h4 id="nameLabel">Навза заявки</h4>
+                <p>
+                    <input required id="inputRequestName" value="" placeholder="Навза заявки" />
+                    <div id="errReqName"></div>
+                </p>
+
+                <h4 id="textLabel">Текст заявки</h4>
+                <p>
+                    <input required id="inputRequestText" value="" name="reqtext" placeholder="Текст заявки" />
+                    <div id="errReqText" ></div>
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="createButton" class="btn btn-primary btn-md">Створити заявку</button>
+                <button type="button" id="closeButton" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+@*
 @using (Html.BeginForm("CreateRequest", "Requests", FormMethod.Get))
 {
     <p>
-        <button>Створити заявку</button>
+        <button type="button" class="btn btn-primary btn-sm">Створити заявку</button>
     </p>
+}*@
+
+<ul class="nav nav-tabs">
+    <li class="nav-item active">
+        @Ajax.ActionLink("Активні", "LoadStudentRequests", "Requests", new AjaxOptions { UpdateTargetId = "requests" }, new { @class="nav-link active" })
+    </li>
+    <li class="nav-item">
+        @Ajax.ActionLink("Розв'язані", "ResolvedRequests", "Requests", new AjaxOptions { UpdateTargetId = "requests" }, new { @class = "nav-link" })
+    </li>
+    <li class="nav-item">
+        @Ajax.ActionLink("Скасовані", "CanceledRequests", "Requests", new AjaxOptions { UpdateTargetId = "requests" }, new { @class = "nav-link" })
+    </li>
+</ul>
+
+<div id="requests">
+    @Html.Partial("_RequestsPartial")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/scripts/bootstrap.js")
+    <script type="text/javascript">
+        var tagList = [];
+        var k = 0;
+        $('#createTagButton').click(function () {
+            $('#inputTags').toggle();
+            if (k % 2 != 0) {
+                if ($('#inputTags').val() != "") {
+                    $('#conteinerForTags').append('<span id="tag' + k + '" class="badge badge-success">' + $('#inputTags').val() + '<span class="badge badge-pill badge-secondary removeTeg" onclick="removeTag(this)" style=" color:dimgray; background-color:lightgray;">x</span> </span>');
+                    tagList.push($('#inputTags').val());
+                    $('#inputTags').val("");
+                }
+            }
+            k++;
+        });
+
+        $("#tags").ready(function () {
+            $('#inputTags').hide();
+        });
+
+        function removeTag(obj) {
+            $($(obj).parent()).remove();
+            //var valOfTegToDelete = $(obj).parent().attr("id");
+            //console.log(valOfTegToDelete);
+            //console.log($("#" + valOfTegToDelete).text());
+            //valOfTegToDelete = valOfTegToDelete.slice(0, -2);
+            tagList = jQuery.grep(tagList, function (value) {
+                return value != $(obj).parent().text().slice(0, -2); // последний символ "x" - крестик, который закрывает этот элемент поэтому .slice(0,-1)
+            });
+        }
+        function closeInstruction() {
+            $('#inputRequestName').val("");
+            $('#inputRequestText').val("");
+            $('#errReqText').text("");
+            $('#errReqName').text("");
+            $('#inputTags').hide();
+            $('#conteinerForTags').text("");
+            tagList = [];
+        }
+        $('#closeButton').click(closeInstruction());
+        $('#createButton').click(function () {
+            if ($('#inputRequestName').val() != "" && $('#inputRequestText').val() != "") {
+                var reqName = $('#inputRequestName').val();
+                var reqText = $('#inputRequestText').val();
+                //var tags = $("#conteinerForTags").children("tag1").text();
+                //console.log($("#conteinerForTags").children().text());
+                console.log(tagList);
+                var data = {
+                    inputRequestName: reqName,
+                    inputRequestText: reqText,
+                    tagList: tagList
+                };
+                $.ajax({ //returns  jQuery XMLHttpRequest (jqXHR) object
+                    type: 'POST',
+                    url: '@Url.Action("RequestsPartial", "Requests")',
+                    dataType: "text",
+                    data: data,
+                    success: function (d) {
+                        //showHide();
+                        closeInstruction();
+                        $('#requests').text("");
+                        $('#myModal').modal('hide');
+                        $('#requests').append(d);
+                        //isShowCreateFields == false;
+                    }
+                });
+            }
+            if ($('#inputRequestName').val() == "") {
+                $('#errReqName').text("Введіть назву заявки!");
+            }
+            else $('#errReqName').text("");
+            if ($('#inputRequestText').val() == "") {
+                $('#errReqText').text("Введіть текст заявки!");
+            }
+            else $('#errReqText').text("");
+        });
+    </script>
 }
 
-<nav>@Html.ActionLink("Активні", "LoadStudentRequests", "Requests")
-    | @Html.ActionLink("Розв'язані", "ResolvedRequests", "Requests")
-    | @Html.ActionLink("Скасовані", "CanceledRequests", "Requests")
-</nav>
-<div>
-    <table cellspacing="2" border="1" cellpadding="5" width="600">
-        @foreach (var t in Model)
-        {
-            <tr>
-                <td>
-                    @t.requestName
-                   
-                        @if (t.requestState == "request not resolved")
-                        {
-                            <nav>
-                                @Html.ActionLink("Позначити як вирішену", "MarkAsResolved", "Requests", new { requestId = t.requestId }, null)
-                                | @Html.ActionLink("Скасувати", "MarkAsCanceled", "Requests", new { requestId = t.requestId }, null)
-                                |@Html.ActionLink("Редагувати заявку", "EditRequest", "Requests", new { requestId = t.requestId }, null)
-                            </nav>
-                        }                    
-                </td>
-                <td>
-                    @t.requestState
-                </td>
-            </tr>
-        }
-    </table>
-</div>
