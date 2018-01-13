@@ -427,10 +427,7 @@ input.btnEdit {
   /*background-size: 40px auto;*/
 }
 
-.profileUserData{
-    font-weight: bold;
-    font-size: 16px;
-}
+
 
 body {
     background-color: #fff;
@@ -443,16 +440,16 @@ body {
 }
 
 a {
-    color: #333;
+
     outline: none;
     padding-left: 3px;
     padding-right: 3px;
-    text-decoration: underline;
+    /*text-decoration: underline;*/
 }
 
     a:link, a:visited,
     a:active, a:hover {
-        color: #333;
+        /*color: #333;*/
     }
 
     a:hover {
@@ -865,7 +862,7 @@ input, textarea {
 
 textarea {
     font-family: inherit;
-    width: 500px;
+    width: 100%;
 }
 
     input:focus, textarea:focus {
@@ -1233,19 +1230,19 @@ aside {
     width: 20%;
 }
 
-.nav-tabs
+.main-nav
 {
   position:relative;
-  border:none!important;
   background-color:#fff;
   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
   border-radius: 0 0 5px 5px;
+  padding: 15px;
 }
-.nav-tabs li
+.main-nav li
 {
   margin:0px;
 }
-.nav-tabs li a
+.main-nav li a
 {
   position:relative;
   margin-right:0px!important;
@@ -1254,10 +1251,11 @@ aside {
   border:none!important;
   color:#333;
 }
-.nav-tabs a:hover
+.main-nav a:hover
 {
   background-color:#fff!important;
   border:none;
+  text-decoration: none;
 }
 .slider
 {
@@ -1272,7 +1270,7 @@ aside {
   transition:all .4s linear;
   
 }
-.nav-tabs .active a
+.main-nav .active a
 {
   background-color:transparent!important;
   border:none!important;
@@ -1285,11 +1283,11 @@ aside {
 #chat-menu-item{
     display:  inline-flex;
     position: relative;
-    margin-right: 0px!important;
+    /*margin-right: 0px!important;
     padding: 20px 0px 0px 40px!important;
     font-size: 16px;
     border: none!important;
-    color: #333;
+    color: #333;*/
 }
 
 .modal-open-fix {
@@ -1297,4 +1295,20 @@ aside {
 }
 .modal-open-fix-pad {
     padding-right: 15px;
+}
+
+.badge-custom{
+    color: #495057;
+    background-color: white;
+    border: 1px solid #e9ecef;
+}
+
+.nav-tabs{
+   margin-top: 10px;
+}
+
+.btn-custom{
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
 }

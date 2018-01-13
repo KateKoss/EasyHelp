@@ -24,16 +24,16 @@
         display: block;
 }
 .input-group-btn {
-        width: 73%;
-    /* white-space: nowrap; */
-    vertical-align: middle;
+        /*width: 73%;
+    /* white-space: nowrap; 
+    vertical-align: middle;*/
 }
 
 .input-group {
-        position: relative;
-    /* display: table; */
+        /*position: relative;
+    /* display: table; 
     display: block;
-    border-collapse: separate;
+    border-collapse: separate;*/
     
 
 }
@@ -72,15 +72,25 @@
 #reviewStars-input{
     margin-top: 20px;
 }
- .removeTag{
+.removeTag{
     cursor: pointer;
     background-color: #a94442;
-    
+    color: #f8f9fa;
+}
+
+.profileUserData{
+    font-weight: bold;
+    font-size: 16px;
+    color: white;
+}
+
+#userName {
+    color: black;
 }
 
  .findMentorBlock{
-     margin: 14px; 
-     width: 85%; 
+     /*margin: 14px; 
+     width: 85%;*/ 
  }
 
  #find {
@@ -107,4 +117,10 @@
  .AboutMeBlock{
      font-family: 'Khula', sans-serif;
      font-size: 17px;
+ }
+
+ #inputFindMentor{
+     border-radius: 10px;
+    border-color: #d9534f;
+    width: 80%;
  }

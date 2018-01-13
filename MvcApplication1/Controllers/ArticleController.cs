@@ -192,14 +192,18 @@ namespace MvcApplication1.Controllers
             using (CustomDbContext db = new CustomDbContext())
             {
                 var modelToDelete = db.ArticleModel.FirstOrDefault(x => x.articleID == articleId);
-                db.ArticleModel.Remove(modelToDelete);
-                db.SaveChanges();
+                if (modelToDelete != null)
+                {
+                    db.ArticleModel.Remove(modelToDelete);
+                    db.SaveChanges();
+                }
+                //TODO: else return error page
             }
             return RedirectToAction("Index");
         }
 
-        [HttpGet]
-        public ActionResult ShowArticles(bool isPublsihed)
+        
+        public ActionResult ShowArticles(string isPublished)
         {
             //string currentMent;
             //if (Request.Cookies["MentorId"] != null)
@@ -210,10 +214,17 @@ namespace MvcApplication1.Controllers
             if (Request.Cookies["UserId"] != null) //если данные о пользователе записаны в куки
             {
                 currentPerson = Convert.ToString(Request.Cookies["UserId"].Value);
-                myModel = getArticles(currentPerson, isPublsihed);
-                if (Request.IsAjaxRequest())
-                    return PartialView("_ArticlesPartial", myModel);
-                return View("MentorArticle", myModel);
+                try
+                {
+                    myModel = getArticles(currentPerson, Convert.ToBoolean(isPublished));
+                    if (Request.IsAjaxRequest())
+                        return PartialView("_ArticlesPartial", myModel);
+                    return View("MentorArticle", myModel);
+                }
+                catch
+                {
+                    return null; //TODO: return error page
+                }
             }
             return View("MentorArticle", myModel);
             //if (currentMent != "")

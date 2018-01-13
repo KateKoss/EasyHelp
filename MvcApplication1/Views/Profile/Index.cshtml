@@ -11,11 +11,7 @@
 {
     <div class="row findMentorBlock">
         <div class="input-group">
-            <input type="text" class="form-control" aria-label="Text input with dropdown button" style="
-    border-radius: 10px;
-    border-color: #d9534f;
-    /* box-sizing: initial; */
-">
+            <input type="text" class="form-control" aria-label="Text input with dropdown button" id="inputFindMentor"/>
             <div class="input-group-btn">
                 <button type="button" class="btn btn-secondary" id="find">Знайти ментора</button>
                 <div class="dropdown-menu" id="dropdown-menu"></div>
@@ -26,7 +22,7 @@
 <br/>
 <div class="container">
     <div class="row">
-        <div class="col-lg-3">
+        <div class="col-lg-4">
 
             <div id="userphotoDiv">
                 <img id="userphotoImg" src="" /><br />
@@ -50,7 +46,7 @@
         </div>
 
 
-        <div class="col-lg-7">
+        <div class="col-lg-8">
             <h2>Ім'я</h2>
             <span id="labelNameEdit" style="display:;" class="profileUserData">
                 <span value="" id="userName">@(Model.Name != null ? Model.Name : "")</span>
