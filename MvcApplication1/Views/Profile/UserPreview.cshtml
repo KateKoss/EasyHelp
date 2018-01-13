@@ -1,0 +1,113 @@
+﻿@model MvcApplication1.Models.ProfileModel
+@{
+    ViewBag.Title = "Перегляд";
+}
+   
+@if (Model.isMentor)
+{
+    <div class="container notifyMentor">
+        
+        <div class="row notifyMentorRow ">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+            <h3>Привіт, я Ментор!<img src="../Images/catgray24.png" /></h3>
+
+        </div>
+        
+    </div>
+}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4">
+            
+            <div id="userphotoDiv">
+                <img id="userphotoImg" src="data:image/jpeg;base64, @Convert.ToBase64String(Model.UserPhoto)"/><br />                
+            </div>
+            
+        </div>
+        <div class="col-lg-8">
+            
+            <h3>@(Model.Name != null ? Model.Name : "")</h3>
+            
+            @if (Model.isMentor)
+            {
+                <div class="rating">
+                    @Html.Partial("RateMentorPartial", Model)
+                </div>
+            }
+            @Html.Partial("../Edit/Tegs", Model)
+            
+            
+            
+        </div>
+    </div>
+</div>
+<div class="AboutMeBlock">
+    <span id="AboutMe">@(Model.About_me != null ? Model.About_me : "")</span>
+</div>    
+@*<br />
+@using (Html.BeginForm("ShowArticles", "Profile", FormMethod.Get))
+{
+    <fieldset>
+        <p>
+            <button>Показати публікації</button>
+        </p>
+    </fieldset>
+}*@
+<div>
+    <br/>
+    @Html.ActionLink("Назад", "Index")
+    @Html.ActionLink("Чат", "Index", "Chat")
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    
+    <script type="text/javascript">
+        $("input[type=radio]").on("click", function () {
+
+            var rate = $("input:checked").attr('id').split('-')[1];
+            var name = getUrlVars()["user"];
+
+            console.log(rate);
+            var data = {
+                name: name,
+                rate: rate
+
+            }
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SetMentorRate", "Profile")',
+                dataType: "text",
+                data: data,
+                success: function (d) {
+                    $('#star-' + d).prop("checked", true);
+                }
+            });
+        });
+        $("#reviewStars-input").ready(function () {
+            $('#star-' + @Model.Rate).prop("checked", true);
+        })
+
+        function getUrlVars() {
+            
+            var vars = {};
+            var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+                vars[key] = value;
+            });
+            
+            return vars;
+        }
+
+        $("#tags").ready(function () {
+            
+            $('.removeTag').hide();
+            $('#btnEditTeg').hide();
+            
+        });
+
+    </script>
+    @Styles.Render("~/Content/Profile.css")
+    @Styles.Render("~/Content/UserPreview.css")
+
+}

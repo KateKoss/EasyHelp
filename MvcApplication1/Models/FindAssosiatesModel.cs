@@ -23,7 +23,7 @@ namespace MvcApplication1.Models
         public int valueOfanswer { get; set; }
 
         [NotMapped]
-        public List<MvcApplication1.Models.MentorsModel> users = new List<MvcApplication1.Models.MentorsModel>();
+        public List<MvcApplication1.Models.ProfileModel> users = new List<MvcApplication1.Models.ProfileModel>();
 
     }
 }

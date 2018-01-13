@@ -1,0 +1,126 @@
+﻿.avatarList {
+    border-radius: 100%;
+    border: 1px solid lightgray;
+    width: 50px;
+    height: 50px;
+}
+
+.dropdown-item{
+    padding: 10px;
+    margin-bottom: 3px;
+    box-shadow: gray;
+    box-shadow: 0px 0px 0px 1px #d9534f;
+    border-radius: 24px;
+    background-color: white;
+}
+
+#addClass{
+    float: right;
+    
+}
+
+.form-control{
+        float: left;
+        display: block;
+}
+.input-group-btn {
+        /*width: 73%;
+    /* white-space: nowrap; 
+    vertical-align: middle;*/
+}
+
+.input-group {
+        /*position: relative;
+    /* display: table; 
+    display: block;
+    border-collapse: separate;*/
+    
+
+}
+
+.dropdown-menu{
+        /* position: absolute; */
+    top: 100%;
+    left: 0;
+    z-index: 2;
+    display: none;
+    float: left;
+    min-width: 136%;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: transparent;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 0px solid #ccc;
+    border: 0px solid rgba(0, 0, 0, .15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    box-shadow: 0 0px 0px rgba(0, 0, 0, .175);
+
+}
+
+.input-group-addon, .input-group-btn, .input-group .form-control {
+    display: block;
+}
+.tag {
+    background-color: #d9534f;
+    padding: 0.45em 0.7em;
+}
+#reviewStars-input{
+    margin-top: 20px;
+}
+.removeTag{
+    cursor: pointer;
+    background-color: #a94442;
+    color: #f8f9fa;
+}
+
+.profileUserData{
+    font-weight: bold;
+    font-size: 16px;
+    color: white;
+}
+
+#userName {
+    color: black;
+}
+
+ .findMentorBlock{
+     /*margin: 14px; 
+     width: 85%;*/ 
+ }
+
+ #find {
+    border-radius: 10px;
+    background-color: #d9534f;
+    /* background-color: white; */
+    margin-left: 6px;
+    border: 2px solid #d9534f;
+    color: white;
+    /* color: black; */
+ }
+ #find:focus,active{
+     outline:none;
+ }
+ #userphotoImg{
+    width: 255px;
+    height: 255px;
+    margin-bottom: 20px;
+    border-radius: 100%;
+    border: 1px solid lightgray;
+
+}
+
+ .AboutMeBlock{
+     font-family: 'Khula', sans-serif;
+     font-size: 17px;
+ }
+
+ #inputFindMentor{
+     border-radius: 10px;
+    border-color: #d9534f;
+    width: 80%;
+ }

@@ -12,7 +12,7 @@ namespace MvcApplication1.Controllers
     {
         //
         // GET: /FindAssosiates/
-        List<MentorsModel> usersList = new List<MentorsModel>();
+        List<ProfileModel> usersList = new List<ProfileModel>();
 
         public ActionResult Index()
         {
@@ -192,7 +192,7 @@ namespace MvcApplication1.Controllers
                         db.SaveChanges();
                     }
                 }
-                MentorsModel ment = new MentorsModel();
+                ProfileModel ment = new ProfileModel();
                 Algorithm al = new Algorithm();
                 List<DataPoint> l = new List<DataPoint>();
                 DataPoint dp = new DataPoint(2);
@@ -215,7 +215,7 @@ namespace MvcApplication1.Controllers
                 {
                     foreach(var item in ids)
                     {
-                        ment = new MentorsModel();
+                        ment = new ProfileModel();
                         if (item != null && item !=currentPerson)
                         {
                             var w = db2.ProfileModel.SingleOrDefault(x => x.UserName == item);

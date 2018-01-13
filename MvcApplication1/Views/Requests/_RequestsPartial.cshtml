@@ -1,0 +1,37 @@
+﻿@model List<MvcApplication1.Models.RequestModel>
+<table class="table">
+    <thead class="thead-default">
+        <tr>
+            <th colspan="2">Заявка</th>
+            <th>Стан</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var t in Model)
+        {
+            <tr>
+                <td>
+                    @t.requestName
+                </td>
+                <td>
+                    @if (t.requestState == "request not resolved") { 
+                    <ul class="nav justify-content-center">
+                        <li class="nav-item">
+                            @Html.ActionLink("Позначити як вирішену", "MarkAsResolved", "Requests", new { requestId = t.requestId }, new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Скасувати", "MarkAsCanceled", "Requests", new { requestId = t.requestId }, new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Редагувати заявку", "EditRequest", "Requests", new { requestId = t.requestId }, new { @class = "nav-link" })
+                        </li>
+                    </ul>
+                    }
+                </td>
+                <td>
+                    @t.requestState
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

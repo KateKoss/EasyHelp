@@ -12,45 +12,27 @@
     </ul>
 </nav>
 
-<ul class="nav nav-tabs">
-    <li class="nav-item active">
-        @Html.ActionLink("Відкриті", "MentorAvailableRequests", "Requests", new { @class = "nav-link active" })
-    </li>
-    <li class="nav-item">
-        @Html.ActionLink("Вирішені", "MentorResolvedRequests", "Requests", new { @class = "nav-link" })
-    </li>
-    <li class="nav-item">
-        @Html.ActionLink("Закриті", "MentorCanceledRequests", "Requests", new { @class = "nav-link" })
-    </li>
-</ul>
+<nav>
+    @Html.ActionLink("Відкриті", "MentorAvailableRequests", "Requests")
+    | @Html.ActionLink("Вирішені", "MentorResolvedRequests", "Requests")
+    | @Html.ActionLink("Закриті", "MentorCanceledRequests", "Requests")
+</nav>
 <div>
-    <table class="table">
-        <thead class="thead-default">
+    <table cellspacing="2" border="1" cellpadding="5" width="600">
+        @foreach (var t in Model)
+        {
             <tr>
-                <th colspan="2">Заявка</th>
-                <th>Стан</th>
+                <td>
+                    @t.requestName
+                    @*<nav>
+                        @Html.ActionLink("Детальніше", "AboutRequest", "Requests", new { requestId = t.requestId }, null)
+                    </nav>*@
+                    @t.createdBy
+                </td>
+                <td>
+                    @t.requestState
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var t in Model)
-            {
-                <tr>
-                    <td>
-                        @t.requestName
-                        @t.createdBy
-                    </td>
-                    <td>
-                        <ul class="nav justify-content-center">
-                            <li class="nav-item active">
-                                @Html.ActionLink("Детальніше", "AboutRequest", "Requests", new { requestId = t.requestId }, new { @class = "nav-link" })
-                            </li>
-                        </ul>
-                    </td>
-                    <td>
-                        @t.requestState
-                    </td>
-                </tr>
-            }
-        </tbody>
-</table>
+        }
+    </table>
 </div>

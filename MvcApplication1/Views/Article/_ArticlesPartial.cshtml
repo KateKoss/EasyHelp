@@ -1,0 +1,96 @@
+﻿@model IEnumerable<MvcApplication1.Models.ArticleModel>
+@foreach (var item in Model)
+{
+    <div class="card">
+        
+        <div class="card-body">
+            <h4 class="card-title">@item.articleTitle
+                @Ajax.ActionLink(HttpUtility.HtmlDecode("&times;"), "DeleteArticle", "Article", new { articleId = item.articleID }, new AjaxOptions { UpdateTargetId = "articles" }, new { @class = "close"})
+                @*<button type="button" class="close" articleId="@item.articleID" onclick="location.href='@Url.Action("DeleteArticle", "Article")'">&times;</button>*@
+            </h4>
+            <div id="articleTags">
+                <h6 class="card-subtitle mb-2 text-muted">
+                    @if(item.chosenTags != null){
+                        foreach (var tag in @item.chosenTags)
+                        {
+                            <span class="badge badge-custom"> @tag </span>
+                        }
+                    }
+                </h6>
+            </div>
+            <p class="card-text">@item.articleText</p>
+            
+            @*<button type="button" class="btn btn-info btn-md">Переглянути</button>*@
+            @Html.ActionLink("Переглянути", "ShowArticleDetails", "Article", new { articleId = item.articleID }, new { @class = "btn btn-custom", @target="_blank"})
+            
+            @if (!item.isPublished)
+            {
+                @*@Html.BeginForm("PublishArticle", "Article",)*@
+                @*@Html.ActionLink("Опубліковані", "PublishArticle", "Article", new { articleId = item.articleID }, new { @class = "btn btn-info btn-md", @type = "button" })*@
+                @Ajax.ActionLink("Опублікувати", "PublishArticle", "Article", new { articleId = item.articleID }, new AjaxOptions { UpdateTargetId = "articles" }, new {@class = "btn btn-custom"  })
+                @*using (Ajax.BeginForm("PublishArticle", "Article", new AjaxOptions { UpdateTargetId = "articles" }))
+                {
+                    <button class="btn btn-info btn-md" type="button" articleId="@item.articleID">Опублікувати</button>
+                }*@
+                @*<button class="btn btn-info btn-md" type="button" articleId="@item.articleID" onclick="location.href='@Url.Action("PublishArticle","Article")'">Опублікувати</button>*@
+
+            }
+</div>
+        <div class="card-footer text-muted">
+            <p>Дата створення: @item.dateOfCreation</p>
+        </div>
+    </div>
+    <br>
+}
+@*<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.createdBy)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.articleTitle)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.articleText)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.isPublished)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.whoLikes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.whoDislikes)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.createdBy)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.articleTitle)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.articleText)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.isPublished)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.whoLikes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.whoDislikes)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.articleID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.articleID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.articleID })
+        </td>
+    </tr>
+}
+
+</table>*@
