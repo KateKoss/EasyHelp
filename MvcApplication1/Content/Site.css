@@ -1291,3 +1291,10 @@ aside {
     border: none!important;
     color: #333;
 }
+
+.modal-open-fix {
+    overflow: hidden;
+}
+.modal-open-fix-pad {
+    padding-right: 15px;
+}

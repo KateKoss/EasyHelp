@@ -13,8 +13,8 @@
 </div>
 
 <!-- Modal -->
-<div id="createArticleModal" class="modal fade" role="dialog" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div id="createArticleModal" class="modal fade" role="dialog" >
+    <div class="modal-dialog" >
 
         <!-- Modal content-->
         <div class="modal-content">
@@ -57,6 +57,8 @@
     </div>
 </div>
 
+
+
 <ul class="nav nav-tabs">
     <li class="nav-item active">
         @Ajax.ActionLink("Мої чернетки", "ShowArticles", "Article", new { isPublished = false }, new AjaxOptions { UpdateTargetId = "articles" }, new { @class = "nav-link active" })
@@ -75,7 +77,9 @@
 </div>
 
 @section Scripts {
+@Scripts.Render("~/scripts/bootstrap.js")
     <script type="text/javascript">
+                
         var tagList = [];
         var k = 0;
         $('#createTagButton').click(function () {
@@ -84,7 +88,7 @@
                 if ($('#inputTags').val() != "") {
                     $('#conteinerForTags').append('<span id="tag' + k + '" class="badge badge-success">' + $('#inputTags').val() + '<span class="badge badge-pill badge-secondary removeTeg" onclick="removeTag(this)" style=" color:dimgray; background-color:lightgray;">&times;</span></span>');
                     tagList.push($('#inputTags').val());
-                    $('#inputTags').val("");
+                    console.log('push');                    $('#inputTags').val("");
                 }
             }
             k++;
@@ -125,13 +129,15 @@
             if ($('#inputArticleTitle').val() != "" && $('#inputArticleText').val() != "") {
                 var articTitle = $('#inputArticleTitle').val();
                 var articText = $('#inputArticleText').val();
-                console.log(tagList);
+                
                 var articleData = {
                     inputArticleTitle: articTitle,
                     inputArticleText: articText,
-                    isPublished: isPublish,
-                    tagList: tagList
+                    tagList: tagList,
+                    isPublished: isPublish
+                    
                 };
+                console.log(articleData);
                 $.ajax({ //returns  jQuery XMLHttpRequest (jqXHR) object
                     type: 'POST',
                     url: '@Url.Action("SaveArticle", "Article")',

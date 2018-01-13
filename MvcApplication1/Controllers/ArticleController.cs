@@ -115,6 +115,11 @@ namespace MvcApplication1.Controllers
             //Singleton s = Singleton.Instance;
             string currentPerson;// = s.user;
             string tegString = "";
+            
+            if (articleData.tagList == null)
+                return null;//make error page
+
+
             List<string> selectedTegs = articleData.tagList.ToList();
             for (int i = 0; i < selectedTegs.Count; i++)
             {                
